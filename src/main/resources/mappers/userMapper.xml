@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+
+	<select id="login" parameterType="com.letsgo.place.model.vo.UserVO" 
+	resultType="com.letsgo.place.model.vo.UserVO">
+		SELECT NAME, EMAIL FROM USERS 
+		WHERE USER_ID = #{userID} AND PASSWORD = #{password}
+	</select>
+	
+	<insert id="signUp" parameterType="com.letsgo.place.model.vo.UserVO">
+		INSERT INTO USERS (USER_ID, EMAIL, NAME, PASSWORD) 
+		VALUES (#{userID}, #{email}, #{name}, #{password})
+	</insert>
+	
+	<select id="idCheck" parameterType="String"
+		resultType="String" >
+		SELECT USER_ID FROM USERS 
+		WHERE USER_ID = #{userID}
+	</select>
+	
+	<update id="updatePassword" parameterType="com.letsgo.place.model.vo.UserVO">
+		UPDATE USERS SET PASSWORD = #{password}
+		WHERE USER_ID = #{userID} AND EMAIL = #{email}
+	</update>
+	
+	<select id="findUserId" parameterType="com.letsgo.place.model.vo.UserVO"
+		resultType="String" >
+		SELECT USER_ID FROM USERS
+		WHERE NAME = #{name} AND EMAIL = #{email}
+	</select>
+</mapper>
