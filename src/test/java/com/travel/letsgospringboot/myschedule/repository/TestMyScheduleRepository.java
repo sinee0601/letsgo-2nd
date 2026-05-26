@@ -5,6 +5,7 @@ import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,11 +16,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@RequiredArgsConstructor
 @Transactional
 public class TestMyScheduleRepository {
 
-    @Autowired
-    MyScheduleRepository myScheduleRepository;
+    private final MyScheduleRepository myScheduleRepository;
 
     @Test
     void testGetMyScheduleListAllByDate() {
