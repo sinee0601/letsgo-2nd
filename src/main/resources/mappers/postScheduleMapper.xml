@@ -94,28 +94,28 @@
     <select id="getPostScheduleListSearchLike" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%'
+        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchView" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%'
+        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchTitle" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%'
+        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY p.title DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchLatest" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%'
+        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY p.posted_at DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -154,7 +154,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%')
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -162,7 +162,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%')
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -170,7 +170,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%')
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.title ASC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -178,7 +178,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE '%' || #{keyword} || '%' OR pl.TITLE LIKE '%' || #{keyword} || '%')
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.posted_at DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -248,19 +248,19 @@
 
     <insert id="copyToMySchedule" parameterType="com.letsgo.place.model.dto.CopyToMyScheduleDTO">
         <selectKey keyProperty="generatedId" resultType="String" order="BEFORE">
-            SELECT 'SCH' || LPAD(SEQ_MY_SCHEDULE.NEXTVAL, 3, '0') FROM DUAL
+            SELECT CONCAT('SCH', LPAD(NEXT VALUE FOR seq_my_schedule, 3, '0'))
         </selectKey>
         INSERT INTO MY_SCHEDULE
             (MY_SCHEDULE_ID, TITLE, START_AT, BUDGET_DETAILS, TODO_DETAILS, USER_ID, IS_SHARED)
         VALUES
-            (#{generatedId}, #{title}, SYSDATE, #{budgetDetail}, #{todoDetail}, #{userId}, 0)
+            (#{generatedId}, #{title}, NOW(), #{budgetDetail}, #{todoDetail}, #{userId}, 0)
     </insert>
 
     <insert id="copyToVisitItem" parameterType="com.letsgo.place.model.dto.CopyToVisitItemDTO">
         INSERT INTO VISIT_ITEM
             (VISIT_ITEM_ID, VISIT_ORDER, DISTANCE_TO_NEXT, PLACE_ID, SCHEDULE_ID, SCHEDULE_TYPE)
         VALUES
-            (SEQ_VISIT_ITEM.NEXTVAL, #{visitOrder}, #{distanceToNext}, #{placeId}, #{myScheduleId}, #{scheduleType})
+            (NEXT VALUE FOR seq_visit_item, #{visitOrder}, #{distanceToNext}, #{placeId}, #{myScheduleId}, #{scheduleType})
     </insert>
 
 </mapper>
