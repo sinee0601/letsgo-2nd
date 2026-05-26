@@ -1,16 +1,21 @@
-package com.travel.letsgospringboot.myschedule.repository;
+package com.travel.letsgospringboot.myschedule.service;
 
-import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
-import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
-import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
-import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
-import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
-import org.apache.ibatis.annotations.Mapper;
+import com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository;
+import com.travel.letsgospringboot.myschedule.vo.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Mapper
-public interface MyScheduleRepository {
-    List<MyScheduleVO> getMyScheduleListAllByDate(String userId);
+
+@Service
+@RequiredArgsConstructor
+public class MyScheduleService {
+    private final MyScheduleRepository myScheduleRepository;
+
+
+    List<MyScheduleVO> getMyScheduleListAllByDate(String userId){
+        return myScheduleRepository.getMyScheduleListAllByDate(userId);
+    };
 
     List<MyScheduleVO> getMyScheduleListAllByTitle(String userId);
 
