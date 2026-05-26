@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="PlaceMapper">
 
-	<select id="getPlaceByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -11,12 +11,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND TITLE = #{title}
 	</select>
 
-	<select id="getPlaceByCategory" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceByCategory" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -25,12 +25,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{lclssystm3}
 	</select>
 
-	<select id="getPlaceOrderByLike" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -39,12 +39,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="getPlaceOrderByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -53,12 +53,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="getPlaceByAddr" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceByAddr" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -67,53 +67,53 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND ADDR1 LIKE #{addrPattern}
 	</select>
 
 	
-	<select id="getPlaceByPlaceIdList" parameterType="string" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceByPlaceIdList" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT #{value} AS placeId,
 		       TITLE,
 		       ADDR1,
 		       MAPX,
 		       MAPY
-		FROM PLACE
+		FROM place
 		WHERE PLACE_ID = #{value}
 	</select>
 
 	<select id="getPlaceCount" parameterType="string" resultType="int">
 		SELECT COUNT(PLACE_ID)
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{value}
 	</select>
 
 	<update id="setPlaceLikeCount" parameterType="string">
-		UPDATE PLACE
+		UPDATE place
 		SET LIKE_COUNT = LIKE_COUNT + 1
 		WHERE PLACE_ID = #{value}
 	</update>
 
 	<select id="getPlaceLikeCount" parameterType="map" resultType="int">
 		SELECT LIKE_COUNT
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND PLACE_ID = #{placeId}
 	</select>
 
-	<select id="getPlaces" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaces" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
 		       MAPX,
 		       MAPY
-		FROM PLACE
+		FROM place
 	</select>
 
 	<insert id="insertVisitItem" parameterType="map">
-		INSERT INTO VISIT_ITEM (VISIT_ITEM_ID, VISIT_ORDER, DISTANCE_TO_NEXT, PLACE_ID, SCHEDULE_ID, SCHEDULE_TYPE)
-		VALUES ((SELECT NVL(MAX(VISIT_ITEM_ID), 0) + 1 FROM VISIT_ITEM),
+		INSERT INTO visit_item (VISIT_ITEM_ID, VISIT_ORDER, DISTANCE_TO_NEXT, PLACE_ID, SCHEDULE_ID, SCHEDULE_TYPE)
+		VALUES ((SELECT IFNULL(MAX(CAST(visit_item_id_temp AS UNSIGNED)), 0) + 1 FROM (SELECT VISIT_ITEM_ID AS visit_item_id_temp FROM visit_item) AS temp),
 		        #{visitOrder},
 		        #{distanceToNext},
 		        #{placeId},
@@ -121,7 +121,7 @@
 		        #{scheduleType})
 	</insert>
 
-	<select id="getLeisurePlacesOrderByLikeDesc" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getLeisurePlacesOrderByLikeDesc" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -130,12 +130,12 @@
 		       FIRST_IMAGE AS firstImage,
 		       LIKE_COUNT AS likeCount,
 		       PLACE_TYPE AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = 'LEISURE'
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="getLeisurePlaces" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getLeisurePlaces" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -144,27 +144,27 @@
 		       FIRST_IMAGE AS firstImage,
 		       LIKE_COUNT AS likeCount,
 		       PLACE_TYPE AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = 'LEISURE'
 	</select>
 
 	<update id="setCounting" parameterType="string">
-		UPDATE PLACE
+		UPDATE place
 		SET LIKE_COUNT = LIKE_COUNT + 1
 		WHERE PLACE_ID = #{value}
 	</update>
 
-	<select id="getPlaceById" parameterType="string" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceById" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
 		       MAPX,
 		       MAPY
-		FROM PLACE
+		FROM place
 		WHERE PLACE_ID = #{value}
 	</select>
 
-	<resultMap id="visitItemResult" type="com.letsgo.place.model.vo.VisitItemVO">
+	<resultMap id="visitItemResult" type="com.travel.letsgospringboot.placeMapper.vo.VisitItemVO">
 		<result property="visitOrder" column="VISIT_ORDER"/>
 		<result property="distanceToNext" column="DISTANCE_TO_NEXT"/>
 		<result property="placeId" column="PLACE_ID"/>
@@ -172,25 +172,25 @@
 
 	<select id="getVisitItemsByScheduleId" parameterType="string" resultMap="visitItemResult">
 		SELECT VISIT_ORDER,
-		       NVL(DISTANCE_TO_NEXT, 0) AS DISTANCE_TO_NEXT,
+		       IFNULL(DISTANCE_TO_NEXT, 0) AS DISTANCE_TO_NEXT,
 		       PLACE_ID
-		FROM VISIT_ITEM
+		FROM visit_item
 		WHERE SCHEDULE_ID = #{value}
 		ORDER BY VISIT_ORDER ASC
 	</select>
 
-	<select id="getPlaceByPlaceId" parameterType="string" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="getPlaceByPlaceId" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
 		       MAPX,
 		       MAPY
-		FROM PLACE
+		FROM place
 		WHERE PLACE_ID = #{value}
 	</select>
 
 	
-	<select id="searchPlacesOrderByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -199,12 +199,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesOrderByLike" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -213,12 +213,12 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByCategoryOrderByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByCategoryOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -227,13 +227,13 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByCategoryOrderByLike" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByCategoryOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -242,13 +242,13 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByKeywordOrderByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -257,13 +257,13 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByKeywordOrderByLike" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -272,13 +272,13 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByCategoryAndKeywordOrderByTitle" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByCategoryAndKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -287,14 +287,14 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByCategoryAndKeywordOrderByLike" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchPlacesByCategoryAndKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -303,7 +303,7 @@
 		       MAPY,
 		       LIKE_COUNT AS likeCount,
 		       #{placeType} AS placeType
-		FROM PLACE
+		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
@@ -317,7 +317,7 @@
 		- category, keywordPattern 은 선택 (null/빈문자열 → 조건 생략)
 		- orderByLike=true → 좋아요순, 그 외 → 거리순 (둘 다 반경 필터 적용)
 	-->
-	<select id="searchNearbyPlaces" parameterType="map" resultType="com.letsgo.place.model.vo.PlaceVO">
+	<select id="searchNearbyPlaces" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
 		SELECT placeId, title, firstImage, addr1, mapx, mapy, likeCount, placeType
 		FROM (
 			SELECT PLACE_ID AS placeId,
@@ -329,12 +329,12 @@
 			       LIKE_COUNT AS likeCount,
 			       #{placeType} AS placeType,
 			       (6371 * 2 * ASIN(SQRT(
-			           POWER(SIN((TO_NUMBER(MAPY) - TO_NUMBER(#{centerLat})) * 0.017453292519943295 / 2), 2)
-			         + COS(TO_NUMBER(MAPY) * 0.017453292519943295)
-			           * COS(TO_NUMBER(#{centerLat}) * 0.017453292519943295)
-			           * POWER(SIN((TO_NUMBER(MAPX) - TO_NUMBER(#{centerLon})) * 0.017453292519943295 / 2), 2)
+			           POWER(SIN((CAST(MAPY AS DOUBLE) - CAST(#{centerLat} AS DOUBLE)) * 0.017453292519943295 / 2), 2)
+			         + COS(CAST(MAPY AS DOUBLE) * 0.017453292519943295)
+			           * COS(CAST(#{centerLat} AS DOUBLE) * 0.017453292519943295)
+			           * POWER(SIN((CAST(MAPX AS DOUBLE) - CAST(#{centerLon} AS DOUBLE)) * 0.017453292519943295 / 2), 2)
 			       ))) AS distance_km
-			FROM PLACE
+			FROM place
 			WHERE PLACE_TYPE = #{placeType}
 			  AND MAPX IS NOT NULL
 			  AND MAPY IS NOT NULL
@@ -344,7 +344,7 @@
 			<if test="keywordPattern != null and keywordPattern != ''">
 			  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
 			</if>
-		)
+		) AS p
 		WHERE distance_km &lt;= #{radiusKm}
 		<choose>
 			<when test="orderByLike == true">
