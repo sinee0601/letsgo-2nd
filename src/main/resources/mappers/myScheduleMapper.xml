@@ -349,7 +349,7 @@
         WHERE schedule_id = #{myScheduleId}
     </insert>
 
-    <select id="isScheduleOwnedByUser" parameterType="map" resultType="boolean">
+    <select id="isScheduleOwnedByUser" parameterType="map" resultType="int">
         SELECT COUNT(my_schedule_id)
         FROM my_schedule
         WHERE my_schedule_id = #{scheduleId}

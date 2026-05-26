@@ -57,7 +57,7 @@ public interface MyScheduleRepository {
 
     boolean insertMyScheduleRow(String myScheduleId, String title, String userId);
 
-    boolean isScheduleOwnedByUser(String scheduleId, String userId);
+    int isScheduleOwnedByUser(String scheduleId, String userId);
 
     List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId);
 
