@@ -1,5 +1,3 @@
-DROP ALL OBJECTS;
-
 CREATE SEQUENCE seq_users
     START WITH 1
     INCREMENT BY 1
@@ -27,7 +25,7 @@ CREATE SEQUENCE seq_place
 
 CREATE TABLE place
 (
-    place_id    BIGINT       NOT NULL AUTO_INCREMENT,
+    place_id    VARCHAR(50)     NOT NULL ,
     title       VARCHAR(255) NOT NULL,
     addr1       VARCHAR(255),
     addr2       VARCHAR(255),
@@ -99,15 +97,13 @@ CREATE TABLE visit_item
     visit_item_id    VARCHAR(50)  NOT NULL,
     visit_order      INT          NOT NULL,
     distance_to_next DOUBLE,
-    place_id         BIGINT       NOT NULL,
+    place_id         VARCHAR(50)       NOT NULL,
     schedule_id      VARCHAR(50)  NOT NULL,
     schedule_type    VARCHAR(20)  NOT NULL,
     CONSTRAINT pk_visit_item PRIMARY KEY (visit_item_id),
     CONSTRAINT fk_visit_place FOREIGN KEY (place_id) REFERENCES place (place_id),
     CONSTRAINT chk_schedule_type CHECK (schedule_type IN ('SCHEDULE', 'POST'))
 ) DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE visit_item;
 
 CREATE SEQUENCE seq_schedule_share_user
     START WITH 1
@@ -119,7 +115,7 @@ CREATE SEQUENCE seq_schedule_share_user
 
 CREATE TABLE schedule_share_user
 (
-    share_id       BIGINT       NOT NULL AUTO_INCREMENT,
+    share_id       VARCHAR(50)  NOT NULL,
     permission     VARCHAR(10)  NOT NULL,
     my_schedule_id VARCHAR(50)  NOT NULL,
     shared_user_id VARCHAR(50)  NOT NULL,
@@ -127,6 +123,3 @@ CREATE TABLE schedule_share_user
     CONSTRAINT fk_share_schedule FOREIGN KEY (my_schedule_id) REFERENCES my_schedule (my_schedule_id) ON DELETE CASCADE,
     CONSTRAINT fk_share_user FOREIGN KEY (shared_user_id) REFERENCES users (user_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8mb4;
-
-
-DROP ALL OBJECTS;
