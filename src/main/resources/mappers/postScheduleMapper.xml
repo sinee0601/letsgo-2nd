@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="PostSchedule">
+<mapper namespace="com.travel.letsgospringboot.postschedule.repository.PostScheduleRepository">
 
-
-
-    <resultMap id="postScheduleResultMap" type="com.letsgo.place.model.vo.PostScheduleVO">
+    <resultMap id="postScheduleResultMap" type="com.travel.letsgospringboot.postschedule.vo.PostScheduleTO">
         <result property="postId"       column="POST_ID"/>
         <result property="title"        column="POST_TITLE"/>
         <result property="likeCount"    column="LIKE_COUNT"/>
@@ -16,12 +14,12 @@
         <result property="visitOrder"   column="VISIT_ORDER"/>
         <result property="scheduleType" column="SCHEDULE_TYPE"/>
         <result property="placeTitle"   column="PLACE_TITLE"/>
-        <result property="addr1"        column="addr1"/>
+        <result property="addr1"         column="ADDR1"/>
         <result property="firstImage"   column="FIRST_IMAGE"/>
         <result property="placeType"    column="PLACE_TYPE"/>
     </resultMap>
 
-    <resultMap id="routeScheduleResultMap" type="com.letsgo.place.model.vo.RouteScheduleVO">
+    <resultMap id="routeScheduleResultMap" type="com.travel.letsgospringboot.postschedule.vo.RouteScheduleTO">
         <result property="visitId"        column="VISIT_ITEM_ID"/>
         <result property="visitOrder"     column="VISIT_ORDER"/>
         <result property="placeId"        column="PLACE_ID"/>
@@ -30,7 +28,7 @@
         <result property="scheduleType"   column="SCHEDULE_TYPE"/>
     </resultMap>
 
-    <resultMap id="mapScheduleResultMap" type="com.letsgo.place.model.vo.MapScheduleVO">
+    <resultMap id="mapScheduleResultMap" type="com.travel.letsgospringboot.postschedule.vo.MapScheduleTO">
         <result property="visitOrder"      column="VISIT_ORDER"/>
         <result property="title"           column="TITLE"/>
         <result property="mapX"            column="MAPX"/>
@@ -51,16 +49,16 @@
         v.VISIT_ORDER,
         v.SCHEDULE_TYPE,
         pl.TITLE   AS PLACE_TITLE,
-        pl.addr1,
+        pl.ADDR1,
         pl.FIRST_IMAGE,
         pl.PLACE_TYPE
     </sql>
 
     <sql id="postScheduleJoins">
-        FROM SCHEDULE_POST p
-        JOIN VISIT_ITEM v  ON p.POST_ID   = v.SCHEDULE_ID
-        JOIN PLACE      pl ON v.PLACE_ID  = pl.PLACE_ID
-        JOIN USERS      u  ON p.user_id   = u.user_id
+        FROM schedule_post p
+        JOIN visit_item v  ON p.POST_ID   = v.SCHEDULE_ID
+        JOIN place      pl ON v.PLACE_ID  = pl.PLACE_ID
+        JOIN users      u  ON p.user_id   = u.user_id
     </sql>
 
 
@@ -150,7 +148,7 @@
     </select>
 
 
-    <select id="getUserPostScheduleListSearchLike" parameterType="map" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchLike" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListTO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -158,7 +156,7 @@
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchView" parameterType="map" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchView" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListTO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -166,7 +164,7 @@
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchTitle" parameterType="map" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchTitle" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListTO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -174,7 +172,7 @@
         ORDER BY p.title ASC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchLatest" parameterType="map" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchLatest" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListTO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -184,55 +182,55 @@
 
 
     <select id="getBudgetDetail" parameterType="String" resultType="String">
-        SELECT BUDGET_DETAILS FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT BUDGET_DETAILS FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
     <select id="getTodoDetail" parameterType="String" resultType="String">
-        SELECT TODO_DETAILS FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT TODO_DETAILS FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
     <select id="getScheduleRoute" parameterType="String" resultMap="routeScheduleResultMap">
         SELECT v.VISIT_ITEM_ID, v.VISIT_ORDER, p.PLACE_ID, p.TITLE,
                v.DISTANCE_TO_NEXT, v.SCHEDULE_TYPE
-        FROM SCHEDULE_POST sp
-        JOIN VISIT_ITEM v ON sp.POST_ID  = v.SCHEDULE_ID
-        JOIN PLACE      p ON v.PLACE_ID  = p.PLACE_ID
+        FROM schedule_post sp
+        JOIN visit_item v ON sp.POST_ID  = v.SCHEDULE_ID
+        JOIN place      p ON v.PLACE_ID  = p.PLACE_ID
         WHERE sp.POST_ID = #{postId}
         ORDER BY v.VISIT_ORDER ASC
     </select>
 
     <select id="getMapSchedule" parameterType="String" resultMap="mapScheduleResultMap">
         SELECT p.TITLE, v.VISIT_ORDER, p.MAPX, p.MAPY, v.DISTANCE_TO_NEXT
-        FROM SCHEDULE_POST sp
-        JOIN VISIT_ITEM v ON sp.POST_ID = v.SCHEDULE_ID
-        JOIN PLACE      p ON v.PLACE_ID = p.PLACE_ID
+        FROM schedule_post sp
+        JOIN visit_item v ON sp.POST_ID = v.SCHEDULE_ID
+        JOIN place      p ON v.PLACE_ID = p.PLACE_ID
         WHERE sp.POST_ID = #{postId}
         ORDER BY v.VISIT_ORDER ASC
     </select>
 
     <select id="getScheduleTitle" parameterType="String" resultType="String">
-        SELECT TITLE FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT TITLE FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
     <select id="getLikeCount" parameterType="String" resultType="int">
-        SELECT LIKE_COUNT FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT LIKE_COUNT FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
     <select id="getViewCount" parameterType="String" resultType="int">
-        SELECT VIEW_COUNT FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT VIEW_COUNT FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
     <select id="getUserId" parameterType="String" resultType="String">
-        SELECT USER_ID FROM SCHEDULE_POST WHERE POST_ID = #{postId}
+        SELECT USER_ID FROM schedule_post WHERE POST_ID = #{postId}
     </select>
 
 
     <update id="plusLike" parameterType="String">
-        UPDATE SCHEDULE_POST SET LIKE_COUNT = LIKE_COUNT + 1 WHERE POST_ID = #{postId}
+        UPDATE schedule_post SET LIKE_COUNT = LIKE_COUNT + 1 WHERE POST_ID = #{postId}
     </update>
 
     <update id="plusView" parameterType="String">
-        UPDATE SCHEDULE_POST SET VIEW_COUNT = VIEW_COUNT + 1 WHERE POST_ID = #{postId}
+        UPDATE schedule_post SET VIEW_COUNT = VIEW_COUNT + 1 WHERE POST_ID = #{postId}
     </update>
 
 
@@ -246,18 +244,18 @@
     </delete>
 
 
-    <insert id="copyToMySchedule" parameterType="com.letsgo.place.model.dto.CopyToMyScheduleDTO">
+    <insert id="copyToMySchedule" parameterType="com.travel.letsgospringboot.postschedule.vo.CopyToMyScheduleVO">
         <selectKey keyProperty="generatedId" resultType="String" order="BEFORE">
             SELECT CONCAT('SCH', LPAD(NEXT VALUE FOR seq_my_schedule, 3, '0'))
         </selectKey>
-        INSERT INTO MY_SCHEDULE
+        INSERT INTO my_schedule
             (MY_SCHEDULE_ID, TITLE, START_AT, BUDGET_DETAILS, TODO_DETAILS, USER_ID, IS_SHARED)
         VALUES
             (#{generatedId}, #{title}, NOW(), #{budgetDetail}, #{todoDetail}, #{userId}, 0)
     </insert>
 
-    <insert id="copyToVisitItem" parameterType="com.letsgo.place.model.dto.CopyToVisitItemDTO">
-        INSERT INTO VISIT_ITEM
+    <insert id="copyToVisitItem" parameterType="com.travel.letsgospringboot.postschedule.vo.CopyToVisitItemVO">
+        INSERT INTO visit_item
             (VISIT_ITEM_ID, VISIT_ORDER, DISTANCE_TO_NEXT, PLACE_ID, SCHEDULE_ID, SCHEDULE_TYPE)
         VALUES
             (NEXT VALUE FOR seq_visit_item, #{visitOrder}, #{distanceToNext}, #{placeId}, #{myScheduleId}, #{scheduleType})
