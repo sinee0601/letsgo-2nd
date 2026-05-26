@@ -4,6 +4,7 @@ import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
 import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public interface MyScheduleRepository {
 
     boolean isScheduleOwnedByUser(String scheduleId, String userId);
 
-    List<String[]> listMyScheduleIdAndTitle(String userId);
+    List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId);
 
     List<RouteScheduleVO> getScheduleRoute(String scheduleId);
 

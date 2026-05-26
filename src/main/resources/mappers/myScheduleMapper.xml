@@ -16,12 +16,10 @@
     </resultMap>
 
     <resultMap id="routeScheduleResultMap" type="com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO">
-        <constructor>
-            <arg column="visit_item_id" javaType="String"/>
-            <arg column="visit_order" javaType="String"/>
-            <arg column="place_id" javaType="String"/>
-            <arg column="title" javaType="String"/>
-        </constructor>
+        <id column="visit_item_id" property="visitId"/>
+        <result column="visit_order" property="visitOrder"/>
+        <result column="place_id" property="placeId"/>
+        <result column="title" property="title"/>
     </resultMap>
 
     <resultMap id="mapScheduleResultMap" type="com.travel.letsgospringboot.myschedule.vo.MapScheduleVO">
@@ -351,15 +349,16 @@
         WHERE schedule_id = #{myScheduleId}
     </insert>
 
-    <select id="isScheduleOwnedByUser" parameterType="map" resultType="int">
+    <select id="isScheduleOwnedByUser" parameterType="map" resultType="boolean">
         SELECT COUNT(my_schedule_id)
         FROM my_schedule
         WHERE my_schedule_id = #{scheduleId}
           AND user_id = #{userId}
     </select>
 
-    <select id="listMyScheduleIdAndTitle" parameterType="String" resultType="map">
-        SELECT my_schedule_id, title
+    <select id="listMyScheduleIdAndTitle" parameterType="String"
+            resultType="com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO">
+        SELECT my_schedule_id AS myScheduleId, title
         FROM my_schedule
         WHERE user_id = #{userId}
         ORDER BY start_at DESC, my_schedule_id DESC
