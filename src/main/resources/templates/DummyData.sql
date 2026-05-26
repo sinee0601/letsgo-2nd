@@ -176,9 +176,6 @@ INSERT INTO visit_item (visit_item_id, visit_order, distance_to_next, place_id, 
 INSERT INTO visit_item (visit_item_id, visit_order, distance_to_next, place_id, schedule_id, schedule_type) VALUES (NEXT VALUE FOR seq_visit_item, 2, 2, '24', 'P018', 'POST');
 INSERT INTO visit_item (visit_item_id, visit_order, distance_to_next, place_id, schedule_id, schedule_type) VALUES (NEXT VALUE FOR seq_visit_item, 3, 0, '42', 'P018', 'POST');
 
-SELECT * FROM visit_item;
-DELETE FROM visit_item WHERE visit_item_id = 1;
-ALTER SEQUENCE seq_visit_item RESTART WITH 1;
 -- 9. 일정 공유 사용자 (schedule_share_user)
 INSERT INTO schedule_share_user (share_id, permission, my_schedule_id, shared_user_id) VALUES (NEXT VALUE FOR seq_schedule_share_user, 'R', 'S001', 'user02');
 INSERT INTO schedule_share_user (share_id, permission, my_schedule_id, shared_user_id) VALUES (NEXT VALUE FOR seq_schedule_share_user, 'W', 'S002', 'user03');
@@ -191,6 +188,3 @@ INSERT INTO schedule_share_user (share_id, permission, my_schedule_id, shared_us
 INSERT INTO schedule_share_user (share_id, permission, my_schedule_id, shared_user_id) VALUES (NEXT VALUE FOR seq_schedule_share_user, 'W', 'S009', 'user02');
 INSERT INTO schedule_share_user (share_id, permission, my_schedule_id, shared_user_id) VALUES (NEXT VALUE FOR seq_schedule_share_user, 'R', 'S010', 'user04');
 
-
-
-SELECT * FROM schedule_share_user;
