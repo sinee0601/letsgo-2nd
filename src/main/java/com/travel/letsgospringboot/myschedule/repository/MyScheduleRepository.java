@@ -4,10 +4,11 @@ import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
 import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-
-public interface MyScheduleDAO {
+@Mapper
+public interface MyScheduleRepository {
     List<MyScheduleVO> getMyScheduleListAllByDate(String userId);
 
     List<MyScheduleVO> getMyScheduleListAllByTitle(String userId);
