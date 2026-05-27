@@ -4,6 +4,7 @@ import com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository;
 import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,74 +13,168 @@ import java.util.List;
 public class MyScheduleService {
     private final MyScheduleRepository myScheduleRepository;
 
-
-    List<MyScheduleVO> getMyScheduleListAllByDate(String userId){
+    // ===== 단순 위임 =====
+    public List<MyScheduleVO> getMyScheduleListAllByDate(String userId) {
         return myScheduleRepository.getMyScheduleListAllByDate(userId);
-    };
+    }
 
-    List<MyScheduleVO> getMyScheduleListAllByTitle(String userId);
+    public List<MyScheduleVO> getMyScheduleListAllByTitle(String userId) {
+        return myScheduleRepository.getMyScheduleListAllByTitle(userId);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSharedByDate(String userId);
+    public List<MyScheduleVO> getMyScheduleListSharedByDate(String userId) {
+        return myScheduleRepository.getMyScheduleListSharedByDate(userId);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSharedByTitle(String userId);
+    public List<MyScheduleVO> getMyScheduleListSharedByTitle(String userId) {
+        return myScheduleRepository.getMyScheduleListSharedByTitle(userId);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSearchByDate(String userId, String keyword);
+    public List<MyScheduleVO> getMyScheduleListSearchByDate(String userId, String keyword) {
+        return myScheduleRepository.getMyScheduleListSearchByDate(userId, keyword);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSearchByTitle(String userId, String keyword);
+    public List<MyScheduleVO> getMyScheduleListSearchByTitle(String userId, String keyword) {
+        return myScheduleRepository.getMyScheduleListSearchByTitle(userId, keyword);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSearchSharedByDate(String userId, String keyword);
+    public List<MyScheduleVO> getMyScheduleListSearchSharedByDate(String userId, String keyword) {
+        return myScheduleRepository.getMyScheduleListSearchSharedByDate(userId, keyword);
+    }
 
-    List<MyScheduleVO> getMyScheduleListSearchSharedByTitle(String userId, String keyword);
+    public List<MyScheduleVO> getMyScheduleListSearchSharedByTitle(String userId, String keyword) {
+        return myScheduleRepository.getMyScheduleListSearchSharedByTitle(userId, keyword);
+    }
 
-    List<MyScheduleVO> getMyScheduleList(String userId, String keyword, String sortType, boolean sharedFilter);
+    public List<MyScheduleVO> getMyScheduleList(String userId, String keyword, String sortType, boolean sharedFilter) {
+        return myScheduleRepository.getMyScheduleList(userId, keyword, sortType, sharedFilter);
+    }
 
-    boolean setMyScheduleTitle(String title, String myScheduleId, String userId);
+    public boolean setMyScheduleTitle(String title, String myScheduleId, String userId) {
+        return myScheduleRepository.setMyScheduleTitle(title, myScheduleId, userId);
+    }
 
-    boolean setTodoDetail(String scheduleId, String todoDetail);
+    public boolean setTodoDetail(String scheduleId, String todoDetail) {
+        return myScheduleRepository.setTodoDetail(scheduleId, todoDetail);
+    }
 
-    String getTodoDetail(String scheduleId);
+    public String getTodoDetail(String scheduleId) {
+        return myScheduleRepository.getTodoDetail(scheduleId);
+    }
 
-    boolean setBudgetDetail(String scheduleId, String budgetDetail);
+    public boolean setBudgetDetail(String scheduleId, String budgetDetail) {
+        return myScheduleRepository.setBudgetDetail(scheduleId, budgetDetail);
+    }
 
-    String getBudgetDetail(String scheduleId);
+    public String getBudgetDetail(String scheduleId) {
+        return myScheduleRepository.getBudgetDetail(scheduleId);
+    }
 
-    String getScheduleTitle(String scheduleId);
+    public String getScheduleTitle(String scheduleId) {
+        return myScheduleRepository.getScheduleTitle(scheduleId);
+    }
 
-    String getStartAt(String scheduleId);
+    public String getStartAt(String scheduleId) {
+        return myScheduleRepository.getStartAt(scheduleId);
+    }
 
-    boolean setStartAt(String scheduleId, String startAt, String userId);
+    public boolean setStartAt(String scheduleId, String startAt, String userId) {
+        return myScheduleRepository.setStartAt(scheduleId, startAt, userId);
+    }
 
-    boolean insertMyScheduleRow(String myScheduleId, String title, String userId);
+    public boolean insertMyScheduleRow(String myScheduleId, String title, String userId) {
+        return myScheduleRepository.insertMyScheduleRow(myScheduleId, title, userId);
+    }
 
-    int isScheduleOwnedByUser(String scheduleId, String userId);
+    public int isScheduleOwnedByUser(String scheduleId, String userId) {
+        return myScheduleRepository.isScheduleOwnedByUser(scheduleId, userId);
+    }
 
-    List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId);
+    public List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId) {
+        return myScheduleRepository.listMyScheduleIdAndTitle(userId);
+    }
 
-    List<RouteScheduleVO> getScheduleRoute(String scheduleId);
+    public List<RouteScheduleVO> getScheduleRoute(String scheduleId) {
+        return myScheduleRepository.getScheduleRoute(scheduleId);
+    }
 
-    List<MapScheduleVO> getMapSchedule(String scheduleId);
+    public List<MapScheduleVO> getMapSchedule(String scheduleId) {
+        return myScheduleRepository.getMapSchedule(scheduleId);
+    }
 
-    boolean addVisitItem(int visitOrder, String placeId, String scheduleId);
+    public boolean addVisitItem(int visitOrder, String placeId, String scheduleId) {
+        return myScheduleRepository.addVisitItem(visitOrder, placeId, scheduleId);
+    }
 
-    boolean deleteVisitItemById(String visitItemId);
+    public boolean deleteVisitItemById(String visitItemId) {
+        return myScheduleRepository.deleteVisitItemById(visitItemId);
+    }
 
-    boolean addCompanion(String myScheduleId, String sharedUserId);
+    public boolean addCompanion(String myScheduleId, String sharedUserId) {
+        return myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
+    }
 
-    boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
+    public boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission) {
+        return myScheduleRepository.setCompanionPermission(myScheduleId, sharedUserId, permission);
+    }
 
-    List<ColleagueVO> getCompanionList(String myScheduleId);
+    public List<ColleagueVO> getCompanionList(String myScheduleId) {
+        return myScheduleRepository.getCompanionList(myScheduleId);
+    }
+    //트랜잭션 메서드
+    @Transactional
+    public boolean deleteMySchedule(String scheduleId) {
+        myScheduleRepository.deleteVisitItemsByScheduleId(scheduleId);
+        return myScheduleRepository.deleteScheduleById(scheduleId) > 0;
+    }
 
-    boolean deleteMySchedule(String scheduleId);
+    @Transactional
+    public boolean deleteMyScheduleList(String userId, String[] scheduleIds) {
+        boolean allDeleted = scheduleIds.length > 0;
+        for (String id : scheduleIds) {
+            myScheduleRepository.deleteVisitItemsByScheduleId(id);
+            if (myScheduleRepository.deleteScheduleByIdAndUserId(id, userId) <= 0) {
+                allDeleted = false;
+            }
+        }
+        return allDeleted;
+    }
 
-    boolean deleteMyScheduleList(String userId, String[] scheduleIds);
+    @Transactional
+    public boolean setMySchedule(String[] visitItemId, int[] visitOrder, String[] distanceToNext, String scheduleId,
+                                 String scheduleTitle, String startAt, String budgetDetail, String todoDetail,
+                                 String userId, int isShared) {
+        boolean updated = myScheduleRepository.updateSchedule(scheduleId, scheduleTitle, startAt, budgetDetail,
+                todoDetail, isShared, userId) > 0;
+        for (int i = 0; i < visitItemId.length; i++) {
+            myScheduleRepository.updateVisitItem(visitItemId[i], visitOrder[i], distanceToNext[i]);
+        }
+        return updated;
+    }
 
-    boolean setMySchedule(String[] visitItemId, int[] visitOrder, String[] distanceToNext, String scheduleId,
-                          String scheduleTitle, String startAt, String budgetDetail, String todoDetail, String userId, int isShared);
+    @Transactional
+    public boolean updateVisitOrders(String[] visitItemIds, int[] visitOrders, String[] distances) {
+        boolean allUpdated = visitItemIds.length > 0;
+        for (int i = 0; i < visitItemIds.length; i++) {
+            if (myScheduleRepository.updateVisitItem(visitItemIds[i], visitOrders[i], distances[i]) <= 0) {
+                allUpdated = false;
+            }
+        }
+        return allUpdated;
+    }
 
-    boolean updateVisitOrders(String[] visitItemIds, int[] visitOrders, String[] distances);
+    public String allocateNextMyScheduleId() {
+        String candidate;
+        do {
+            candidate = myScheduleRepository.getNextMyScheduleIdCandidate();
+        } while (myScheduleRepository.checkMyScheduleIdExists(candidate) > 0);
+        return candidate;
+    }
 
-    String allocateNextMyScheduleId();
-
-    String shareToPost(String myScheduleId, String userId, int isAnonymous);
-
+    @Transactional
+    public String shareToPost(String myScheduleId, String userId, int isAnonymous) {
+        myScheduleRepository.shareToPostInsert(myScheduleId, userId, isAnonymous);
+        myScheduleRepository.shareVisitItemsToPost(myScheduleId);
+        return myScheduleRepository.getLastPostId();
+    }
 }

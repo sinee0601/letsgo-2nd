@@ -6,10 +6,14 @@ import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+@Repository
 @Mapper
 public interface MyScheduleRepository {
+
+    // ---- 목록 조회 ----
     List<MyScheduleVO> getMyScheduleListAllByDate(String userId);
 
     List<MyScheduleVO> getMyScheduleListAllByTitle(String userId);
@@ -28,13 +32,33 @@ public interface MyScheduleRepository {
 
     List<MyScheduleVO> getMyScheduleList(String userId, String keyword, String sortType, boolean sharedFilter);
 
+    // ---- 삭제 ----
+    int deleteVisitItemsByScheduleId(String scheduleId);
+
+    int deleteScheduleById(String scheduleId);
+
+    int deleteScheduleByIdAndUserId(String scheduleId, String userId);
+
+    boolean deleteVisitItemById(String visitItemId);
+
+    // ---- 수정 ----
+    int updateVisitItem(String visitItemId, int visitOrder, String distanceToNext);
+
+    int updateSchedule(String scheduleId, String scheduleTitle, String startAt, String budgetDetail,
+                       String todoDetail, int isShared, String userId);
+
     boolean setMyScheduleTitle(String title, String myScheduleId, String userId);
 
     boolean setTodoDetail(String scheduleId, String todoDetail);
 
-    String getTodoDetail(String scheduleId);
-
     boolean setBudgetDetail(String scheduleId, String budgetDetail);
+
+    boolean setStartAt(String scheduleId, String startAt, String userId);
+
+    boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
+
+    // ---- 단건 조회 ----
+    String getTodoDetail(String scheduleId);
 
     String getBudgetDetail(String scheduleId);
 
@@ -42,39 +66,31 @@ public interface MyScheduleRepository {
 
     String getStartAt(String scheduleId);
 
-    boolean setStartAt(String scheduleId, String startAt, String userId);
+    String getNextMyScheduleIdCandidate();
 
-    boolean insertMyScheduleRow(String myScheduleId, String title, String userId);
+    int checkMyScheduleIdExists(String id);
+
+    String getLastPostId();
 
     int isScheduleOwnedByUser(String scheduleId, String userId);
 
+    // ---- 삽입 ----
+    boolean insertMyScheduleRow(String myScheduleId, String title, String userId);
+
+    boolean addVisitItem(int visitOrder, String placeId, String scheduleId);
+
+    boolean addCompanion(String myScheduleId, String sharedUserId);
+
+    int shareToPostInsert(String myScheduleId, String userId, int isAnonymous);
+
+    int shareVisitItemsToPost(String myScheduleId);
+
+    // ---- 결과 매핑 조회 ----
     List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId);
 
     List<RouteScheduleVO> getScheduleRoute(String scheduleId);
 
     List<MapScheduleVO> getMapSchedule(String scheduleId);
 
-    boolean addVisitItem(int visitOrder, String placeId, String scheduleId);
-
-    boolean deleteVisitItemById(String visitItemId);
-
-    boolean addCompanion(String myScheduleId, String sharedUserId);
-
-    boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
-
     List<ColleagueVO> getCompanionList(String myScheduleId);
-
-    boolean deleteMySchedule(String scheduleId);
-
-    boolean deleteMyScheduleList(String userId, String[] scheduleIds);
-
-    boolean setMySchedule(String[] visitItemId, int[] visitOrder, String[] distanceToNext, String scheduleId,
-                          String scheduleTitle, String startAt, String budgetDetail, String todoDetail, String userId, int isShared);
-
-    boolean updateVisitOrders(String[] visitItemIds, int[] visitOrders, String[] distances);
-
-    String allocateNextMyScheduleId();
-
-    String shareToPost(String myScheduleId, String userId, int isAnonymous);
-
 }

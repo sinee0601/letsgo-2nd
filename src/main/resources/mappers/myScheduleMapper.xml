@@ -306,6 +306,10 @@
         WHERE my_schedule_id = #{id}
     </select>
 
+    <select id="getLastPostId" resultType="String">
+        SELECT CONCAT('P', LPAD(LASTVAL(seq_schedule_post), 3, '0'))
+    </select>
+
     <insert id="insertMyScheduleRow" parameterType="map">
         INSERT INTO my_schedule (my_schedule_id, title, start_at, user_id, is_shared)
         VALUES (#{myScheduleId}, #{title}, NOW(), #{userId}, 0)

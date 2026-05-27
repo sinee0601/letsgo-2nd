@@ -16,11 +16,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@RequiredArgsConstructor
+
 @Transactional
 public class TestMyScheduleRepository {
-
-    private final MyScheduleRepository myScheduleRepository;
+    @Autowired
+    MyScheduleRepository myScheduleRepository;
 
     @Test
     void testGetMyScheduleListAllByDate() {
