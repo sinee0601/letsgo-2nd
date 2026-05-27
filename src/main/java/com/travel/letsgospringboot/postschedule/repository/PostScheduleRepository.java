@@ -23,10 +23,10 @@ public interface PostScheduleRepository {
     List<PostScheduleTO> getUserPostScheduleListTitle(String userId);
     List<PostScheduleTO> getUserPostScheduleListLatest(String userId);
 
-    List<PostScheduleTO> getUserPostScheduleListSearchLike(UserPostScheduleListTO userPostScheduleListTO);
-    List<PostScheduleTO> getUserPostScheduleListSearchView(UserPostScheduleListTO userPostScheduleListTO);
-    List<PostScheduleTO> getUserPostScheduleListSearchTitle(UserPostScheduleListTO userPostScheduleListTO);
-    List<PostScheduleTO> getUserPostScheduleListSearchLatest(UserPostScheduleListTO userPostScheduleListTO);
+    List<PostScheduleTO> getUserPostScheduleListSearchLike(UserPostScheduleListVO userPostScheduleListVO);
+    List<PostScheduleTO> getUserPostScheduleListSearchView(UserPostScheduleListVO userPostScheduleListVO);
+    List<PostScheduleTO> getUserPostScheduleListSearchTitle(UserPostScheduleListVO userPostScheduleListVO);
+    List<PostScheduleTO> getUserPostScheduleListSearchLatest(UserPostScheduleListVO userPostScheduleListVO);
 
 
     //예산 및 할일 상세 조회

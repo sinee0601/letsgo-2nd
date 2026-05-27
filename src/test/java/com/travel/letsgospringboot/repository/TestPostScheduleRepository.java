@@ -92,25 +92,25 @@ public class TestPostScheduleRepository {
 
     @Test
     void getPostScheduleListLikeUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListTO("user01", "여의도"));
+        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListViewUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListTO("user01", "여의도"));
+        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListTitleUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListTO("user01", "여의도"));
+        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLatestUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListTO("user01", "여의도"));
+        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO("user01", "여의도"));
         assertNotNull(list);
     }
 
