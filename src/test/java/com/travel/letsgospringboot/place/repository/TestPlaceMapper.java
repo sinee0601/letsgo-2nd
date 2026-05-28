@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestPlaceMapper {
 
     @Autowired
-    private PlaceDAO placeDAO;
+    private PlaceMapper placeDAO;
 
     // 제목으로 장소 단일 조회 테스트
     @Test

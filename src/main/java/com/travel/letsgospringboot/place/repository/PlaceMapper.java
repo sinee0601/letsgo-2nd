@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface PlaceDAO {
+public interface PlaceMapper {
 
     PlaceVO getPlaceByTitle(Map<String, Object> params);
 
