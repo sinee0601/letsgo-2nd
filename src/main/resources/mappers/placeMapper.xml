@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.travel.letsgospringboot.placeMapper.repository.PlaceDAO">
+<mapper namespace="com.travel.letsgospringboot.place.repository.PlaceDAO">
 
-	<select id="getPlaceByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -16,7 +16,7 @@
 		  AND TITLE = #{title}
 	</select>
 
-	<select id="getPlaceByCategory" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceByCategory" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -30,7 +30,7 @@
 		  AND LCLSSYSTM3 = #{lclssystm3}
 	</select>
 
-	<select id="getPlaceOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -44,7 +44,7 @@
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="getPlaceOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -58,7 +58,7 @@
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="getPlaceByAddr" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceByAddr" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -73,7 +73,7 @@
 	</select>
 
 	
-	<select id="getPlaceByPlaceIdList" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceByPlaceIdList" parameterType="string" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT #{value} AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -102,7 +102,7 @@
 		  AND PLACE_ID = #{placeId}
 	</select>
 
-	<select id="getPlaces" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaces" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -121,7 +121,7 @@
 		        #{scheduleType})
 	</insert>
 
-	<select id="getLeisurePlacesOrderByLikeDesc" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getLeisurePlacesOrderByLikeDesc" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -135,7 +135,7 @@
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="getLeisurePlaces" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getLeisurePlaces" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -154,7 +154,7 @@
 		WHERE PLACE_ID = #{value}
 	</update>
 
-	<select id="getPlaceById" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceById" parameterType="string" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -164,7 +164,7 @@
 		WHERE PLACE_ID = #{value}
 	</select>
 
-	<resultMap id="visitItemResult" type="com.travel.letsgospringboot.placeMapper.vo.VisitItemVO">
+	<resultMap id="visitItemResult" type="com.travel.letsgospringboot.place.vo.VisitItemVO">
 		<result property="visitOrder" column="VISIT_ORDER"/>
 		<result property="distanceToNext" column="DISTANCE_TO_NEXT"/>
 		<result property="placeId" column="PLACE_ID"/>
@@ -179,7 +179,7 @@
 		ORDER BY VISIT_ORDER ASC
 	</select>
 
-	<select id="getPlaceByPlaceId" parameterType="string" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="getPlaceByPlaceId" parameterType="string" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       ADDR1,
@@ -190,7 +190,7 @@
 	</select>
 
 	
-	<select id="searchPlacesOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -204,7 +204,7 @@
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -218,7 +218,7 @@
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByCategoryOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByCategoryOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -233,7 +233,7 @@
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByCategoryOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByCategoryOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -248,7 +248,7 @@
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -263,7 +263,7 @@
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -278,7 +278,7 @@
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
-	<select id="searchPlacesByCategoryAndKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByCategoryAndKeywordOrderByTitle" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -294,7 +294,7 @@
 		ORDER BY TITLE ASC
 	</select>
 
-	<select id="searchPlacesByCategoryAndKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchPlacesByCategoryAndKeywordOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT PLACE_ID AS placeId,
 		       TITLE,
 		       FIRST_IMAGE AS firstImage,
@@ -317,7 +317,7 @@
 		- category, keywordPattern 은 선택 (null/빈문자열 → 조건 생략)
 		- orderByLike=true → 좋아요순, 그 외 → 거리순 (둘 다 반경 필터 적용)
 	-->
-	<select id="searchNearbyPlaces" parameterType="map" resultType="com.travel.letsgospringboot.placeMapper.vo.PlaceVO">
+	<select id="searchNearbyPlaces" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
 		SELECT placeId, title, firstImage, addr1, mapx, mapy, likeCount, placeType
 		FROM (
 			SELECT PLACE_ID AS placeId,
