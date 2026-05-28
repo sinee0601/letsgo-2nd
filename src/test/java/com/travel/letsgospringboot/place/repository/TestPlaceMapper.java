@@ -1,7 +1,7 @@
-package com.travel.letsgospringboot.placeMapper.repository;
+package com.travel.letsgospringboot.place.repository;
 
-import com.travel.letsgospringboot.placeMapper.vo.PlaceVO;
-import com.travel.letsgospringboot.placeMapper.vo.VisitItemVO;
+import com.travel.letsgospringboot.place.vo.PlaceVO;
+import com.travel.letsgospringboot.place.vo.VisitItemVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

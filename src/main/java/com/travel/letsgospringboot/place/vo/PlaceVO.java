@@ -1,4 +1,4 @@
-package com.travel.letsgospringboot.placeMapper.vo;
+package com.travel.letsgospringboot.place.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
