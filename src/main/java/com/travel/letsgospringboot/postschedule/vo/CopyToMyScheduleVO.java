@@ -2,7 +2,6 @@ package com.travel.letsgospringboot.postschedule.vo;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder
