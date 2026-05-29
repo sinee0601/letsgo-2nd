@@ -16,7 +16,7 @@ public class TestUserRepository {
 
     @Test
     void login_correctCredentials_returnsUserVO() {
-        UserVO user = userRepository.login(new UserVO("user03", null, null, "pass789"));
+        UserVO user = userRepository.login(new UserVO("user01", null, null, "pass123"));
         assertNotNull(user);
         assertNotNull(user.getName());
         assertNotNull(user.getEmail());
