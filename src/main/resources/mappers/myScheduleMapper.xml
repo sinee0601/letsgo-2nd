@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="myScheduleMapper">
+<mapper namespace="com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository">
 
     <resultMap id="myScheduleResultMap" type="com.travel.letsgospringboot.myschedule.vo.MyScheduleVO">
         <constructor>
@@ -15,16 +15,14 @@
         </constructor>
     </resultMap>
 
-    <resultMap id="routeScheduleResultMap" type="com.letsgo.place.model.vo.MyScheduleVO">
-        <constructor>
-            <arg column="visit_item_id" javaType="String"/>
-            <arg column="visit_order" javaType="String"/>
-            <arg column="place_id" javaType="String"/>
-            <arg column="title" javaType="String"/>
-        </constructor>
+    <resultMap id="routeScheduleResultMap" type="com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO">
+        <id column="visit_item_id" property="visitId"/>
+        <result column="visit_order" property="visitOrder"/>
+        <result column="place_id" property="placeId"/>
+        <result column="title" property="title"/>
     </resultMap>
 
-    <resultMap id="mapScheduleResultMap" type="com.letsgo.place.model.vo.MyScheduleVO">
+    <resultMap id="mapScheduleResultMap" type="com.travel.letsgospringboot.myschedule.vo.MapScheduleVO">
         <constructor>
             <arg column="visit_order" javaType="String"/>
             <arg column="title" javaType="String"/>
@@ -34,7 +32,7 @@
         </constructor>
     </resultMap>
 
-    <resultMap id="colleagueResultMap" type="com.letsgo.place.model.vo.ColleagueVO">
+    <resultMap id="colleagueResultMap" type="com.travel.letsgospringboot.myschedule.vo.ColleagueVO">
         <constructor>
             <arg column="user_id" javaType="String"/>
             <arg column="name" javaType="String"/>
@@ -308,6 +306,10 @@
         WHERE my_schedule_id = #{id}
     </select>
 
+    <select id="getLastPostId" resultType="String">
+        SELECT CONCAT('P', LPAD(LASTVAL(seq_schedule_post), 3, '0'))
+    </select>
+
     <insert id="insertMyScheduleRow" parameterType="map">
         INSERT INTO my_schedule (my_schedule_id, title, start_at, user_id, is_shared)
         VALUES (#{myScheduleId}, #{title}, NOW(), #{userId}, 0)
@@ -358,8 +360,9 @@
           AND user_id = #{userId}
     </select>
 
-    <select id="listMyScheduleIdAndTitle" parameterType="String" resultType="map">
-        SELECT my_schedule_id, title
+    <select id="listMyScheduleIdAndTitle" parameterType="String"
+            resultType="com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO">
+        SELECT my_schedule_id AS myScheduleId, title
         FROM my_schedule
         WHERE user_id = #{userId}
         ORDER BY start_at DESC, my_schedule_id DESC
