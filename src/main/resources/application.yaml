@@ -3,9 +3,13 @@ spring:
     name: letsgo-springboot
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://43.203.228.33:3306/mydb
-    username: mydbid
-    password: mydbpw
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 mybatis:
+  mapper-locations: classpath:mappers/*.xml
+
+server:
+  port: 5531
   mapper-locations: classpath:mappers/myScheduleMapper.xml
