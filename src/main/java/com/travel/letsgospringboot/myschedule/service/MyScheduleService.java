@@ -13,7 +13,6 @@ import java.util.List;
 public class MyScheduleService {
     private final MyScheduleRepository myScheduleRepository;
 
-    // ===== 단순 위임 =====
     public List<MyScheduleVO> getMyScheduleListAllByDate(String userId) {
         return myScheduleRepository.getMyScheduleListAllByDate(userId);
     }
@@ -44,10 +43,6 @@ public class MyScheduleService {
 
     public List<MyScheduleVO> getMyScheduleListSearchSharedByTitle(String userId, String keyword) {
         return myScheduleRepository.getMyScheduleListSearchSharedByTitle(userId, keyword);
-    }
-
-    public List<MyScheduleVO> getMyScheduleList(String userId, String keyword, String sortType, boolean sharedFilter) {
-        return myScheduleRepository.getMyScheduleList(userId, keyword, sortType, sharedFilter);
     }
 
     public boolean setMyScheduleTitle(String title, String myScheduleId, String userId) {
@@ -121,7 +116,7 @@ public class MyScheduleService {
     public List<ColleagueVO> getCompanionList(String myScheduleId) {
         return myScheduleRepository.getCompanionList(myScheduleId);
     }
-    //트랜잭션 메서드
+
     @Transactional
     public boolean deleteMySchedule(String scheduleId) {
         myScheduleRepository.deleteVisitItemsByScheduleId(scheduleId);
