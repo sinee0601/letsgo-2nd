@@ -1,0 +1,23 @@
+### 호스트 주소 설정 (로컬 서버)
+@host = http://localhost:8080
+
+### 1. 레저 스포츠 페이지 테스트 (기본값)
+GET {{host}}/places/leisure
+
+### 2. 레저 스포츠 페이지 조건 검색 및 정렬 (카테고리: LS010200, 인기순)
+GET {{host}}/places/leisure?category=LS010200&keyword=서울&sortOrder=popular
+
+### 3. 음식점 페이지 테스트 (기본값)
+GET {{host}}/places/restaurant
+
+### 4. 음식점 페이지 조건 검색 및 정렬 (한식, 인기순)
+GET {{host}}/places/restaurant?category=FD010100&keyword=서울&sortOrder=popular
+
+### 5. 숙박 페이지 테스트 (기본값)
+GET {{host}}/places/stay
+
+### 6. 숙박 페이지 조건 검색 및 정렬 (호텔, 이름순)
+GET {{host}}/places/stay?category=AC010100&keyword=서울&sortOrder=name
+
+### 7. 좋아요 비동기(AJAX) 통신 테스트 (성공 시 JSON 반환)
+GET {{host}}/placeLikeAjax?placeId=1&placeType=LEISURE
