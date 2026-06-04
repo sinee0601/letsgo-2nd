@@ -1,16 +1,13 @@
 package com.travel.letsgospringboot.myschedule.controller;
 
 import com.travel.letsgospringboot.myschedule.service.MyScheduleService;
-import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
-import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
-import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
-import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
+import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/myschedule")
@@ -20,29 +17,12 @@ public class MyScheduleController {
     private final MyScheduleService myScheduleService;
 
     @GetMapping("/list")
-    @ResponseBody
-    public Collection getMyScheduleList(@RequestParam(name = "userId", required = true) String userId,
-                                        @RequestBody SearchRequest searchRequest) {
-        boolean isSortTitle = searchRequest.getSortType().equals("title");
-        boolean hasKeyword = !searchRequest.getSearchTitle().isEmpty();
-        if (searchRequest.isShared()) {
-            if (hasKeyword) {
-                return isSortTitle
-                        ? myScheduleService.getMyScheduleListSearchSharedByTitle(userId, searchRequest.getSearchTitle())
-                        : myScheduleService.getMyScheduleListSearchSharedByDate(userId, searchRequest.getSearchTitle());
-            }
-            return isSortTitle
-                    ? myScheduleService.getMyScheduleListSharedByTitle(userId)
-                    : myScheduleService.getMyScheduleListSharedByDate(userId);
-        }
-        if (hasKeyword) {
-            return isSortTitle
-                    ? myScheduleService.getMyScheduleListSearchByTitle(userId, searchRequest.getSearchTitle())
-                    : myScheduleService.getMyScheduleListSearchByDate(userId, searchRequest.getSearchTitle());
-        }
-        return isSortTitle
-                ? myScheduleService.getMyScheduleListAllByTitle(userId)
-                : myScheduleService.getMyScheduleListAllByDate(userId);
+    public String mySchedule(Model model, @SessionAttribute(name = "userId", required = false) String userId) {
+        userId = "user01";
+
+        model.addAttribute("myScheduleList", myScheduleService.getMyScheduleListAllByTitle(userId));
+
+        return "myScheduleList";
     }
 
     @GetMapping("/idAndTitle")
