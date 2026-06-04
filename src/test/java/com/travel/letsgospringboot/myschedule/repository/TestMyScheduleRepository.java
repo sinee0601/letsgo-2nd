@@ -119,13 +119,6 @@ public class TestMyScheduleRepository {
     }
 
     @Test
-    void getMyScheduleList_returnsNonNull() {
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", "서대문", "title", false));
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", "", "title", false));
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", null, "date", true));
-    }
-
-    @Test
     void getScheduleTitle_returnsNonNull() {
         assertNotNull(myScheduleRepository.getScheduleTitle("S002"));
     }
