@@ -108,10 +108,10 @@ public class MyScheduleController {
 
     @PostMapping
     @ResponseBody
-    public boolean insertMyScheduleRow(@RequestParam String myScheduleId,
+    public boolean addMySchedule(@RequestParam String myScheduleId,
                                        @RequestParam String title,
                                        @RequestParam String userId) {
-        return myScheduleService.insertMyScheduleRow(myScheduleId, title, userId);
+        return myScheduleService.addMySchedule(myScheduleId, title, userId);
     }
 
     @PostMapping("/visit")

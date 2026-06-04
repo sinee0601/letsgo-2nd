@@ -3,18 +3,22 @@ package com.travel.letsgospringboot.myschedule.service;
 import com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository;
 import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MyScheduleService {
     private final MyScheduleRepository myScheduleRepository;
 
     public List<MyScheduleVO> getMyScheduleListAllByDate(String userId) {
-        return myScheduleRepository.getMyScheduleListAllByDate(userId);
+        List<MyScheduleVO> result = myScheduleRepository.getMyScheduleListAllByDate(userId);
+        log.info(result.toString());
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListAllByTitle(String userId) {
@@ -77,8 +81,8 @@ public class MyScheduleService {
         return myScheduleRepository.setStartAt(scheduleId, startAt, userId);
     }
 
-    public boolean insertMyScheduleRow(String myScheduleId, String title, String userId) {
-        return myScheduleRepository.insertMyScheduleRow(myScheduleId, title, userId);
+    public boolean addMySchedule(String myScheduleId, String title, String userId) {
+        return myScheduleRepository.addMySchedule(myScheduleId, title, userId);
     }
 
     public int isScheduleOwnedByUser(String scheduleId, String userId) {

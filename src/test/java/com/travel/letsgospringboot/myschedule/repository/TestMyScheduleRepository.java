@@ -5,7 +5,6 @@ import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -202,7 +201,7 @@ public class TestMyScheduleRepository {
 
     @Test
     void insertMyScheduleRow_returnsTrue() {
-        assertTrue(myScheduleRepository.insertMyScheduleRow("S999", "테스트 일정", "user01"));
+        assertTrue(myScheduleRepository.addMySchedule("S999", "테스트 일정", "user01"));
     }
 
     @Test

@@ -178,30 +178,6 @@
         ORDER BY sch_title ASC, visit_order ASC
     </select>
 
-    <select id="getMyScheduleList" parameterType="map" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId}
-        <if test="sharedFilter == true">AND s.is_shared = 1</if>
-        <if test="keyword != null and keyword != ''">
-            AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
-        </if>
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId}
-        <if test="keyword != null and keyword != ''">
-            AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
-        </if>
-        <choose>
-            <when test="sortType == 'title'">ORDER BY sch_title ASC, visit_order ASC</when>
-            <otherwise>ORDER BY start_at DESC, visit_order ASC</otherwise>
-        </choose>
-    </select>
-
     <delete id="deleteVisitItemsByScheduleId" parameterType="String">
         DELETE
         FROM visit_item
@@ -310,7 +286,7 @@
         SELECT CONCAT('P', LPAD(LASTVAL(seq_schedule_post), 3, '0'))
     </select>
 
-    <insert id="insertMyScheduleRow" parameterType="map">
+    <insert id="addMySchedule" parameterType="map">
         INSERT INTO my_schedule (my_schedule_id, title, start_at, user_id, is_shared)
         VALUES (#{myScheduleId}, #{title}, NOW(), #{userId}, 0)
     </insert>
