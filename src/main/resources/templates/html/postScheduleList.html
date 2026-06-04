@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" th:href="@{/css/myScheduleList.css}">
+    <script th:src="@{/js/postScheduleList.js}" defer></script>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <main>
+        <div class="content-container">
+            <div class="content-left">
+                <div class="search-area">
+                    <form method="post" action="controller">
+                        <input type="hidden" name="cmd" value="${param.cmd == 'postScheduleListUI' ? 'postScheduleListUI' : 'postScheduleMyListUI'}">
+                        <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" name = "searchTitle" th:text ="${param.searchTitle}" />
+                        <button type="submit" >
+                            검색하기
+                        </button>
+                        <div class="sort-area">
+                            <select name="sortOrder" value="${param.sortOrder}">
+                                <option value="latest" ${param.sortOrder == 'latest' ? 'selected' : ''}>날짜순</option>
+                                <option value="title" ${param.sortOrder == 'title' ? 'selected' : ''}>이름순</option>
+                                <option value="like" ${param.sortOrder == 'like' ? 'selected' : ''}>좋아요순</option>
+                                <option value="view" ${param.sortOrder == 'view' ? 'selected' : ''}>조회순</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="edit-area">
+                    <button><a href="controller?cmd=myScheduleListUI">내 일정 공유</a></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <figure class="figure" th:each="postSchedule : ${list}">
+                    <div th:text="${postSchedule.title}">
+                        일정제목
+                    </div>
+
+                    <a th:href="@{'/postschedule/' + ${postSchedule.postId} + '/route'}" class="box-placeholder">
+                        <img th:src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder">
+                    </a>
+
+                    <figcaption class="figure-caption" th:text="${postSchedule.placeTitle}">장소명</figcaption>
+
+                    <div>
+                        <button type="button" class="like-btn" data-postId="${postSchedule.postId}">
+                            <h1>❤️</h1>
+                        </button>
+                        <span>좋아요 : <span class="like-Count" th:text="${postSchedule.likeCount}">0</span></span>
+                        <span>&ensp;</span>
+
+                    </div>
+                    <div>
+                        <span>조회수 : <span th:text="${postSchedule.viewCount}">0</span></span>
+                    </div>
+
+                    <div>
+                	<span>📍<span th:text="${#strings.substring(postSchedule.addr1,0,10)}">
+                		주우우우소
+                        </span>
+                	</span>
+                        <span>
+
+                    </span>
+                    </div>
+                <div>👤 <span th:text="${postSchedule.isAnonymous == 1 ? '익명' : postSchedule.userName}">이름</span></div>
+                </figure>
+        </div>
+    </main>
+</div>
+</body>
+</html>
