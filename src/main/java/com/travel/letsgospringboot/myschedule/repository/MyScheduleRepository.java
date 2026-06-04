@@ -30,8 +30,6 @@ public interface MyScheduleRepository {
 
     List<MyScheduleVO> getMyScheduleListSearchSharedByTitle(String userId, String keyword);
 
-    List<MyScheduleVO> getMyScheduleList(String userId, String keyword, String sortType, boolean sharedFilter);
-
     // ---- 삭제 ----
     int deleteVisitItemsByScheduleId(String scheduleId);
 
@@ -75,7 +73,7 @@ public interface MyScheduleRepository {
     int isScheduleOwnedByUser(String scheduleId, String userId);
 
     // ---- 삽입 ----
-    boolean insertMyScheduleRow(String myScheduleId, String title, String userId);
+    boolean addMySchedule(String myScheduleId, String title, String userId);
 
     boolean addVisitItem(int visitOrder, String placeId, String scheduleId);
 

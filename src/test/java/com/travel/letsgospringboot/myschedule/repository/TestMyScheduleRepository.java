@@ -5,7 +5,6 @@ import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -120,13 +119,6 @@ public class TestMyScheduleRepository {
     }
 
     @Test
-    void getMyScheduleList_returnsNonNull() {
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", "서대문", "title", false));
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", "", "title", false));
-        assertNotNull(myScheduleRepository.getMyScheduleList("user01", null, "date", true));
-    }
-
-    @Test
     void getScheduleTitle_returnsNonNull() {
         assertNotNull(myScheduleRepository.getScheduleTitle("S002"));
     }
@@ -202,7 +194,7 @@ public class TestMyScheduleRepository {
 
     @Test
     void insertMyScheduleRow_returnsTrue() {
-        assertTrue(myScheduleRepository.insertMyScheduleRow("S999", "테스트 일정", "user01"));
+        assertTrue(myScheduleRepository.addMySchedule("S999", "테스트 일정", "user01"));
     }
 
     @Test
