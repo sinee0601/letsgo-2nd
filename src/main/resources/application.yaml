@@ -3,7 +3,8 @@ spring:
     name: letsgo-springboot
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://43.203.228.33:3306/mydb
+   # url: jdbc:mariadb://43.203.228.33:3306/mydb
+    url: jdbc:mariadb://127.0.0.1:3306/mydb
     username: mydbid
     password: mydbpw
 

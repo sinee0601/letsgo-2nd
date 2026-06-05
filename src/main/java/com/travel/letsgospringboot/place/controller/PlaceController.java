@@ -28,8 +28,7 @@ public class PlaceController {
 
 
     @GetMapping("/places/leisure")
-    public String leisurePage(
-            Model model,
+    public String leisurePage(Model model,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder) {
@@ -43,8 +42,6 @@ public class PlaceController {
 
         return "placeview/html/leisure";
     }
-
-
 
 
     @GetMapping("/places/restaurant")

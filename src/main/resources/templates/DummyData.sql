@@ -10,7 +10,7 @@ INSERT INTO USERS (USER_ID, EMAIL, NAME, PASSWORD) VALUES ('user08', '윤@test.c
 INSERT INTO USERS (USER_ID, EMAIL, NAME, PASSWORD) VALUES ('user09', '장@test.com', '장동건', 'pass567');
 INSERT INTO USERS (USER_ID, EMAIL, NAME, PASSWORD) VALUES ('user10', '임@test.com', '임나나', 'pass890');
 
---2
+
 -- LEISURE (1~20)
 INSERT INTO PLACE VALUES ('1', '북한산 자락길', '서울특별시 서대문구 홍은동', NULL, '126.9429290191', '37.5948003229', 'http://tong.visitkorea.or.kr/cms/resource/43/2405143_image2_1.jpg', 0, 'LEISURE', 'LS', 'LS01', 'LS011900');
 INSERT INTO PLACE VALUES ('2', '여의나루역 러너스테이션', '서울특별시 영등포구 여의동로 350 (여의도동)', NULL, '126.9316013762', '37.5282689639', 'http://tong.visitkorea.or.kr/cms/resource/04/3413104_image2_1.png', 0, 'LEISURE', 'VE', 'VE10', 'VE100200');

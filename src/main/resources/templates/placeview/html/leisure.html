@@ -145,7 +145,8 @@
 
 					<button type="button" class="like-btn"
 					        th:data-place-id="${place.placeId}"
-					        data-place-type="LEISURE">
+					        data-place-type="LEISURE"
+					        th:data-like-url="@{/placeLikeAjax}">
 						<h1>❤️</h1>
 					</button>
 					<div class="like-count" th:id="'likeCount-' + ${place.placeId}" th:text="'좋아요: ' + ${place.likeCount}">좋아요: 0</div>
@@ -158,61 +159,14 @@
 			</div>
 
 			<div class="button-container">
-				<button type="button" id="restaurant"> 음식점 => </button>
-				<button type="button" id="stay"> 숙박 => </button>
+				<button type="button" id="restaurant" th:onclick="|location.href='@{/places/restaurant}'|"> 음식점 => </button>
+				<button type="button" id="stay" th:onclick="|location.href='@{/places/stay}'|"> 숙박 => </button>
 			</div>
 		</main>
 	</div>
 </form>
 
-<script type="text/javascript" th:inline="javascript">
-
-	window.onload = function(){
-		document.querySelector("#restaurant").onclick = function(){
-
-			window.location.href = /*[[@{/places/restaurant}]]*/ '/LetsGo/controller?cmd=restaurantUI';
-		}
-
-		document.querySelector("#stay").onclick = function(){
-			window.location.href = /*[[@{/places/stay}]]*/ '/LetsGo/controller?cmd=stayUI';
-		}
-	}
-
-	let likeBtns = document.querySelectorAll(".like-btn");
-
-	for (let i = 0; i < likeBtns.length; i++) {
-		likeBtns[i].onclick = function () {
-
-			let placeId = this.getAttribute("data-place-id");
-			let placeType = this.getAttribute("data-place-type");
-			if (placeType == null || placeType == "") {
-				placeType = "LEISURE";
-			}
-
-			let xhr = new XMLHttpRequest();
-
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						let parsed = JSON.parse(xhr.responseText);
-
-						if (parsed.result == "success") {
-							document.getElementById("likeCount-" + placeId)
-									.innerText = "좋아요: " + parsed.likeCount;
-						} else {
-							alert("로그인이 필요합니다.");
-						}
-					}
-				}
-			};
-
-			const requestUrl = /*[[@{/placeLikeAjax}]]*/ '/LetsGo/placeLikeAjax';
-			xhr.open("GET", requestUrl + "?placeId=" + placeId + "&placeType=" + placeType, true);
-
-			xhr.send(null);
-		};
-	}
-</script>
+<script th:src="@{/view/js/place-like.js}"></script>
 
 
 <div id="locked-cart-data" style="display: none;">
@@ -235,7 +189,8 @@
 
 
 
-<script src="/LetsGo/common/floating-cart.js"></script>
+<script th:src="/LetsGo/common/floating-cart.js"></script>
+
 
 </body>
 </html>
