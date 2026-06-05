@@ -128,23 +128,23 @@ public class MyScheduleService {
     public List<MapScheduleVO> getMapSchedule(String scheduleId) {
         return myScheduleRepository.getMapSchedule(scheduleId);
     }
-
+    @Transactional
     public boolean addVisitItem(int visitOrder, String placeId, String scheduleId) {
         return myScheduleRepository.addVisitItem(visitOrder, placeId, scheduleId);
     }
-
+    @Transactional
     public boolean deleteVisitItemById(String visitItemId) {
         return myScheduleRepository.deleteVisitItemById(visitItemId);
     }
-
+    @Transactional
     public boolean addCompanion(String myScheduleId, String sharedUserId) {
         return myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
     }
-
+    @Transactional
     public boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission) {
         return myScheduleRepository.setCompanionPermission(myScheduleId, sharedUserId, permission);
     }
-
+    @Transactional
     public List<ColleagueVO> getCompanionList(String myScheduleId) {
         return myScheduleRepository.getCompanionList(myScheduleId);
     }

@@ -25,6 +25,16 @@ public class MyScheduleController {
         return "myScheduleList";
     }
 
+    @GetMapping("/detail/{scheduleId}")
+    public String myScheduleDetail(Model model, @PathVariable String scheduleId) {
+        model.addAttribute("scheduleTitle", myScheduleService.getScheduleTitle(scheduleId));
+        model.addAttribute("startAt", myScheduleService.getStartAt(scheduleId));
+        model.addAttribute("scheduleRoute", myScheduleService.getScheduleRoute(scheduleId));
+        model.addAttribute("budgetDetail", myScheduleService.getBudgetDetail(scheduleId));
+        model.addAttribute("todoDetail", myScheduleService.getTodoDetail(scheduleId));
+        return "myScheduleDetail";
+    }
+
     @GetMapping("/idAndTitle")
     @ResponseBody
     public List<ScheduleSummaryVO> listMyScheduleIdAndTitle(@RequestParam String userId) {
@@ -43,17 +53,6 @@ public class MyScheduleController {
         return myScheduleService.getScheduleTitle(scheduleId);
     }
 
-    @GetMapping("/detail/{scheduleId}/todo")
-    @ResponseBody
-    public String getTodoDetail(@PathVariable String scheduleId) {
-        return myScheduleService.getTodoDetail(scheduleId);
-    }
-
-    @GetMapping("/detail/{scheduleId}/budget")
-    @ResponseBody
-    public String getBudgetDetail(@PathVariable String scheduleId) {
-        return myScheduleService.getBudgetDetail(scheduleId);
-    }
 
     @GetMapping("/detail/{scheduleId}/startAt")
     @ResponseBody
@@ -132,9 +131,9 @@ public class MyScheduleController {
         return myScheduleService.setTodoDetail(scheduleId, todoDetail);
     }
 
-    @PutMapping("/budget")
+    @PutMapping("/detail/{scheduleId}/budget")
     @ResponseBody
-    public boolean setBudgetDetail(@RequestParam String scheduleId,
+    public boolean setBudgetDetail(@PathVariable String scheduleId,
                                    @RequestParam String budgetDetail) {
         return myScheduleService.setBudgetDetail(scheduleId, budgetDetail);
     }
@@ -192,9 +191,5 @@ public class MyScheduleController {
         return myScheduleService.deleteMyScheduleList(userId, scheduleIds);
     }
 
-    @DeleteMapping("/visit/{visitItemId}")
-    @ResponseBody
-    public boolean deleteVisitItemById(@PathVariable String visitItemId) {
-        return myScheduleService.deleteVisitItemById(visitItemId);
-    }
+
 }

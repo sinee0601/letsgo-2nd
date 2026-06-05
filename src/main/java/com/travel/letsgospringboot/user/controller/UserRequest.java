@@ -1,15 +1,16 @@
-package com.travel.letsgospringboot.user.vo;
+package com.travel.letsgospringboot.user.controller;
 
 import lombok.*;
 
-@Data
+@Setter
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserVO {
+@NoArgsConstructor
+@ToString(exclude = {"password"})
+public class UserRequest {
     private String userID;
     private String email;
     private String name;
     private String password;
-    private String role;
 }

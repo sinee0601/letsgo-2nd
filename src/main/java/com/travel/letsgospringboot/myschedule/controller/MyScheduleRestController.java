@@ -45,4 +45,22 @@ public class MyScheduleRestController {
                 ? myScheduleService.getMyScheduleListAllByTitle(userId)
                 : myScheduleService.getMyScheduleListAllByDate(userId);
     }
+
+    @DeleteMapping("/visit/{visitItemId}")
+    public boolean deleteVisitItemById(@PathVariable String visitItemId) {
+        return myScheduleService.deleteVisitItemById(visitItemId);
+    }
+
+    @PutMapping("/budget")
+    public boolean setBudgetDetail(@RequestParam String scheduleId,
+                                   @RequestParam String budgetDetail) {
+        return myScheduleService.setBudgetDetail(scheduleId, budgetDetail);
+    }
+
+    @PutMapping("/startAt")
+    public boolean setStartAt(@RequestParam String scheduleId,
+                              @RequestParam String startAt,
+                              @RequestParam String userId) {
+        return myScheduleService.setStartAt(scheduleId, startAt, userId);
+    }
 }

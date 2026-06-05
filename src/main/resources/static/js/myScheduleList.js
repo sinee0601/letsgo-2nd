@@ -1,49 +1,45 @@
+const navBtns = document.querySelectorAll(".nav-btn");
+const searchBtn = document.querySelector("#searchPlaces");
+const searchTitleInput = document.querySelector("[name='searchTitle']");
+const sortOrderSelect = document.querySelector("[name='sortOrder']");
+const container = document.querySelector("#scheduleListContainer");
+
 let currentFilter = "all";
 
-document.querySelectorAll(".nav-btn").forEach(btn => {
+navBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        navBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         currentFilter = btn.dataset.filter;
         fetchSchedules();
     });
 });
 
-let searchPlaces = document.querySelector("#searchPlaces");
-if (searchPlaces)
-    searchPlaces.addEventListener("click", fetchSchedules);
+if (searchBtn) searchBtn.addEventListener("click", fetchSchedules);
 
 function fetchSchedules() {
     const userId = "user01";
-    const searchTitle = document.querySelector("[name='searchTitle']")?.value ?? "";
-    const sortOrder = document.querySelector("[name='sortOrder']")?.value ?? "date";
+    const searchTitle = searchTitleInput?.value ?? "";
+    const sortOrder = sortOrderSelect?.value ?? "date";
     const isShared = currentFilter === "shared";
 
     fetch(`/myschedule/api/list?userId=${userId}&searchTitle=${searchTitle}&sortOrder=${sortOrder}&isShared=${isShared}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     })
-        .then(result => {
-            console.log("응답 status:", result.status);
-            return result.json();
-        })
-        .then(data => {
-            console.log("받은 데이터:", data);
-            renderMySchedules(data);
-        })
+        .then(res => res.json())
+        .then(data => renderMySchedules(data))
         .catch(err => console.error("fetch 오류:", err));
 }
 
-
 function renderMySchedules(myScheduleList) {
-    const container = document.querySelector("#scheduleListContainer");
     if (!container) return;
 
     container.innerHTML = myScheduleList.map(item => {
-        const isShared = item.isShared === "1" ? " 👥" : "";
+        const sharedBadge = item.isShared === "1" ? " 👥" : "";
         return `
             <figure class="figure">
-                <div>${item.myScheduleTitle}${isShared}</div>
+                <div>${item.myScheduleTitle}${sharedBadge}</div>
                 <a href="#" class="box-placeholder">
                     <img src="${item.firstImage}" alt="이미지" class="box-placeholder">
                 </a>
