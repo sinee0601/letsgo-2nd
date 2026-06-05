@@ -28,12 +28,12 @@ public class SecurityConfig {
 
         //로그인
         http.formLogin(form
-                        -> form.loginPage("/loginView")
+                        -> form.loginPage("/user/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("userID")
                         .passwordParameter("password")
-                        .failureUrl("/loginView?error=true")
-                        .defaultSuccessUrl("/user")
+                        .failureUrl("/user/login?error=true")
+                        .defaultSuccessUrl("/user/user")
         );
         return http.build();
     }

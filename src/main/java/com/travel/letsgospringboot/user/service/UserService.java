@@ -2,7 +2,6 @@ package com.travel.letsgospringboot.user.service;
 
 import com.travel.letsgospringboot.user.repository.User;
 import com.travel.letsgospringboot.user.repository.UserJpaRepository;
-import com.travel.letsgospringboot.user.repository.UserRepository;
 import com.travel.letsgospringboot.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
