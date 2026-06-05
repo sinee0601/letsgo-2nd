@@ -27,12 +27,12 @@ public class UserController {
     public String user(){
         return "user";
     }
-    @GetMapping("login")
+    @GetMapping("loginView")
     public String loginView(Model model){
         model.addAttribute("message", "처음 로그인 시도");
         return "login";
     }
-    @GetMapping("signUp")
+    @GetMapping("signUpView")
     public String signUpView(){
         return "signUp";
     }
