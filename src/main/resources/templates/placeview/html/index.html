@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+
+	<link rel="stylesheet" th:href="@{/common/floating-cart.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/view/css/index.css(v=2)}">
+	<style>
+		.like-btn {
+			background: none;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 0;
+			transition: transform 0.12s ease, filter 0.12s ease;
+		}
+
+		.like-btn:hover {
+			transform: scale(1.12);
+			filter: brightness(1.05);
+		}
+
+		.like-btn:active {
+			transform: scale(0.9);
+		}
+	</style>
+</head>
+
+<body th:with="so=${(sortOrder != null && sortOrder != '') ? sortOrder : 'distance'}">
+
+	<div th:replace="~{header/html/header :: header}">
+		<p style="padding: 10px; background: #eee; border: 1px solid #ccc; text-align: center;"></p>
+	</div>
+
+	<h1>추천 레저스포츠 리스트</h1>
+
+	<div class="sort-area">
+		<label>
+			<select id="sortOrderSelect" name="sortOrder">
+				<option value="distance" th:selected="${so != 'like'}">전체</option>
+				<option value="like" th:selected="${so == 'like'}">좋아요순</option>
+			</select>
+		</label>
+	</div>
+
+	<div class="container" id="leisurePlaceContainer">
+		<figure class="figure" th:each="place : ${leisurePlaceList}">
+			<th:block th:if="${place.firstImage != null && place.firstImage != ''}">
+				<img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder" />
+			</th:block>
+			<th:block th:unless="${place.firstImage != null && place.firstImage != ''}">
+				<a href="#" class="box-placeholder">이미지 없음</a>
+			</th:block>
+			<figcaption class="figure-caption" th:text="${place.title}">장소제목</figcaption>
+			<span th:text="${place.addr1}">주소</span>
+
+			<button type="button" class="like-btn" th:data-place-id="${place.placeId}" data-place-type="LEISURE">
+				<h1>❤️</h1>
+			</button>
+			<div class="like-count" th:id="'likeCount-' + ${place.placeId}" th:text="'좋아요: ' + ${place.likeCount}">좋아요:
+				0</div>
+
+			<button type="button" class="add-to-cart-btn" th:data-place-id="${place.placeId}"
+				th:data-place-title="${place.title}" th:data-place-type="${place.placeType}">담기</button>
+		</figure>
+	</div>
+
+	</main>
+
+	<div id="session-cart-data" style="display: none;">
+		<div th:each="cartPlace : ${session.placeCartList}" class="session-cart-item"
+			th:data-place-id="${cartPlace.placeId}" th:data-place-title="${cartPlace.title}"
+			th:data-place-type="${cartPlace.placeType}"></div>
+	</div>
+
+
+	<script src="common/floating-cart.js"></script>
+
+
+	<script type="text/javascript">
+		(function () {
+			var apiBase = window.location.origin + "${pageContext.request.contextPath}";
+
+			function renderPlaces(list) {
+				var container = document.getElementById("leisurePlaceContainer");
+				if (!container) {
+					return;
+				}
+				while (container.firstChild) {
+					container.removeChild(container.firstChild);
+				}
+				var frag = document.createDocumentFragment();
+				for (var i = 0; i < list.length; i++) {
+					var p = list[i];
+					var fig = document.createElement("figure");
+					fig.className = "figure";
+					if (p.firstImage && String(p.firstImage).length > 0) {
+						var img = document.createElement("img");
+						img.src = p.firstImage;
+						img.alt = p.title || "";
+						img.className = "box-placeholder";
+						fig.appendChild(img);
+					} else {
+						var a = document.createElement("a");
+						a.href = "#";
+						a.className = "box-placeholder";
+						a.textContent = "이미지";
+						fig.appendChild(a);
+					}
+					var cap = document.createElement("figcaption");
+					cap.className = "figure-caption";
+					cap.textContent = p.title || "";
+					fig.appendChild(cap);
+					fig.appendChild(document.createTextNode(p.addr1 || ""));
+
+					var likeBtn = document.createElement("button");
+					likeBtn.type = "button";
+					likeBtn.className = "like-btn";
+					likeBtn.setAttribute("data-place-id", p.placeId);
+					likeBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
+
+					var h1 = document.createElement("h1");
+					h1.textContent = "❤️";
+					likeBtn.appendChild(h1);
+					fig.appendChild(likeBtn);
+
+					var likeDiv = document.createElement("div");
+					likeDiv.className = "like-count";
+					likeDiv.id = "likeCount-" + p.placeId;
+					likeDiv.textContent = "좋아요: " + p.likeCount;
+					fig.appendChild(likeDiv);
+
+					var cartBtn = document.createElement("button");
+					cartBtn.type = "button";
+					cartBtn.className = "add-to-cart-btn";
+					cartBtn.setAttribute("data-place-id", p.placeId);
+					cartBtn.setAttribute("data-place-title", p.title || "");
+					cartBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
+					cartBtn.textContent = "담기";
+					fig.appendChild(cartBtn);
+					frag.appendChild(fig);
+				}
+				container.appendChild(frag);
+			}
+
+			function requestSort(sortOrder) {
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState !== 4) {
+						return;
+					}
+					if (xhr.status !== 200) {
+						alert("목록 정렬 요청 실패 (HTTP " + xhr.status + ")");
+						return;
+					}
+					var data;
+					try {
+						data = JSON.parse(xhr.responseText);
+					} catch (e) {
+						alert("JSON이 아닙니다.");
+						return;
+					}
+					if (data && data.error === true) {
+						alert(data.message || "목록을 불러오지 못했습니다.");
+						return;
+					}
+					if (!Array.isArray(data)) {
+						alert("목록 형식 오류");
+						return;
+					}
+					renderPlaces(data);
+				};
+				xhr.open("GET", apiBase + "/leisureListAjax?sortOrder=" + encodeURIComponent(sortOrder), true);
+				xhr.send(null);
+			}
+
+			document.getElementById("leisurePlaceContainer").addEventListener("click", function (ev) {
+				var btn = ev.target.closest(".like-btn");
+				if (!btn) {
+					return;
+				}
+				var placeId = btn.getAttribute("data-place-id");
+				var placeType = btn.getAttribute("data-place-type");
+				if (placeType == null || placeType === "") {
+					placeType = "LEISURE";
+				}
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState !== 4) {
+						return;
+					}
+					if (xhr.status === 200) {
+						var parsed;
+						try {
+							parsed = JSON.parse(xhr.responseText);
+						} catch (e) {
+							alert("에러");
+							return;
+						}
+						if (parsed.result === "success") {
+							var el = document.getElementById("likeCount-" + placeId);
+							if (el) {
+								el.innerText = "좋아요: " + parsed.likeCount;
+							}
+						} else {
+							alert("로그인이 필요합니다.");
+						}
+					} else {
+						alert("좋아요 요청 실패 (HTTP " + xhr.status + ").");
+					}
+				};
+				xhr.open("GET", apiBase + "/placeLikeAjax?placeId=" + encodeURIComponent(placeId) + "&placeType=" + encodeURIComponent(placeType), true);
+				xhr.send(null);
+			});
+
+			var sortSel = document.getElementById("sortOrderSelect");
+			if (sortSel) {
+				sortSel.addEventListener("change", function () {
+					requestSort(sortSel.value);
+				});
+			}
+		})();
+	</script>
+</body>
+
+</html>
