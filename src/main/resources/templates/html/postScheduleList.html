@@ -14,7 +14,7 @@
                 <div class="search-area">
                     <form method="post" action="controller">
                         <input type="hidden" name="cmd" value="${param.cmd == 'postScheduleListUI' ? 'postScheduleListUI' : 'postScheduleMyListUI'}">
-                        <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" name = "searchTitle" th:text ="${param.searchTitle}" />
+                        <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" name = "searchTitle" th:text ="${param.searchTitle}" id="title" />
                         <button type="submit" >
                             검색하기
                         </button>
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" id="scheduleListContainer">
             <figure class="figure" th:each="postSchedule : ${list}">
                     <div th:text="${postSchedule.title}">
                         일정제목
