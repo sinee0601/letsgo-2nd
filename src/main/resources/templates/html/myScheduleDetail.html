@@ -19,7 +19,7 @@
         <li><a href="/">홈</a></li>
         <li><a href="/leisureUI">플레이스 조회</a></li>
         <li><a href="/postScheduleListUI">일정게시판</a></li>
-        <li><a href="/myScheduleListUI">내일정</a></li>
+        <li><a href="/myschedule/list">내일정</a></li>
         <li class="user-name">강X회 님</li>
         <li><a href="/logoutAction">로그아웃</a></li>
     </ul>
@@ -30,21 +30,25 @@
     <aside class="sidebar">
 
         <ul>
-            <li><button type="button" class="sidebar-link" data-filter="route">동선관리</button></li>
-            <li><button type="button" class="sidebar-link" data-filter="budget">예산관리</button></li>
-            <li><button type="button" class="sidebar-link" data-filter="todo">To-Do 리스트</button></li>
+            <li>
+                <button type="button" class="sidebar-link" data-filter="route">동선관리</button>
+            </li>
+            <li>
+                <button type="button" class="sidebar-link" data-filter="budget">예산관리</button>
+            </li>
+            <li>
+                <button type="button" class="sidebar-link" data-filter="todo">To-Do 리스트</button>
+            </li>
         </ul>
 
         <div>
             <button type="button" id="dateEditBtn">날짜 수정</button>
             <div id="dateEditForm" style="display:none; margin-top:6px;">
-                <form action="/updateStartAt" method="get">
-                    <input type="date" name="startAt" id="startAtInput" th:value="${startAt}" required/>
-                    <button type="submit">확인</button>
-                    <button type="button" id="dateCancelBtn">취소</button>
-                </form>
+                <input type="date" name="startAt" id="startAtInput" th:value="${startAt}" required/>
+                <button type="button" id="dateConfirmBtn">확인</button>
+                <button type="button" id="dateCancelBtn">취소</button>
             </div>
-            <a class="sidebar-action" href="/myScheduleShareUI">공유하기</a>
+            <button type="button" class="sidebar-action" id="companionBtn">공유하기</button>
             <button type="button" id="deleteBtn">삭제하기</button>
         </div>
     </aside>
@@ -68,7 +72,8 @@
                         <span th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
                         <button type="button"
                                 class="delete-visit-btn"
-                                th:data-visit-id="${item.visitId}">×</button>
+                                th:data-visit-id="${item.visitId}">×
+                        </button>
                     </li>
                 </ul>
 
@@ -134,6 +139,24 @@
         </div>
     </div>
 </template>
+<template id="tpl-companion">
+    <div class="content-right">
+        <div class="memo">
+            <div><h3>동반자 관리</h3></div>
 
+            <div class="invite-row">
+                <input type="text" id="sharedUserIdInput" placeholder="추가할 사용자 ID 입력"/>
+                <button type="button" id="addCompanionBtn" class="save-title-btn">동반자 추가</button>
+            </div>
+
+            <div class="member-list" id="memberList"></div>
+
+            <div class="share-row">
+                <label><input type="checkbox" id="isAnonymousCheck" value="1"/> 익명으로 게시</label>
+                <button type="button" id="shareToPostBtn" class="save-title-btn">게시판에 공유</button>
+            </div>
+        </div>
+    </div>
+</template>
 </body>
 </html>

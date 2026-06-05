@@ -56,4 +56,11 @@ public class MyScheduleRestController {
                                    @RequestParam String budgetDetail) {
         return myScheduleService.setBudgetDetail(scheduleId, budgetDetail);
     }
+
+    @PutMapping("/startAt")
+    public boolean setStartAt(@RequestParam String scheduleId,
+                              @RequestParam String startAt,
+                              @RequestParam String userId) {
+        return myScheduleService.setStartAt(scheduleId, startAt, userId);
+    }
 }

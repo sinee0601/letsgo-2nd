@@ -138,8 +138,6 @@ public class MyScheduleController {
         return myScheduleService.setBudgetDetail(scheduleId, budgetDetail);
     }
 
-
-
     @PutMapping("/startAt")
     @ResponseBody
     public boolean setStartAt(@RequestParam String scheduleId,
