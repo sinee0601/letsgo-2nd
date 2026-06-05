@@ -23,7 +23,7 @@ public class SecurityConfig {
 
         //비로그인
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/", "/loginView", "/signUpView").permitAll()
+                auth.requestMatchers("/", "/user/loginView", "/user/signUpView").permitAll()
                         .anyRequest().authenticated());
 
         //로그인
