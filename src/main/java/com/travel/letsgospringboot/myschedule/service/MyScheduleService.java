@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -16,37 +19,62 @@ public class MyScheduleService {
     private final MyScheduleRepository myScheduleRepository;
 
     public List<MyScheduleVO> getMyScheduleListAllByDate(String userId) {
-        List<MyScheduleVO> result = myScheduleRepository.getMyScheduleListAllByDate(userId);
-        log.info(result.toString());
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListAllByDate(userId));
         return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListAllByTitle(String userId) {
-        return myScheduleRepository.getMyScheduleListAllByTitle(userId);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListAllByTitle(userId));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSharedByDate(String userId) {
-        return myScheduleRepository.getMyScheduleListSharedByDate(userId);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSharedByDate(userId));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSharedByTitle(String userId) {
-        return myScheduleRepository.getMyScheduleListSharedByTitle(userId);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSharedByTitle(userId));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSearchByDate(String userId, String keyword) {
-        return myScheduleRepository.getMyScheduleListSearchByDate(userId, keyword);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSearchByDate(userId, keyword));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSearchByTitle(String userId, String keyword) {
-        return myScheduleRepository.getMyScheduleListSearchByTitle(userId, keyword);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSearchByTitle(userId, keyword));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSearchSharedByDate(String userId, String keyword) {
-        return myScheduleRepository.getMyScheduleListSearchSharedByDate(userId, keyword);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSearchSharedByDate(userId, keyword));
+        return result;
     }
 
     public List<MyScheduleVO> getMyScheduleListSearchSharedByTitle(String userId, String keyword) {
-        return myScheduleRepository.getMyScheduleListSearchSharedByTitle(userId, keyword);
+        List<MyScheduleVO> result = processMyScheduleList(myScheduleRepository.getMyScheduleListSearchSharedByTitle(userId, keyword));
+        return result;
+    }
+
+    private List<MyScheduleVO> processMyScheduleList(List<MyScheduleVO> data) {
+        Map<String, MyScheduleVO> uniqueMap = new LinkedHashMap<>();
+        for (MyScheduleVO vo : data) {
+            if (!uniqueMap.containsKey(vo.getMyScheduleId())) {
+                uniqueMap.put(vo.getMyScheduleId(), vo);
+            } else {
+                MyScheduleVO existingVO = uniqueMap.get(vo.getMyScheduleId());
+                if (existingVO.getFirstImage() == null) {
+                    existingVO.setFirstImage(vo.getFirstImage());
+                }
+                String combinedPlaces = existingVO.getPlaceTitle() + " / " + vo.getPlaceTitle();
+                existingVO.setPlaceTitle(combinedPlaces);
+            }
+        }
+        log.info(data.toString());
+        List<MyScheduleVO> result = new ArrayList<>(uniqueMap.values());
+        return result;
     }
 
     public boolean setMyScheduleTitle(String title, String myScheduleId, String userId) {
@@ -100,23 +128,23 @@ public class MyScheduleService {
     public List<MapScheduleVO> getMapSchedule(String scheduleId) {
         return myScheduleRepository.getMapSchedule(scheduleId);
     }
-
+    @Transactional
     public boolean addVisitItem(int visitOrder, String placeId, String scheduleId) {
         return myScheduleRepository.addVisitItem(visitOrder, placeId, scheduleId);
     }
-
+    @Transactional
     public boolean deleteVisitItemById(String visitItemId) {
         return myScheduleRepository.deleteVisitItemById(visitItemId);
     }
-
+    @Transactional
     public boolean addCompanion(String myScheduleId, String sharedUserId) {
         return myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
     }
-
+    @Transactional
     public boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission) {
         return myScheduleRepository.setCompanionPermission(myScheduleId, sharedUserId, permission);
     }
-
+    @Transactional
     public List<ColleagueVO> getCompanionList(String myScheduleId) {
         return myScheduleRepository.getCompanionList(myScheduleId);
     }
