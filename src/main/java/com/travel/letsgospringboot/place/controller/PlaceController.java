@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PlaceController {
 
-    private PlaceService placeService;
+    private final PlaceService placeService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -48,8 +48,7 @@ public class PlaceController {
 
 
     @GetMapping("/places/restaurant")
-    @ResponseBody
-    public List<PlaceVO> restaurantPage(
+    public String restaurantPage(Model model,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder) {
@@ -57,12 +56,14 @@ public class PlaceController {
         String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
         List<PlaceVO> list = placeService.searchPlaces("RESTAURANT", category, keyword, sortBy);
 
-        return list;
+        model.addAttribute("restaurantPlaceList", list);
+        model.addAttribute("totalCount", list.size());
+
+        return "placeview/html/restaurant";
     }
 
     @GetMapping("/places/stay")
-    @ResponseBody
-    public List<PlaceVO> stayPage(
+    public String stayPage(Model model,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder) {
@@ -70,8 +71,12 @@ public class PlaceController {
         String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
         List<PlaceVO> list = placeService.searchPlaces("STAY", category, keyword, sortBy);
 
-        return list;
+        model.addAttribute("stayPlaceList", list);
+        model.addAttribute("totalCount", list.size());
+
+        return "placeview/html/stay";
     }
+
 
     @GetMapping("/placeLikeAjax")
     @ResponseBody
