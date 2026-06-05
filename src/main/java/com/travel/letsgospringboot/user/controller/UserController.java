@@ -27,14 +27,14 @@ public class UserController {
     public String user(){
         return "user";
     }
-    @GetMapping("loginView")
+    @GetMapping("login")
     public String loginView(Model model){
         model.addAttribute("message", "처음 로그인 시도");
-        return "loginView";
+        return "login";
     }
-    @GetMapping("signUpView")
+    @GetMapping("signUp")
     public String signUpView(){
-        return "signUpView";
+        return "signUp";
     }
     @PostMapping("join")
     public String signUp(UserRequest userRequest){
@@ -44,7 +44,7 @@ public class UserController {
                 .name(userRequest.getName())
                 .password(userRequest.getPassword())
                 .build()))
-            return "redirect:/user/loginView";
-        return "redirect:/user/signUpView";
+            return "redirect:/user/login";
+        return "redirect:/user/signUp";
     }
 }
