@@ -6,9 +6,10 @@ if (sortSelect)
     sortSelect.addEventListener("change", fetchSchedules);
 
 function fetchSchedules(){
+    const userId = document.querySelector("[name='userId']").value;
     const sortOrder = document.querySelector("[name='sortOrder']").value;
     const searchTitle = document.querySelector("[name='searchTitle']").value;
-    fetch(`/postschedule/api/list?sortOrder=${sortOrder}&keyword=${searchTitle}`, {
+    fetch(`/postschedule/api/mylist?userId=${userId}&sortOrder=${sortOrder}&keyword=${searchTitle}`, {
         method: "get",
         headers: {
             "Content-Type": "application/json"
@@ -60,7 +61,7 @@ function renderPostSchedules(postScheduleList) {
                     </div>
                     
                     <div>
-                        👤 ${postSchedule.isAnonymous == 1 ? '익명' : postSchedule.userName}
+                        ${postSchedule.userName}
                     </div>
                 </figure>
         `).join("");
