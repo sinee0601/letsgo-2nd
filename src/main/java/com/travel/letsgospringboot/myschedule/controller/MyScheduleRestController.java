@@ -46,5 +46,14 @@ public class MyScheduleRestController {
                 : myScheduleService.getMyScheduleListAllByDate(userId);
     }
 
+    @DeleteMapping("/visit/{visitItemId}")
+    public boolean deleteVisitItemById(@PathVariable String visitItemId) {
+        return myScheduleService.deleteVisitItemById(visitItemId);
+    }
 
+    @PutMapping("/budget")
+    public boolean setBudgetDetail(@RequestParam String scheduleId,
+                                   @RequestParam String budgetDetail) {
+        return myScheduleService.setBudgetDetail(scheduleId, budgetDetail);
+    }
 }

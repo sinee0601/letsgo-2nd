@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" th:href="@{/css/myScheduleList.css}">
-    <script th:src="@{/js/myScheduleList.js}" defer></script>
     <meta charset="UTF-8"/>
+    <title>내 일정 목록 - Let's GO!</title>
+    <link rel="stylesheet" th:href="@{/css/myScheduleList.css}"/>
+    <script th:src="@{/js/myScheduleList.js}" defer></script>
 </head>
 <body>
 
@@ -22,53 +23,51 @@
         <li><a href="/logoutAction">로그아웃</a></li>
     </ul>
 </header>
-<main>
-    <div class="layout-wrapper">
-        <aside class="sidebar">
-            <nav>
-                <button class="nav-btn active" data-filter="all">전체 일정</button>
-                <button class="nav-btn" data-filter="shared">공유된 일정</button>
-            </nav>
-        </aside>
+<div class="layout-wrapper">
+    <aside class="sidebar">
+        <ul>
+            <li><button type="button" class="nav-btn" data-filter="all">전체 일정</button></li>
+            <li><button type="button" class="nav-btn" data-filter="shared">공유된 일정</button></li>
+        </ul>
+    </aside>
 
-        <div class="main-content">
-            <div class="content-left">
-                <div class="search-area">
-                    <input type="text" placeholder="장소 이름이나 일정 이름을 검색하세요" name="searchTitle"/>
-                    <button type="submit" id="searchPlaces">검색하기</button>
-                    <div class="sort-area">
-                        <select name="sortOrder">
-                            <option value="">날짜순</option>
-                            <option value="title">이름순</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="edit-area">
-                    <button>수정하기</button>
+    <main>
+        <div class="content-left">
+            <div class="search-area">
+                <input type="text" placeholder="장소 이름이나 일정 이름을 검색하세요" name="searchTitle"/>
+                <button type="submit" id="searchPlaces">검색하기</button>
+                <div class="sort-area">
+                    <select name="sortOrder">
+                        <option value="">날짜순</option>
+                        <option value="title">이름순</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="container" id="scheduleListContainer">
-                <div th:each="item : ${myScheduleList}">
-                    <figure class="figure">
-                        <div>
-                            <span th:text="${item.myScheduleTitle}">수영하려 가자</span><br/>
-                            <span th:if="${item.isShared == '1'}">👥 공유중</span>
-                        </div>
-                        <a th:href="@{myScheduleRouteManageUI?myScheduleId=${item.myScheduleId}}">
-                            <img th:src="${item.firstImage}" alt="이미지" class="box-placeholder"/>
-                        </a>
-                        <figcaption class="figure-caption" th:text="${item.placeTitle}">금원 수원 수영장</figcaption>
-                        <div th:text="${#strings.substring(item.startAt, 0, 10)} ">2026-04-16
-                            <span th:text="' 📍'+ ${item.addr1}">📍경기 안양</span>
-                        </div>
-                    </figure>
-                </div>
+            <div class="edit-area">
+                <button>수정하기</button>
             </div>
-
         </div>
-    </div>
-</main>
+
+        <div class="container" id="scheduleListContainer">
+            <a th:each="item : ${myScheduleList}"
+               class="figure-link"
+               th:href="@{/myschedule/detail/{id}(id=${item.myScheduleId})}">
+                <figure class="figure">
+                    <div>
+                        <span th:text="${item.myScheduleTitle}">수영하려 가자</span><br/>
+                        <span th:if="${item.isShared == '1'}">👥 공유중</span>
+                    </div>
+                    <img th:src="${item.firstImage}" alt="이미지" class="box-placeholder"/>
+                    <figcaption class="figure-caption" th:text="${item.placeTitle}">금원 수원 수영장</figcaption>
+                    <div th:text="${#strings.substring(item.startAt, 0, 10)} ">2026-04-16
+                        <span th:text="' 📍'+ ${item.addr1}">📍경기 안양</span>
+                    </div>
+                </figure>
+            </a>
+        </div>
+
+    </main>
+</div>
 
 
 </body>

@@ -18,33 +18,15 @@ body {
 
 aside.sidebar {
     width: 220px;
-    border-right: 1px solid #000;
-    padding: 10px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
 }
 
 aside.sidebar ul {
     list-style: none;
     padding: 0;
-    margin: 0 0 20px 0;
-}
-
-aside.sidebar li {
-    margin-bottom: 10px;
-}
-
-aside.sidebar button {
-    width: 100%;
-    padding: 6px 0;
-    margin-bottom: 10px;
-    border: 1px solid #000;
-    background: transparent;
-    cursor: pointer;
-    font-size: 1rem;
 }
 
 main {
@@ -72,6 +54,12 @@ header {
     display: flex;
     min-height: 0;
     width: 100%;
+}
+
+#contentRight {
+    flex: 6;
+    display: flex;
+    min-width: 0;
 }
 
 .content-left, .content-right {
@@ -266,7 +254,7 @@ header {
 }
 
 .content-left {
-    flex: 1;
+    flex: 4;
     padding: 20px;
     box-sizing: border-box;
     display: flex;
@@ -350,13 +338,9 @@ aside.sidebar a {
     color: inherit;
 }
 
-aside.sidebar button a {
-    display: block;
-    width: 100%;
-    text-align: center;
-}
-
-aside.sidebar button {
+aside.sidebar button,
+aside.sidebar .sidebar-link,
+aside.sidebar .sidebar-action {
     box-sizing: border-box;
     margin: 0;
     padding: 9px 10px;
@@ -368,10 +352,18 @@ aside.sidebar button {
     font-family: inherit;
     color: #222;
     text-align: center;
+    cursor: pointer;
 }
 
-aside.sidebar button:hover {
+aside.sidebar button:hover,
+aside.sidebar .sidebar-link:hover,
+aside.sidebar .sidebar-action:hover {
     background: #fff5eb;
+}
+
+aside.sidebar .sidebar-link.active {
+    background: #ff7a00;
+    color: #fff;
 }
 
 aside.sidebar #deleteBtn {
@@ -410,4 +402,50 @@ button, .save-btn, .save-title-btn {
 input, textarea {
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+
+/* ===== 예산관리 (방문지 항목별) ===== */
+.budget-list {
+    list-style: none;
+    margin: 12px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.budget-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.budget-row .budget-place {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.budget-row .budget-amount {
+    width: 120px;
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    text-align: right;
+}
+
+.budget-row .budget-won {
+    flex: 0 0 auto;
+    color: #666;
+}
+
+.budget-total {
+    margin: 12px 0;
+    text-align: right;
+    font-size: 1.0625rem;
+}
+
+.budget-total strong {
+    color: #ff7a00;
 }
