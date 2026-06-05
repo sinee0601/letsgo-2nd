@@ -6,7 +6,6 @@
     <meta charset="UTF-8"/>
 </head>
 <body>
-<main>
     <header>
         <div class="logo">
             <a href="#" title="Let's GO! 홈">
@@ -15,68 +14,77 @@
         </div>
         <ul class="menu"
             style="list-style: none; display: flex; padding: 0; margin: 0;">
-                <li><a href="">홈</a></li>
-                <li><a href="">플레이스 조회</a></li>
-                <li><a href="">일정게시판</a></li>
-                <li><a href="">내일정</a></li>
+            <li><a href="">홈</a></li>
+            <li><a href="">플레이스 조회</a></li>
+            <li><a href="">일정게시판</a></li>
+            <li><a href="">내일정</a></li>
         </ul>
     </header>
     <div class="layout-wrapper">
+        <aside class="sidebar">
+            <nav>
+                <button class="nav-btn active" data-filter="all">전체 게시물</button>
+                <button class="nav-btn" data-filter="shared">내가 올린 게시물</button>
+            </nav>
+        </aside>
 
         <div class="content-container">
             <div class="content-left">
                 <div class="search-area">
-                        <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" id="searchTitle"/>
-                        <button type="button" id="searchPostSchedule">
-                            검색하기
-                        </button>
-                        <div class="sort-area">
-                            <select id="sortOrder">
-                                <option value="latest">날짜순</option>
-                                <option value="title">이름순</option>
-                                <option value="like">좋아요순</option>
-                                <option value="view">조회순</option>
-                            </select>
-                        </div>
+                    <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" id="searchTitle"/>
+                    <button type="button" id="searchPostSchedule">검색하기</button>
+                    <div class="sort-area">
+                        <select id="sortOrder">
+                            <option value="latest">날짜순</option>
+                            <option value="title">이름순</option>
+                            <option value="like">좋아요순</option>
+                            <option value="view">조회순</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="edit-area">
                     <button><a href="controller?cmd=myScheduleListUI">내 일정 공유</a></button>
                 </div>
             </div>
-        </div>
 
-        <div class="container" id="scheduleListContainer">
-            <figure class="figure" th:each="postSchedule : ${list}">
-                    <div th:text="${postSchedule.title}">일정제목</div>
 
-                    <a th:href="@{'/postschedule/' + ${postSchedule.postId} + '/route'}" class="box-placeholder">
-                        <img th:src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder">
-                    </a>
+            <div class="container" id="scheduleListContainer">
+                <div th:each="postSchedule : ${list}">
+                    <figure class="figure">
+                        <div th:text="${postSchedule.title}">일정제목</div>
 
-                    <figcaption class="figure-caption" th:text="${postSchedule.placeTitle}">장소명</figcaption>
+                        <a th:href="@{'/postschedule/' + ${postSchedule.postId} + '/route'}" class="box-placeholder">
+                            <img th:src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder">
+                        </a>
 
-                    <div>
-                        <button type="button" class="like-btn" data-postId="${postSchedule.postId}">
-                            <h1>❤️</h1>
-                        </button>
-                        <span>좋아요 : <span class="like-Count" th:text="${postSchedule.likeCount}">0</span></span>
-                        <span>&ensp;</span>
+                        <figcaption class="figure-caption" th:text="${postSchedule.placeTitle}">장소명</figcaption>
 
-                    </div>
-                    <div>
-                        <span>조회수 : <span th:text="${postSchedule.viewCount}">0</span></span>
-                    </div>
+                        <div>
+                            <button type="button" class="like-btn" data-postId="${postSchedule.postId}">
+                                <h1>❤️</h1>
+                            </button>
+                            <span>좋아요 : <span class="like-Count" th:text="${postSchedule.likeCount}">0</span></span>
+                            <span>&ensp;</span>
+                        </div>
 
-                    <div>
+                        <div>
+                            <span>조회수 : <span th:text="${postSchedule.viewCount}">0</span></span>
+                        </div>
+
+                        <div>
                 	<span>📍<span th:text="${#strings.substring(postSchedule.addr1,0,10)}">
                 		주우우우소
                         </span>
                 	</span>
-                    </div>
-                <div>👤 <span th:text="${postSchedule.isAnonymous == 1 ? '익명' : postSchedule.userName}">이름</span></div>
-                </figure>
+                        </div>
+                        <div>👤 <span th:text="${postSchedule.isAnonymous == 1 ? '익명' : postSchedule.userName}">이름</span>
+                        </div>
+                    </figure>
+                </div>
+            </div>
         </div>
-    </main>
-</div>
+    </div>
+
+
 </body>
 </html>
