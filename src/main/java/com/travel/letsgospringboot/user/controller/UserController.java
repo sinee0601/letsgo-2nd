@@ -36,7 +36,7 @@ public class UserController {
     public String signUpView(){
         return "signUp";
     }
-    @PostMapping("join")
+    @PostMapping("signUp")
     public String signUp(UserRequest userRequest){
         if (userService.signUp(UserVO.builder()
                 .userID(userRequest.getUserID())
