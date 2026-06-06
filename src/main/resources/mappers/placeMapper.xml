@@ -356,4 +356,9 @@
 		</choose>
 	</select>
 
+	<insert id="insertMySchedule" parameterType="map">
+		INSERT INTO my_schedule (MY_SCHEDULE_ID, TITLE, START_AT, USER_ID)
+		VALUES (#{myScheduleId}, #{title}, #{startAt}, #{userId})
+	</insert>
+
 </mapper>

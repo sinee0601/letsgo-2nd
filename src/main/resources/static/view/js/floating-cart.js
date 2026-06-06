@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
-	var contextPath = '/' + window.location.pathname.split('/')[1];
+	var contextPath = '';
+	var bodyContextPath = document.body.getAttribute("data-context-path");
+	if (bodyContextPath) {
+		contextPath = bodyContextPath.replace(/\/$/, "");
+	} else {
+		var pathname = window.location.pathname;
+		if (pathname.indexOf('/LetsGo') === 0) {
+			contextPath = '/LetsGo';
+		} else {
+			contextPath = '';
+		}
+	}
 
 	fetch(contextPath + '/view/floating-cart.html')
 		.then(function (response) {
@@ -8,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(function (html) {
 			document.body.insertAdjacentHTML('beforeend', html);
 			startFloatingCart(contextPath);
-		})
-		
+		});
 });
 
 function startFloatingCart(contextPath) {

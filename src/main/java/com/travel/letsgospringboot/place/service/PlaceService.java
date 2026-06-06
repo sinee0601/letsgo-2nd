@@ -231,4 +231,14 @@ public class PlaceService {
     public List<PlaceVO> searchNearbyPlaces(Map<String, Object> params) {
         return placeMapper.searchNearbyPlaces(params);
     }
+
+    @Transactional
+    public int insertMySchedule(String myScheduleId, String title, java.time.LocalDateTime startAt, String userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("myScheduleId", myScheduleId);
+        params.put("title", title);
+        params.put("startAt", startAt);
+        params.put("userId", userId);
+        return placeMapper.insertMySchedule(params);
+    }
 }

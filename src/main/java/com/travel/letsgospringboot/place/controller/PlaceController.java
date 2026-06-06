@@ -75,23 +75,4 @@ public class PlaceController {
     }
 
 
-    @GetMapping("/placeLikeAjax")
-    @ResponseBody
-    public Map<String, Object> likePlace(
-            @RequestParam("placeId") String placeId,
-            @RequestParam("placeType") String placeType) {
-
-        Map<String, Object> response = new HashMap<>();
-        try {
-            placeService.setPlaceLikeCount(placeId);
-            int updatedCount = placeService.getPlaceLikeCount(placeType, placeId);
-
-            response.put("result", "success");
-            response.put("likeCount", updatedCount);
-        } catch (Exception e) {
-            response.put("result", "fail");
-        }
-        return response;
-    }
-
 }
