@@ -18,12 +18,11 @@ navBtns.forEach(btn => {
 searchBtn.addEventListener("click", fetchSchedules);
 
 function fetchSchedules() {
-    const userId = "user01";
     const searchTitle = searchTitleInput?.value ?? "";
     const sortOrder = sortOrderSelect?.value ?? "date";
     const isShared = currentFilter === "shared";
 
-    fetch(`/myschedule/api/list?userId=${userId}&searchTitle=${searchTitle}&sortOrder=${sortOrder}&isShared=${isShared}`, {
+    fetch(`/myschedule/api/list?searchTitle=${searchTitle}&sortOrder=${sortOrder}&isShared=${isShared}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     })

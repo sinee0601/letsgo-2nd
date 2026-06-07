@@ -121,7 +121,7 @@ function calcBudgetTotal() {
 function saveBudget() {
     const payload = JSON.stringify({ items: readBudgetItems() });
 
-    fetch(`/myschedule/detail/${scheduleId}/budget`, {
+    fetch(`/myschedule/api/detail/${scheduleId}/budget`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ budgetDetail: payload })
@@ -132,7 +132,7 @@ function saveBudget() {
 }
 
 function saveTodo(todoDetail) {
-    fetch(`/myschedule/todo`, {
+    fetch(`/myschedule/api/todo`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ scheduleId, todoDetail })
@@ -208,7 +208,7 @@ function renderCompanion() {
 }
 
 function loadCompanions() {
-    fetch(`/myschedule/detail/${scheduleId}/companion`)
+    fetch(`/myschedule/api/detail/${scheduleId}/companion`)
         .then(res => res.json())
         .then(renderCompanionList)
         .catch(err => console.error("fetch 오류:", err));
@@ -220,9 +220,9 @@ function renderCompanionList(list) {
     memberList.innerHTML = "";
 
     list.forEach(member => {
-        const row = document.createElement("div");
-        row.className = "member-item";
-        row.innerHTML = `
+        const data = document.createElement("div");
+        data.className = "member-item";
+        data.innerHTML = `
             <span class="member-icon">▣</span>
             <div class="member-info">
                 <span class="member-name"></span>
@@ -234,19 +234,19 @@ function renderCompanionList(list) {
                     <option value="R">읽기 허용</option>
                 </select>
             </div>`;
-        row.querySelector(".member-name").textContent = member.name;
-        row.querySelector(".member-email").textContent = member.email;
+        data.querySelector(".member-name").textContent = member.name;
+        data.querySelector(".member-email").textContent = member.email;
 
-        const select = row.querySelector(".permission-select");
+        const select = data.querySelector(".permission-select");
         select.value = member.permission;
         select.addEventListener("change", () => changePermission(member.userId, select.value));
 
-        memberList.appendChild(row);
+        memberList.appendChild(data);
     });
 }
 
 function addCompanion(sharedUserId) {
-    fetch(`/myschedule/companion`, {
+    fetch(`/myschedule/api/companion`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ myScheduleId: scheduleId, sharedUserId })
@@ -264,7 +264,7 @@ function addCompanion(sharedUserId) {
 }
 
 function changePermission(sharedUserId, permission) {
-    fetch(`/myschedule/companion/permission`, {
+    fetch(`/myschedule/api/companion/permission`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ myScheduleId: scheduleId, sharedUserId, permission })
@@ -275,10 +275,10 @@ function changePermission(sharedUserId, permission) {
 }
 
 function shareToPost(isAnonymous) {
-    fetch(`/myschedule/share`, {
+    fetch(`/myschedule/api/share`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ myScheduleId: scheduleId, userId: "user01", isAnonymous })
+        body: new URLSearchParams({ myScheduleId: scheduleId, isAnonymous })
     })
         .then(res => res.text())
         .then(postId => alert(postId ? `게시판에 공유되었습니다. (글번호: ${postId})` : "공유에 실패했습니다."))
@@ -286,10 +286,10 @@ function shareToPost(isAnonymous) {
 }
 
 function submitTitle(title) {
-    fetch(`/myschedule/title`, {
+    fetch(`/myschedule/api/title`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ title, myScheduleId: scheduleId, userId: "user01" })
+        body: new URLSearchParams({ title, myScheduleId: scheduleId })
     })
         .then(res => res.json())
         .then(ok => alert(ok ? "일정 제목이 수정되었습니다." : "수정에 실패했습니다."))
@@ -301,10 +301,10 @@ function submitStartAt(startAt) {
         alert("날짜를 선택해주세요.");
         return;
     }
-    fetch(`/myschedule/startAt`, {
+    fetch(`/myschedule/api/startAt`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ scheduleId, startAt, userId: "user01" })
+        body: new URLSearchParams({ scheduleId, startAt })
     })
         .then(res => res.json())
         .then(ok => alert(ok ? "날짜가 수정되었습니다." : "수정에 실패했습니다."))
@@ -319,7 +319,7 @@ function submitRoute(order) {
         body.append("distances", "0");
     });
 
-    fetch(`/myschedule/visitOrders`, {
+    fetch(`/myschedule/api/visitOrders`, {
         method: "PUT",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body
