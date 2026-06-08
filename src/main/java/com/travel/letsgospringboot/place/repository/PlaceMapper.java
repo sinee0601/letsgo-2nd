@@ -61,5 +61,7 @@ public interface PlaceMapper {
     List<PlaceVO> searchPlacesByCategoryAndKeywordOrderByLike(Map<String, Object> params);
 
     List<PlaceVO> searchNearbyPlaces(Map<String, Object> params);
+
+    int insertMySchedule(Map<String, Object> params);
 }
 

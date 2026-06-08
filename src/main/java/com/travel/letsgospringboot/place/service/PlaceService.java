@@ -59,7 +59,6 @@ public class PlaceService {
     public List<PlaceVO> getPlaceByAddr(String placeType, String addrPattern) {
         Map<String, Object> params = new HashMap<>();
         params.put("placeType", placeType);
-        // Automatically wrap in wildcards if not already done
         String pattern = addrPattern.contains("%") ? addrPattern : "%" + addrPattern + "%";
         params.put("addrPattern", pattern);
         return placeMapper.getPlaceByAddr(params);
@@ -231,5 +230,15 @@ public class PlaceService {
 
     public List<PlaceVO> searchNearbyPlaces(Map<String, Object> params) {
         return placeMapper.searchNearbyPlaces(params);
+    }
+
+    @Transactional
+    public int insertMySchedule(String myScheduleId, String title, java.time.LocalDateTime startAt, String userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("myScheduleId", myScheduleId);
+        params.put("title", title);
+        params.put("startAt", startAt);
+        params.put("userId", userId);
+        return placeMapper.insertMySchedule(params);
     }
 }

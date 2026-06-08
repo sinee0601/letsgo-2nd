@@ -1,0 +1,141 @@
+.modal {
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.modal_body {
+    width: 420px;
+    max-width: 90vw;
+    max-height: 80vh;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shoppingbox {
+    width: 100%;
+    border: 1px solid black;
+    padding: 10px;
+    min-height: 180px;
+    max-height: 45vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.place-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#btn-close-modal {
+    align-self: flex-end;
+    padding: 6px 12px;
+}
+
+.cart-schedule-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+#btn-add-to-schedule {
+    padding: 6px 10px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.cart-footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-open-modal {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    margin: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: #4A90D9;
+    color: white;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-open-modal:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-open-modal h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 32px;
+    line-height: 1;
+}
+
+.place-item.locked-item {
+    background-color: #f0f0f0;
+    color: #888;
+    cursor: default;
+    font-style: italic;
+    border-bottom: 1px solid #ddd;
+    padding: 4px 6px;
+}
+
+/* 장바구니 담기 성공 toast — 자동 fade in/out, 2.5초 후 제거 */
+.cart-toast {
+    position: fixed;
+    bottom: 115px;
+    left: 50%;
+    background-color: rgba(40, 40, 40, 0.95);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    z-index: 2000;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: cartToastInOut 2.5s ease forwards;
+}
+
+@keyframes cartToastInOut {
+    0%   { opacity: 0; transform: translate(-50%, 12px); }
+    10%  { opacity: 1; transform: translate(-50%, 0); }
+    85%  { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -8px); }
+}
