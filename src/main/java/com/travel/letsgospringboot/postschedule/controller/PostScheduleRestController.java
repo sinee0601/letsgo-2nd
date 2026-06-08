@@ -79,7 +79,7 @@ public class PostScheduleRestController {
     }
 
     @GetMapping("/{postId}/budget")
-    public String getBudgetDetail(@PathVariable("postId") String postId, Model model) {
+    public String getBudgetDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getBudgetDetail(postId);
     }
 

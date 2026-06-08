@@ -47,7 +47,7 @@
                         </div>
 
                         <ul id="sortableList">
-                            <li th:each="route : ${detail.routeList}"
+                            <li th:each="route : ${detail.routes}"
                                 class="sortable-item"
                                 th:data-visit-id="${route.visitId}">
                                 <span th:text="${route.visitOrder} + '. ' + ${route.title}">방문서순</span>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="content-right-bottom">
                         <ol class="route-summary">
-                            <li th:each="route : ${scheduleRoute}" th:text="${scheduleRoute.title}">수원 화성</li>
+                            <li th:each="route : ${detail.routes}" th:text="${detail.scheduleTitle}">수원 화성</li>
                         </ol>
                     </div>
                 </div>

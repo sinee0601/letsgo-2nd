@@ -15,8 +15,8 @@ public class PostScheduleDetailTO {
     private int likeCount;
     private int viewCount;
     private String writerId;
-    private boolean match;
+    private boolean isOwner;
 
-    private List<RouteScheduleTO> routeList;
-    private List<MapScheduleTO> mapList;
+    private List<RouteScheduleTO> routes;
+    private List<MapScheduleTO> maps;
 }
