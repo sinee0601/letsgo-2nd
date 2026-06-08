@@ -44,7 +44,7 @@
         <div>
             <button type="button" id="dateEditBtn">날짜 수정</button>
             <div id="dateEditForm" style="display:none; margin-top:6px;">
-                <input type="date" name="startAt" id="startAtInput" th:value="${startAt}" required/>
+                <input type="date" name="startAt" id="startAtInput" th:value="${schedule.startAt}" required/>
                 <button type="button" id="dateConfirmBtn">확인</button>
                 <button type="button" id="dateCancelBtn">취소</button>
             </div>
@@ -59,7 +59,7 @@
             <div class="content-left">
                 <div class="schedule-header">
                     <input type="text" name="title" id="scheduleTitleInput"
-                           th:value="${scheduleTitle}"
+                           th:value="${schedule.scheduleTitle}"
                            placeholder="일정 제목을 입력하세요"
                            class="title-input"/>
                     <button type="button" id="saveTitleBtn" class="save-title-btn">수정</button>
@@ -110,7 +110,7 @@
         <div class="memo">
             <div><h3>예산관리</h3></div>
 
-            <span id="budgetData" th:text="${budgetDetail}" hidden></span>
+            <span id="budgetData" th:text="${schedule.budgetDetail}" hidden></span>
 
             <ul id="budgetList" class="budget-list">
                 <li th:each="item : ${scheduleRoute}"
@@ -134,7 +134,7 @@
         <div class="memo">
             <div><h3>To-Do 리스트</h3></div>
             <textarea id="todoDetail" class="detail-textarea"
-                      placeholder="할 일을 입력하세요" th:text="${todoDetail}"></textarea>
+                      placeholder="할 일을 입력하세요" th:text="${schedule.todoDetail}"></textarea>
             <button type="button" id="saveTodoBtn" class="save-title-btn">저장</button>
         </div>
     </div>

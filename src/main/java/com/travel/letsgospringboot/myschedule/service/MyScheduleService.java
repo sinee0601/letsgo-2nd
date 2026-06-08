@@ -85,6 +85,10 @@ public class MyScheduleService {
         return myScheduleRepository.setTodoDetail(scheduleId, todoDetail);
     }
 
+    public ScheduleDetailVO getScheduleDetail(String scheduleId) {
+        return myScheduleRepository.getScheduleDetail(scheduleId);
+    }
+
     public String getTodoDetail(String scheduleId) {
         return myScheduleRepository.getTodoDetail(scheduleId);
     }

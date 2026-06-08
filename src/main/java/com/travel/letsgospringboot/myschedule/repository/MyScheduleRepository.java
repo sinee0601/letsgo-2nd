@@ -4,6 +4,7 @@ import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
 import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleDetailVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -56,6 +57,8 @@ public interface MyScheduleRepository {
     boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
 
     // ---- 단건 조회 ----
+    ScheduleDetailVO getScheduleDetail(String scheduleId);
+
     String getTodoDetail(String scheduleId);
 
     String getBudgetDetail(String scheduleId);

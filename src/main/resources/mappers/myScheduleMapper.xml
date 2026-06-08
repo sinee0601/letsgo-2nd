@@ -248,6 +248,16 @@
           AND shared_user_id = #{sharedUserId}
     </update>
 
+    <select id="getScheduleDetail" parameterType="String"
+            resultType="com.travel.letsgospringboot.myschedule.vo.ScheduleDetailVO">
+        SELECT title                             AS scheduleTitle,
+               DATE_FORMAT(start_at, '%Y-%m-%d') AS startAt,
+               budget_details                    AS budgetDetail,
+               todo_details                      AS todoDetail
+        FROM my_schedule
+        WHERE my_schedule_id = #{scheduleId}
+    </select>
+
     <select id="getTodoDetail" parameterType="String" resultType="String">
         SELECT todo_details
         FROM my_schedule

@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
-    private String userId = "user01";
-    private String searchTitle = "";
-    private boolean isShared = false;
+    private String userId;
+    private String searchTitle;
+    private boolean isShared;
     private String sortType;
 }
