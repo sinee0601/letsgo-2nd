@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class JpaUsers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

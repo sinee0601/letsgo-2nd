@@ -1,6 +1,6 @@
 package com.travel.letsgospringboot.user.auth;
 
-import com.travel.letsgospringboot.user.repository.User;
+import com.travel.letsgospringboot.user.repository.JpaUsers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,14 +9,14 @@ import java.util.Collection;
 
 public class AppUserDetails implements UserDetails {
 
-    private User user;
+    private JpaUsers jpaUsers;
 
-    public AppUserDetails(User user) {
-        this.user = user;
+    public AppUserDetails(JpaUsers jpaUsers) {
+        this.jpaUsers = jpaUsers;
     }
 
-    public User getUser() {
-        return user;
+    public JpaUsers getUser() {
+        return jpaUsers;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class AppUserDetails implements UserDetails {
         authorities.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return user.getRole();
+                return jpaUsers.getRole();
             }
         });
         return authorities;
@@ -33,12 +33,12 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return jpaUsers.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUserID();
+        return jpaUsers.getUserID();
     }
 
     @Override

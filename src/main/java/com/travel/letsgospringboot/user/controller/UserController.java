@@ -44,7 +44,7 @@ public class UserController {
                 .name(userRequest.getName())
                 .password(userRequest.getPassword())
                 .build()))
-            return "redirect:/user/login";
-        return "redirect:/user/signUp";
+            return "redirect:/user/loginView";
+        return "redirect:/user/signUpView";
     }
 }

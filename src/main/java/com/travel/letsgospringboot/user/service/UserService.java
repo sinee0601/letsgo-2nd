@@ -1,6 +1,6 @@
 package com.travel.letsgospringboot.user.service;
 
-import com.travel.letsgospringboot.user.repository.User;
+import com.travel.letsgospringboot.user.repository.JpaUsers;
 import com.travel.letsgospringboot.user.repository.UserJpaRepository;
 import com.travel.letsgospringboot.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class UserService {
         if (userJpaRepository.findByUserID(userVO.getUserID()) != null) {
             return false;
         }
-        return (userJpaRepository.save(User.builder()
+        return (userJpaRepository.save(JpaUsers.builder()
                 .userID(userVO.getUserID())
                 .password(bCryptPasswordEncoder.encode(userVO.getPassword()))
                 .email(userVO.getEmail())
@@ -34,22 +34,22 @@ public class UserService {
     }
 
     public boolean updatePassword(UserVO userVO) {
-        User user = userJpaRepository.findByUserID(userVO.getUserID());
-        if (user == null) {
+        JpaUsers jpaUsers = userJpaRepository.findByUserID(userVO.getUserID());
+        if (jpaUsers == null) {
             return false;
         }
-        return (userJpaRepository.save(User.builder()
-                .id(user.getId())
-                .userID(user.getUserID())
+        return (userJpaRepository.save(JpaUsers.builder()
+                .id(jpaUsers.getId())
+                .userID(jpaUsers.getUserID())
                 .password(bCryptPasswordEncoder.encode(userVO.getPassword()))
-                .email(user.getEmail())
-                .name(user.getName())
-                .role(user.getRole())
+                .email(jpaUsers.getEmail())
+                .name(jpaUsers.getName())
+                .role(jpaUsers.getRole())
                 .build())) != null;
     }
 
     public String findUserIdByNameAndEmail(UserVO userVO) {
-        User user = userJpaRepository.findByNameAndEmail(userVO.getName(), userVO.getEmail());
-        return user != null ? user.getUserID() : null;
+        JpaUsers jpaUsers = userJpaRepository.findByNameAndEmail(userVO.getName(), userVO.getEmail());
+        return jpaUsers != null ? jpaUsers.getUserID() : null;
     }
 }
