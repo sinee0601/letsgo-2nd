@@ -122,27 +122,6 @@ public class MyScheduleRestController {
         return myScheduleService.updateVisitOrders(visitItemIds, visitOrders, distances);
     }
 
-    @PutMapping
-    public boolean setMySchedule(@RequestParam String[] visitItemId,
-                                 @RequestParam int[] visitOrder,
-                                 @RequestParam String[] distanceToNext,
-                                 @RequestParam String scheduleId,
-                                 @RequestParam String scheduleTitle,
-                                 @RequestParam String startAt,
-                                 @RequestParam String budgetDetail,
-                                 @RequestParam String todoDetail,
-                                 @RequestParam int isShared,
-                                 Principal principal) {
-        return myScheduleService.setMySchedule(visitItemId, visitOrder, distanceToNext,
-                scheduleId, scheduleTitle, startAt, budgetDetail, todoDetail, principal.getName(), isShared);
-    }
-
-    @DeleteMapping("/list")
-    public boolean deleteMyScheduleList(@RequestParam String[] scheduleIds,
-                                        Principal principal) {
-        return myScheduleService.deleteMyScheduleList(principal.getName(), scheduleIds);
-    }
-
     @DeleteMapping("/visit/{visitItemId}")
     public boolean deleteVisitItemById(@PathVariable String visitItemId) {
         boolean bool = myScheduleService.deleteVisitItemById(visitItemId);

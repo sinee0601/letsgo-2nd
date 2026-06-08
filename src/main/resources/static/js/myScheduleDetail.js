@@ -65,7 +65,7 @@ saveTitleBtn.addEventListener("click", () => {
 saveRouteBtn.addEventListener("click", () => submitRoute(readRouteOrder()));
 
 addVisitBtn.addEventListener("click", () => {
-    location.href = "#";
+    location.href = `/myschedule/detail/${scheduleId}/addVisit`;
 });
 
 sidebarLinks.forEach(btn => {

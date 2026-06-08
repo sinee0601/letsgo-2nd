@@ -81,8 +81,9 @@
                     </div>
                     <img th:src="${item.firstImage}" alt="이미지" class="box-placeholder"/>
                     <figcaption class="figure-caption" th:text="${item.placeTitle}">금원 수원 수영장</figcaption>
-                    <div th:text="${#strings.substring(item.startAt, 0, 10)} ">2026-04-16
-                        <span th:text="' 📍'+ ${item.addr1}">📍경기 안양</span>
+                    <div>
+                        <span th:text="${item.startAt}">2026-04-16</span><br/>
+                        <span th:text="'📍' + ${item.addr1}">📍서울특별시 강남구</span>
                     </div>
                 </figure>
             </a>
