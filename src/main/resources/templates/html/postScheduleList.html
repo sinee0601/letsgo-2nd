@@ -22,17 +22,17 @@
     </header>
     <div class="layout-wrapper">
         <aside class="sidebar">
-            <nav>
-                <button class="nav-btn active" data-filter="all">전체 게시물</button>
-                <button class="nav-btn" data-filter="shared">내가 올린 게시물</button>
-            </nav>
+            <ul>
+                <li><button type="button" class="nav-btn active" data-filter="all">전체 게시물</button></li>
+                <li><button type="button" class="nav-btn" data-filter="user">내가 올린 게시물</button></li>
+            </ul>
         </aside>
 
-        <div class="content-container">
+        <main>
             <div class="content-left">
                 <div class="search-area">
-                    <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" id="searchTitle"/>
-                    <button type="button" id="searchPostSchedule">검색하기</button>
+                    <input type="text" placeholder="장소 이름이나 게시물 이름을 검색하세요" id="keyword"/>
+                    <button type="button" id="searchButton">검색하기</button>
                     <div class="sort-area">
                         <select id="sortOrder">
                             <option value="latest">날짜순</option>
@@ -82,9 +82,7 @@
                     </figure>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-
-
 </body>
 </html>

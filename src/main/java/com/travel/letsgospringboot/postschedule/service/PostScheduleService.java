@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PostScheduleService {
@@ -14,54 +17,56 @@ public class PostScheduleService {
     @Autowired
     PostScheduleRepository postScheduleRepository;
 
+
+
     public List<PostScheduleTO> getPostScheduleListLike() {
-        return postScheduleRepository.getPostScheduleListLike();
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListLike());
     }
     public List<PostScheduleTO> getPostScheduleListView() {
-        return postScheduleRepository.getPostScheduleListView();
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListView());
     }
     public List<PostScheduleTO> getPostScheduleListTitle() {
-        return postScheduleRepository.getPostScheduleListTitle();
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListTitle());
     }
     public List<PostScheduleTO> getPostScheduleListLatest() {
-        return postScheduleRepository.getPostScheduleListLatest();
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListLatest());
     }
     public List<PostScheduleTO> getPostScheduleListSearchLike(String keyword) {
-        return postScheduleRepository.getPostScheduleListSearchLike(keyword);
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLike(keyword));
     }
     public List<PostScheduleTO> getPostScheduleListSearchView(String keyword) {
-        return postScheduleRepository.getPostScheduleListSearchView(keyword);
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchView(keyword));
     }
     public List<PostScheduleTO> getPostScheduleListSearchTitle(String keyword) {
-        return postScheduleRepository.getPostScheduleListSearchTitle(keyword);
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchTitle(keyword));
     }
     public List<PostScheduleTO> getPostScheduleListSearchLatest(String keyword) {
-        return postScheduleRepository.getPostScheduleListSearchLatest(keyword);
+        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLatest(keyword));
     }
 
     public List<PostScheduleTO> getUserPostScheduleListLike(String userId) {
-        return postScheduleRepository.getUserPostScheduleListLike(userId);
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLike(userId));
     }
     public List<PostScheduleTO> getUserPostScheduleListView(String userId) {
-        return postScheduleRepository.getUserPostScheduleListView(userId);
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListView(userId));
     }
     public List<PostScheduleTO> getUserPostScheduleListTitle(String userId) {
-        return postScheduleRepository.getUserPostScheduleListTitle(userId);
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListTitle(userId));
     }
     public List<PostScheduleTO> getUserPostScheduleListLatest(String userId) {
-        return postScheduleRepository.getUserPostScheduleListLatest(userId);
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLatest(userId));
     }
     public List<PostScheduleTO> getUserPostScheduleListSearchLike(String userId, String keyword) {
-        return postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListVO(userId, keyword));
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListVO(userId, keyword)));
     }
     public List<PostScheduleTO> getUserPostScheduleListSearchView(String userId, String keyword) {
-        return postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListVO(userId, keyword));
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListVO(userId, keyword)));
     }
     public List<PostScheduleTO> getUserPostScheduleListSearchTitle(String userId, String keyword) {
-        return postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListVO(userId, keyword));
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListVO(userId, keyword)));
     }
     public List<PostScheduleTO> getUserPostScheduleListSearchLatest(String userId, String keyword) {
-        return postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO(userId, keyword));
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO(userId, keyword)));
     }
 
     public String getBudgetDetail(String postId) {
@@ -125,5 +130,24 @@ public class PostScheduleService {
                     .scheduleType(route.getScheduleType())
                     .build());
         }
+    }
+
+    public List<PostScheduleTO> processPostScheduleList(List<PostScheduleTO> list){
+        Map<String, PostScheduleTO> uniqueMap = new LinkedHashMap<>();
+        for (PostScheduleTO to : list) {
+
+            if (!uniqueMap.containsKey(to.getPostId())) {
+                uniqueMap.put(to.getPostId(), to);
+            } else {
+                PostScheduleTO existingVO = uniqueMap.get(to.getPostId());
+                if (existingVO.getFirstImage() == null) {
+                    existingVO.setFirstImage(to.getFirstImage());
+                }
+                String combinedPlaces = existingVO.getPlaceTitle() + " / " + to.getPlaceTitle();
+                existingVO.setPlaceTitle(combinedPlaces);
+            }
+        }
+        List<PostScheduleTO> result = new ArrayList<>(uniqueMap.values());
+        return result;
     }
 }

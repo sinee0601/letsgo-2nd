@@ -1,14 +1,35 @@
-let searchPostSchedule = document.querySelector("#searchPostSchedule");
-if (searchPostSchedule)
-    searchPostSchedule.addEventListener("click", fetchSchedules);
-let sortSelect = document.querySelector("#sortOrder");
-if (sortSelect)
-    sortSelect.addEventListener("change", fetchSchedules);
+let searchButton = document.querySelector("#searchButton");
+let sortOrder = document.querySelector("#sortOrder");
+if (searchButton)
+    searchButton.addEventListener("click", fetchSchedules);
+if (sortOrder)
+    sortOrder.addEventListener("change", fetchSchedules);
+
+const userId = "user01";
+let currentFilter = "all";
+
+const navBtns = document.querySelectorAll(".nav-btn");
+
+navBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        navBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        currentFilter = btn.dataset.filter;
+        fetchSchedules();
+    });
+});
 
 function fetchSchedules(){
+    // const userId = document.querySelector("#userId").value;
     const sortOrder = document.querySelector("#sortOrder").value;
-    const searchTitle = document.querySelector("#searchTitle").value;
-    fetch(`/postschedule/api/list?sortOrder=${sortOrder}&keyword=${searchTitle}`, {
+    const keyword = document.querySelector("#keyword").value;
+
+    const url = currentFilter === "user"
+        ? `/postschedule/api/mylist?userId=${userId}&sortOrder=${sortOrder}&keyword=${keyword}`
+        : `/postschedule/api/list?sortOrder=${sortOrder}&keyword=${keyword}`;
+    console.log(url);
+    fetch(url, {
         method: "get",
         headers: {
             "Content-Type": "application/json"
