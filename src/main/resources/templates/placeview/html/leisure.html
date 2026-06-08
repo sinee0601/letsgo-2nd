@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/view/css/leisure.css(v=2)}">
 	<link rel="stylesheet" type="text/css" th:href="@{/view/css/floating-cart.css}">
 </head>
-<body>
+<body th:data-context-path="@{/}">
 
 
 <div th:replace="~{header/html/header :: header}">
@@ -26,85 +26,85 @@
 						<summary>육상레저스포츠</summary>
 						<ul>
 							<li><label><input type="radio" name="category" value="NO_DATA_INLINE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_INLINE'}"> 인라인</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_INLINE'}"> 인라인</label></li>
 							<li><label><input type="radio" name="category" value="LS010200"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS010200'}"> 자전거 (둘레길)</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS010200'}"> 자전거 (둘레길)</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_CART"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_CART'}"> 카트</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CART'}"> 카트</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_GOLF"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_GOLF'}"> 골프</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_GOLF'}"> 골프</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_HORSE_RACE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_HORSE_RACE'}"> 경마</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_HORSE_RACE'}"> 경마</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_HORSE_RIDE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_HORSE_RIDE'}"> 승마</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_HORSE_RIDE'}"> 승마</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_SKI"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_SKI'}"> 스키/스노보드</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_SKI'}"> 스키/스노보드</label></li>
 							<li><label><input type="radio" name="category" value="LS010900"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS010900'}"> 스케이트</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS010900'}"> 스케이트</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_SLED"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_SLED'}"> 썰매장</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_SLED'}"> 썰매장</label></li>
 							<li><label><input type="radio" name="category" value="LS011200"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS011200'}"> 사격장</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS011200'}"> 사격장</label></li>
 							<li><label><input type="radio" name="category" value="LS011900"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS011900'}"> 산책/둘레길</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS011900'}"> 산책/둘레길</label></li>
 							<li><label><input type="radio" name="category" value="VE100100"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'VE100100'}"> 종합체육시설</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'VE100100'}"> 종합체육시설</label></li>
 							<li><label><input type="radio" name="category" value="VE100200"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'VE100200'}"> 수련시설</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'VE100200'}"> 수련시설</label></li>
 						</ul>
 					</details></li>
-
+ 
 					<li><details>
 						<summary>수상레저스포츠</summary>
 						<ul>
 							<li><label><input type="radio" name="category" value="LS020100"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS020100'}"> 윈드서핑/수상스키</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS020100'}"> 윈드서핑/수상스키</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_KAYAK"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_KAYAK'}"> 카약/카누</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_KAYAK'}"> 카약/카누</label></li>
 							<li><label><input type="radio" name="category" value="LS020300"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS020300'}"> 요트</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS020300'}"> 요트</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_SCUBA"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_SCUBA'}"> 스노쿨링/스킨스쿠버다이빙</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_SCUBA'}"> 스노쿨링/스킨스쿠버다이빙</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_FISHING"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_FISHING'}"> 낚시</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_FISHING'}"> 낚시</label></li>
 							<li><label><input type="radio" name="category" value="LS020700"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'LS020700'}"> 수영</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'LS020700'}"> 수영</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_JET_SKI"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_JET_SKI'}"> 수상오토바이</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_JET_SKI'}"> 수상오토바이</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_WATER_BIKE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_BIKE'}"> 수상자전거</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_BIKE'}"> 수상자전거</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_WATER_SLED"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_SLED'}"> 워터슬레드</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_SLED'}"> 워터슬레드</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_PARASAIL"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_PARASAIL'}"> 패러세일</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_PARASAIL'}"> 패러세일</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_WATER_ETC"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_ETC'}"> 기타수상레저스포츠</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_WATER_ETC'}"> 기타수상레저스포츠</label></li>
 						</ul>
 					</details></li>
-
+ 
 					<li><details>
 						<summary>항공레저스포츠</summary>
 						<ul>
 							<li><label><input type="radio" name="category" value="NO_DATA_SKYDIVE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_SKYDIVE'}"> 스카이다이빙</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_SKYDIVE'}"> 스카이다이빙</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_ULTRALIGHT"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_ULTRALIGHT'}"> 초경량비행</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_ULTRALIGHT'}"> 초경량비행</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_PARAGLIDE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_PARAGLIDE'}"> 헹글라이딩/패러글라이딩</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_PARAGLIDE'}"> 헹글라이딩/패러글라이딩</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_BALLOON"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_BALLOON'}"> 열기구</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_BALLOON'}"> 열기구</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_DRONE"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_DRONE'}"> 무인비행장치(드론)</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_DRONE'}"> 무인비행장치(드론)</label></li>
 							<li><label><input type="radio" name="category" value="NO_DATA_AIR_ETC"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'NO_DATA_AIR_ETC'}"> 기타항공레저스포츠</label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_AIR_ETC'}"> 기타항공레저스포츠</label></li>
 						</ul>
 					</details></li>
-
+ 
 					<li><details>
 						<summary>복합레저스포츠</summary>
 						<ul>
 							<li><label><input type="radio" name="category" value="VE120200"
-							                  onchange="this.form.submit()" th:checked="${param.category != null && param.category[0] == 'VE120200'}"> 복합레저스포츠 </label></li>
+							                  th:checked="${param.category != null && param.category[0] == 'VE120200'}"> 복합레저스포츠 </label></li>
 						</ul>
 					</details></li>
 				</ul>
@@ -121,7 +121,7 @@
 						<button type="submit">검색하기</button>
 
 						<div class="sort-area">
-							<select name="sortOrder" onchange="this.form.submit()">
+							<select name="sortOrder" id="sortOrderSelect">
 								<option value="distance" th:selected="${param.sortOrder == null || param.sortOrder[0] == 'distance'}">전체</option>
 								<option value="popular"  th:selected="${param.sortOrder != null && param.sortOrder[0] == 'popular'}">인기순</option>
 							</select>
@@ -131,7 +131,7 @@
 				</div>
 			</div>
 
-			<div class="container">
+			<div class="container" id="leisurePlaceContainer">
 				<figure class="figure" th:each="place : ${leisurePlaceList}">
 					<th:block th:if="${place.firstImage != null && place.firstImage != ''}">
 						<img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder" />
@@ -187,9 +187,8 @@
 	     th:data-place-type="${cartPlace.placeType}"></div>
 </div>
 
-
-
 <script th:src="@{/view/js/floating-cart.js}"></script>
+<script th:src="@{/view/js/leisure.js}"></script>
 
 
 </body>

@@ -3,7 +3,7 @@
 	var apiBase = window.location.origin + contextPath.replace(/\/$/, "");
 
 	function renderPlaces(list) {
-		var container = document.getElementById("restaurantPlaceContainer");
+		var container = document.getElementById("stayPlaceContainer");
 		if (!container) {
 			return;
 		}
@@ -11,7 +11,7 @@
 			container.removeChild(container.firstChild);
 		}
 
-		var countHeader = document.querySelector(".content-left h3") || document.querySelector(".content-container h3");
+		var countHeader = document.querySelector(".content-left span") || document.querySelector(".content-container span");
 		if (countHeader) {
 			countHeader.textContent = "총 " + list.length + "개의 항목";
 		}
@@ -31,7 +31,7 @@
 				var a = document.createElement("a");
 				a.href = "#";
 				a.className = "box-placeholder";
-				a.textContent = "이미지 없음";
+				a.textContent = "이미지";
 				fig.appendChild(a);
 			}
 
@@ -48,7 +48,7 @@
 			likeBtn.type = "button";
 			likeBtn.className = "like-btn";
 			likeBtn.setAttribute("data-place-id", p.placeId);
-			likeBtn.setAttribute("data-place-type", p.placeType || "RESTAURANT");
+			likeBtn.setAttribute("data-place-type", p.placeType || "STAY");
 			likeBtn.setAttribute("data-like-url", apiBase + "/placeLikeAjax");
 
 			var h1 = document.createElement("h1");
@@ -67,7 +67,7 @@
 			cartBtn.className = "add-to-cart-btn";
 			cartBtn.setAttribute("data-place-id", p.placeId);
 			cartBtn.setAttribute("data-place-title", p.title || "");
-			cartBtn.setAttribute("data-place-type", p.placeType || "RESTAURANT");
+			cartBtn.setAttribute("data-place-type", p.placeType || "STAY");
 			cartBtn.textContent = "담기";
 			fig.appendChild(cartBtn);
 			frag.appendChild(fig);
@@ -76,8 +76,8 @@
 	}
 
 	function requestSearch() {
-		var categoryInput = document.getElementById("categoryInput");
-		var category = categoryInput ? categoryInput.value : "";
+		var categoryRadio = document.querySelector("input[name='category']:checked");
+		var category = categoryRadio ? categoryRadio.value : "";
 		
 		var keywordInput = document.querySelector("input[name='keyword']");
 		var keyword = keywordInput ? keywordInput.value : "";
@@ -112,7 +112,7 @@
 			renderPlaces(data);
 		};
 
-		var url = apiBase + "/restaurantListAjax"
+		var url = apiBase + "/stayListAjax"
 			+ "?sortOrder=" + encodeURIComponent(sortOrder)
 			+ "&category=" + encodeURIComponent(category)
 			+ "&keyword=" + encodeURIComponent(keyword);
@@ -121,17 +121,16 @@
 		xhr.send(null);
 	}
 
-	window.filterCategory = function(value) {
-		var categoryInput = document.getElementById("categoryInput");
-		if (categoryInput) {
-			categoryInput.value = value;
-		}
-		requestSearch();
-	};
-
 	var sortSel = document.getElementById("sortOrderSelect");
 	if (sortSel) {
 		sortSel.addEventListener("change", function () {
+			requestSearch();
+		});
+	}
+
+	var radios = document.querySelectorAll("input[name='category']");
+	for (var i = 0; i < radios.length; i++) {
+		radios[i].addEventListener("change", function () {
 			requestSearch();
 		});
 	}

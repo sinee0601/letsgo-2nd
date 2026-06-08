@@ -19,9 +19,11 @@ public class PlaceRestController {
 
     @GetMapping("/leisureListAjax")
     public List<PlaceVO> getLeisureListAjax(
-            @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder) {
+            @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword) {
         String sortBy = "like".equalsIgnoreCase(sortOrder) ? "like" : "title";
-        return placeService.searchPlaces("LEISURE", null, null, sortBy);
+        return placeService.searchPlaces("LEISURE", category, keyword, sortBy);
     }
 
     @GetMapping("/placeLikeAjax")
@@ -156,5 +158,65 @@ public class PlaceRestController {
         }
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/restaurantListAjax")
+    public List<PlaceVO> getRestaurantListAjax(
+            @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
+        return placeService.searchPlaces("RESTAURANT", category, keyword, sortBy);
+    }
+
+    @GetMapping("/stayListAjax")
+    public List<PlaceVO> getStayListAjax(
+            @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
+        return placeService.searchPlaces("STAY", category, keyword, sortBy);
+    }
+
+    @GetMapping("/placeDetailAjax")
+    public PlaceVO getPlaceDetail(
+            @RequestParam("placeId") String placeId) {
+        return placeService.getPlaceByPlaceId(placeId);
+    }
+
+    @GetMapping("/placeDetailByTitleAjax")
+    public PlaceVO getPlaceDetailByTitle(
+            @RequestParam("placeType") String placeType,
+            @RequestParam("title") String title) {
+        return placeService.getPlaceByTitle(placeType, title);
+    }
+
+    @GetMapping("/searchNearbyPlacesAjax")
+    public List<PlaceVO> searchNearbyPlaces(
+            @RequestParam("placeType") String placeType,
+            @RequestParam("centerLat") String centerLat,
+            @RequestParam("centerLon") String centerLon,
+            @RequestParam("radiusKm") Double radiusKm,
+            @RequestParam(value = "orderByLike", defaultValue = "false") boolean orderByLike,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        return placeService.searchNearbyPlaces(placeType, centerLat, centerLon, radiusKm, orderByLike, category, keyword);
+    }
+
+    @GetMapping("/getPlaceCountAjax")
+    public int getPlaceCount(
+            @RequestParam("placeType") String placeType) {
+        return placeService.getPlaceCount(placeType);
+    }
+
+    @PostMapping("/setCountingAjax")
+    public int setCounting(
+            @RequestParam("placeId") String placeId) {
+        return placeService.setCounting(placeId);
+    }
+
+    @GetMapping("/getPlacesAjax")
+    public List<PlaceVO> getPlaces() {
+        return placeService.getPlaces();
     }
 }
