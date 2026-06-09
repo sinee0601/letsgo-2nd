@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/signup.css">
+    <link rel="stylesheet" th:href="@{/css/auth-common.css}">
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
     <meta charset="UTF-8">
     <title>회원가입</title>
 </head>
 <body>
+<button type="button" class="back-button" onclick="history.back()">뒤로가기</button>
 <div class="signupbox">
     <h1>회원가입</h1>
 
-    <!-- errorMessage: model.addAttribute("errorMessage", ...) -->
-    <div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></div>
     <div id="signupMessage"></div>
 
     <form id="signupForm" method="post" action="/user/signUp">
@@ -42,5 +42,6 @@
         <a href="/user/loginView">로그인</a>
     </div>
 </div>
+<script th:src="@{/js/signup.js}"></script>
 </body>
 </html>

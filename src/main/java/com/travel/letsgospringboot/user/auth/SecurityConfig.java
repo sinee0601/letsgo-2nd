@@ -25,7 +25,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
                                 "/user/getIdView", "/user/getId",
-                                "/user/updatePwView", "/user/updatePw").permitAll()
+                                "/user/updatePwView", "/user/updatePw",
+                                "/user/api/signUpAjax", "/user/api/getIdAjax", "/user/api/updatePwAjax").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/myschedule/**").authenticated()
                         .requestMatchers("/postschedule/detail/**").authenticated()

@@ -1,28 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel = "stylesheet" href ="/css/getid.css">
+    <link rel="stylesheet" th:href="@{/css/auth-common.css}">
+    <link rel="stylesheet" th:href="@{/css/getid.css}">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>아이디 찾기</title>
 </head>
 <body>
+<button type="button" class="back-button" onclick="history.back()">뒤로가기</button>
 <div class="getidbox">
-    <div class="name">
-        <input placeholder="이름">
-    </div>
-    <div class="emaile">
-        <input type="password" placeholder="이메일"><button>코드 전송</button>
-    </div>
+    <h1>아이디 찾기</h1>
 
-    <div class="checkcode">
-        <input placeholder="인증코드"><button>인증</button>
-    </div>
+    <div id="getIdMessage"></div>
+    <div id="foundIdMessage"></div>
+
+    <form id="getIdForm" method="post" action="/user/getId">
+        <div class="name">
+            <input id="nameInput" name="name" placeholder="이름">
+        </div>
+        <div class="emaile">
+            <input type="email" id="emailInput" name="email" placeholder="이메일">
+        </div>
+        <div>
+            <button type="submit">아이디 찾기</button>
+        </div>
+    </form>
     <div>
-        회원님의 아이디는 "example123"입니다.
-    </div>
-    <div>
-        <a href="login">로그인</a>
+        <a href="/user/loginView">로그인</a>
     </div>
 </div>
+<script th:src="@{/js/getid.js}"></script>
 </body>
 </html>
