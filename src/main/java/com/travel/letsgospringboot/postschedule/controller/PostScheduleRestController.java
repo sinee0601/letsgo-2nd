@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,8 @@ public class PostScheduleRestController {
     }
 
     @GetMapping("/mylist")
-    public List<PostScheduleTO> getUserPostScheduleList(@RequestParam (value = "userId", required = false) String userId, @RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
+    public List<PostScheduleTO> getUserPostScheduleList(Principal principal, @RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
+        String userId = principal.getName();
         if (sortOrder == null || sortOrder.trim().isEmpty()) {
             sortOrder = "latest";
         }
@@ -83,7 +85,7 @@ public class PostScheduleRestController {
         return postScheduleService.getBudgetDetail(postId);
     }
 
-    @GetMapping("/{postId}/detail")
+    @GetMapping("/{postId}/todo")
     public String getTodoDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getTodoDetail(postId);
     }

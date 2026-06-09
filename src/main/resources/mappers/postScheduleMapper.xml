@@ -66,7 +66,7 @@
         FROM schedule_post p
         JOIN visit_item v  ON p.POST_ID   = v.SCHEDULE_ID
         JOIN place      pl ON v.PLACE_ID  = pl.PLACE_ID
-        JOIN users      u  ON p.user_id   = u.user_id
+        JOIN jpa_users      u  ON p.user_id   = u.userid
     </sql>
 
 

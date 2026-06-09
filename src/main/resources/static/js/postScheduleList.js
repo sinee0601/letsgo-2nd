@@ -5,7 +5,6 @@ if (searchButton)
 if (sortOrder)
     sortOrder.addEventListener("change", fetchSchedules);
 
-const userId = "user01";
 let currentFilter = "all";
 
 const navBtns = document.querySelectorAll(".nav-btn");
@@ -26,7 +25,7 @@ function fetchSchedules(){
     const keyword = document.querySelector("#keyword").value;
 
     const url = currentFilter === "user"
-        ? `/postschedule/api/mylist?userId=${userId}&sortOrder=${sortOrder}&keyword=${keyword}`
+        ? `/postschedule/api/mylist?sortOrder=${sortOrder}&keyword=${keyword}`
         : `/postschedule/api/list?sortOrder=${sortOrder}&keyword=${keyword}`;
     console.log(url);
     fetch(url, {
@@ -52,7 +51,7 @@ function renderPostSchedules(postScheduleList) {
                         ${postSchedule.title}
                     </div>
                     
-                    <a href="#" class="box-placeholder">
+                    <a href="/postschedule/detail/${postSchedule.postId}" class="box-placeholder">
                         <img src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder"/>
                     </a>
 

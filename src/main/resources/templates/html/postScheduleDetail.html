@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>일정 게시판 - Let's GO!</title>
@@ -45,27 +46,21 @@
     <aside class="sidebar">
         <ul>
             <li>
-                <button type="button" class="nav-btn" data-filter="route">동선관리</button>
+                <button type="button" class="sidebar-link" data-filter="route">동선관리</button>
             </li>
             <li>
-                <button type="button" class="nav-btn" data-filter="budget">예산관리</button>
+                <button type="button" class="sidebar-link" data-filter="budget">예산관리</button>
             </li>
             <li>
-                <button type="button" class="nav-btn" data-filter="todo">To-Do 리스트</button>
+                <button type="button" class="sidebar-link" data-filter="todo">To-Do 리스트</button>
             </li>
         </ul>
 
-        <ul>
-            <li>
-                <button type="button" class="nav-btn" data-filter="list">삭제하기</button>
-            </li>
-            <li>
-                <button type="button" class="nav-btn" data-filter="delete">내 일정에 추가하기</button>
-            </li>
-            <li>
-                <button type="button" class="nav-btn" data-filter="add">목록으로</button>
-            </li>
-        </ul>
+        <div>
+            <button type="button" id="addBtn">내 일정에 추가하기</button>
+            <button type="button" id="deleteBtn">삭제하기</button>
+            <button><a th:href="@{/postschedule/list}">목록으로</a></button>
+        </div>
     </aside>
     <main>
         <div class="content-container">
@@ -147,6 +142,7 @@
             </div>
         </div>
     </template>
+    </div>
 </body>
 
 </html>
