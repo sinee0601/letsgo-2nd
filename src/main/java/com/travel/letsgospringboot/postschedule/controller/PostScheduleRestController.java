@@ -83,7 +83,7 @@ public class PostScheduleRestController {
         return postScheduleService.getBudgetDetail(postId);
     }
 
-    @GetMapping("/{postId}/detail")
+    @GetMapping("/{postId}/todo")
     public String getTodoDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getTodoDetail(postId);
     }

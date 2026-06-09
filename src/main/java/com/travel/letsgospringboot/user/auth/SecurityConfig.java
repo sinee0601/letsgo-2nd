@@ -26,6 +26,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/myschedule/**").authenticated()
+                        .requestMatchers("/postschedule/detail/**").authenticated()
                         .anyRequest().permitAll());
 
         //로그인

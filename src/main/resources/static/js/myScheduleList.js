@@ -41,7 +41,7 @@ function renderMySchedules(myScheduleList) {
         return `
             <figure class="figure">
                 <div>${item.myScheduleTitle}${sharedBadge}</div>
-                <a href="#" class="box-placeholder">
+                <a href="/myschedule/detail/${item.myScheduleId}" class="box-placeholder">
                     <img src="${item.firstImage}" alt="이미지" class="box-placeholder">
                 </a>
                 <figcaption class="figure-caption">${item.placeTitle}</figcaption>

@@ -52,7 +52,7 @@ function renderPostSchedules(postScheduleList) {
                         ${postSchedule.title}
                     </div>
                     
-                    <a href="#" class="box-placeholder">
+                    <a href="/postschedule/detail/${postSchedule.postId}" class="box-placeholder">
                         <img src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder"/>
                     </a>
 
