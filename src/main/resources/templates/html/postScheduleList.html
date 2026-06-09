@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="edit-area">
-                    <button><a href="controller?cmd=myScheduleListUI">내 일정 공유</a></button>
+                    <button><a href="/myschedule/list">내 일정 공유</a></button>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                     <figure class="figure">
                         <div th:text="${postSchedule.title}">일정제목</div>
 
-                        <a th:href="@{'/postschedule/' + ${postSchedule.postId} + '/route'}" class="box-placeholder">
+                        <a th:href="@{'/postschedule' + '/detail/' + ${postSchedule.postId}}" class="box-placeholder">
                             <img th:src="${postSchedule.firstImage}" alt="일정 이미지" class="box-placeholder">
                         </a>
 

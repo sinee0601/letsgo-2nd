@@ -78,63 +78,63 @@ public class PostScheduleRestController {
         }
     }
 
-    @GetMapping("/{postId}/budget")
+    @GetMapping("/{postId}/")
     public String getBudgetDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getBudgetDetail(postId);
     }
 
-    @GetMapping("/{postId}/todo")
+    @GetMapping("/{postId}/")
     public String getTodoDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getTodoDetail(postId);
     }
 
-    @GetMapping("/{postId}/route")
+    @GetMapping("/{postId}/")
     public List<RouteScheduleTO> getScheduleRoute(@PathVariable("postId") String postId) {
         return postScheduleService.getScheduleRoute(postId);
     }
 
-    @GetMapping("/{postId}/route/map")
+    @GetMapping("/{postId}/")
     public List<MapScheduleTO> getMapSchedule(@PathVariable("postId") String postId) {
         return postScheduleService.getMapSchedule(postId);
     }
 
-    @GetMapping("/{postId}/title")
+    @GetMapping("/{postId}/")
     public String getScheduleTitle(@PathVariable("postId") String postId) {
         return postScheduleService.getScheduleTitle(postId);
     }
 
-    @GetMapping("/{postId}/likeCount")
+    @GetMapping("/{postId}/")
     public int getLikeCount(@PathVariable("postId") String postId) {
         return postScheduleService.getLikeCount(postId);
     }
 
-    @GetMapping("/{postId}/viewCount")
+    @GetMapping("/{postId}/")
     public int getViewCount(@PathVariable("postId") String postId) {
         return postScheduleService.getViewCount(postId);
     }
 
-    @GetMapping("/{postId}/userId")
+    @GetMapping("/{postId}/")
     public String getUserId(@PathVariable("postId") String postId) {
         return postScheduleService.getUserId(postId);
     }
 
-    @PutMapping("/{postId}/plusLike")
+    @PutMapping("/{postId}/")
     public void plusLike(@PathVariable("postId") String postId) {
         postScheduleService.plusLike(postId);
     }
 
-    @PutMapping("/{postId}/plusView")
+    @PutMapping("/{postId}/")
     public void plusView(@PathVariable("postId") String postId) {
         postScheduleService.plusView(postId);
     }
 
-    @DeleteMapping("/{postId}/delete")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePostSchedule(@PathVariable("postId") String postId){
         postScheduleService.deletePostSchedule(postId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{postId}/addToMySchedule")
+    @PutMapping("/{postId}/")
     public ResponseEntity<String> addToMySchedule(@PathVariable("postId") String postId, @RequestBody Map<String, String> body) {
         String userId = body.get("userId");
         postScheduleService.addToMySchedule(postId, userId);

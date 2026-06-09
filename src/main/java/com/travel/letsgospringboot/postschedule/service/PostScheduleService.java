@@ -69,10 +69,10 @@ public class PostScheduleService {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO(userId, keyword)));
     }
 
-    public PostScheduleDetailTO getPostScheduleDetail(String postId, String loingUserId) {
+    public PostScheduleDetailTO getPostScheduleDetail(String postId) {
         PostScheduleDetailTO detail = postScheduleRepository.getPostScheduleDetail(postId);
-        boolean isOwner = loingUserId.equals(detail.getWriterId());
-        detail.setOwner(isOwner);
+//        boolean isOwner = loingUserId.equals(detail.getWriterId());
+//        detail.setOwner(isOwner);
         detail.setRoutes(getScheduleRoute(postId));
         detail.setMaps(getMapSchedule(postId));
         return detail;
