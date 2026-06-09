@@ -78,52 +78,52 @@ public class PostScheduleRestController {
         }
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/budget")
     public String getBudgetDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getBudgetDetail(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/detail")
     public String getTodoDetail(@PathVariable("postId") String postId) {
         return postScheduleService.getTodoDetail(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/route")
     public List<RouteScheduleTO> getScheduleRoute(@PathVariable("postId") String postId) {
         return postScheduleService.getScheduleRoute(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/map")
     public List<MapScheduleTO> getMapSchedule(@PathVariable("postId") String postId) {
         return postScheduleService.getMapSchedule(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/title")
     public String getScheduleTitle(@PathVariable("postId") String postId) {
         return postScheduleService.getScheduleTitle(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/like")
     public int getLikeCount(@PathVariable("postId") String postId) {
         return postScheduleService.getLikeCount(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/view")
     public int getViewCount(@PathVariable("postId") String postId) {
         return postScheduleService.getViewCount(postId);
     }
 
-    @GetMapping("/{postId}/")
+    @GetMapping("/{postId}/id")
     public String getUserId(@PathVariable("postId") String postId) {
         return postScheduleService.getUserId(postId);
     }
 
-    @PutMapping("/{postId}/")
+    @PutMapping("/{postId}/plusLike")
     public void plusLike(@PathVariable("postId") String postId) {
         postScheduleService.plusLike(postId);
     }
 
-    @PutMapping("/{postId}/")
+    @PutMapping("/{postId}/plusView")
     public void plusView(@PathVariable("postId") String postId) {
         postScheduleService.plusView(postId);
     }
