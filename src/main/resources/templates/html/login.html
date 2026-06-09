@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" th:href="@{/css/auth-common.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
     <meta charset="UTF-8">
     <title>로그인</title>
 </head>
 <body>
+<button type="button" class="back-button" onclick="history.back()">뒤로가기</button>
 <div class="loginbox">
     <h1>로그인</h1>
 
-    <!-- errorMessage: model.addAttribute("errorMessage", ...) -->
-    <div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></div>
+    <div th:if="${param.error}" style="color:red;">아이디/비밀번호를 다시 입력하세요.</div>
     <div id="loginMessage"></div>
 
     <form id="loginForm" method="post" action="/login">
