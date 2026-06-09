@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/signup.css">
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<div class="signupbox">
+    <h1>회원가입</h1>
+
+    <!-- errorMessage: model.addAttribute("errorMessage", ...) -->
+    <div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></div>
+    <div id="signupMessage"></div>
+
+    <form id="signupForm" method="post" action="/user/signUp">
+        <div class="name">
+            <label for="nameInput">이름</label>
+            <input id="nameInput" name="name" placeholder="이름">
+        </div>
+        <div class="id">
+            <label for="idInput">아이디</label>
+            <input id="idInput" name="userID" placeholder="아이디">
+        </div>
+        <div class="email">
+            <label for="emailInput">이메일</label>
+            <input id="emailInput" name="email" type="email" placeholder="이메일">
+        </div>
+        <div class="pw">
+            <label for="pwInput">비밀번호</label>
+            <input id="pwInput" name="password" type="password" placeholder="비밀번호">
+        </div>
+        <div class="pw">
+            <label for="pwConfirmInput">비밀번호 확인</label>
+            <input id="pwConfirmInput" name="passwordConfirm" type="password" placeholder="비밀번호 확인">
+        </div>
+        <div>
+            <button type="submit">회원가입</button>
+        </div>
+    </form>
+    <div>
+        <a href="/user/loginView">로그인</a>
+    </div>
+</div>
+</body>
+</html>

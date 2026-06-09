@@ -33,7 +33,7 @@ public class UserController {
     }
     @GetMapping("signUpView")
     public String signUpView(){
-        return "signUp";
+        return "signup";
     }
     @PostMapping("signUp")
     public String signUp(UserRequest userRequest, Model model){
@@ -46,17 +46,17 @@ public class UserController {
         if (userId == null || name == null || email == null || password == null
                 || userId.trim().isEmpty() || name.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
             model.addAttribute("errorMessage", "필수 항목을 모두 입력해주세요.");
-            return "signUp";
+            return "signup";
         }
 
         if (!password.equals(passwordConfirm)) {
             model.addAttribute("errorMessage", "비밀번호 확인이 일치하지 않습니다.");
-            return "signUp";
+            return "signup";
         }
 
         if (!userService.idCheck(userId)) {
             model.addAttribute("errorMessage", "이미 사용 중인 아이디입니다.");
-            return "signUp";
+            return "signup";
         }
 
         if (userService.signUp(UserVO.builder()
@@ -68,7 +68,7 @@ public class UserController {
             return "redirect:/user/loginView";
 
         model.addAttribute("errorMessage", "회원가입에 실패했습니다.");
-        return "signUp";
+        return "signup";
     }
     @GetMapping("getIdView")
     public String getIdView(){
