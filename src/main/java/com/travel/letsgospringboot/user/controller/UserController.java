@@ -17,11 +17,11 @@ public class UserController {
 
     //private final UserService userService;
 
-    @GetMapping("user")
-    @ResponseBody
-    public String user(){
-        return "user";
-    }
+//    @GetMapping("user")
+//    @ResponseBody
+//    public String user(){
+//        return "user";
+//    }
     @GetMapping("loginView")
     public String loginView(){
         return "login";

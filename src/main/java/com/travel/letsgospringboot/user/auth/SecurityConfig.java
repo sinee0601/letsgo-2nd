@@ -26,7 +26,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
                                 "/user/getIdView", "/user/getId",
                                 "/user/updatePwView", "/user/updatePw",
-                                "/user/api/signUpAjax", "/user/api/getIdAjax", "/user/api/updatePwAjax").permitAll()
+                                "/user/api/**").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/myschedule/**").authenticated()
                         .anyRequest().permitAll());
