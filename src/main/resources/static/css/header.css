@@ -3,11 +3,11 @@ header.site-header {
     box-sizing: border-box;
     width: 100%;
     height: auto;
-    min-height: 180px;
+    min-height: 120px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 40px;
+    padding: 8px 40px;
     border-bottom: 4px solid #ff7a00;
 }
 
@@ -18,7 +18,7 @@ header.site-header {
 }
 
 .logo .site-logo {
-    height: 200px;
+    height: 133px;
     width: auto;
     display: block;
 }
@@ -64,4 +64,26 @@ header.site-header {
     padding: 10px 14px;
     color: #534537;
     font-weight: 700;
+}
+
+.menu .logout-form {
+    display: inline;
+    margin: 0;
+}
+
+.menu .logout-btn {
+    background: none;
+    border: 1px solid #ff7a00;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.menu .logout-btn:hover {
+    background: #ff7a00;
+    transform: translateY(-2px);
 }

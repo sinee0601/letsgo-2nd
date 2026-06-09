@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -99,16 +100,17 @@ public class PlaceRestController {
     public ResponseEntity<Map<String, Object>> addCartToSchedule(
             @RequestParam("placeIds") String placeIdsStr,
             @RequestParam(value = "myScheduleId", required = false) String myScheduleId,
+            Principal principal,
             HttpSession session) {
 
         Map<String, Object> result = new HashMap<>();
 
-        String loginUser = (String) session.getAttribute("loginOK");
-        if (loginUser == null) {
+        if (principal == null) {
             result.put("ok", false);
             result.put("message", "로그인이 필요합니다.");
             return ResponseEntity.ok(result);
         }
+        String loginUser = principal.getName();
 
         if (placeIdsStr == null || placeIdsStr.trim().isEmpty()) {
             result.put("ok", false);

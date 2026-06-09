@@ -25,6 +25,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp").permitAll()
                         .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/myschedule/**").authenticated()
                         .anyRequest().permitAll());
 
         //로그인
@@ -34,7 +35,7 @@ public class SecurityConfig {
                 .usernameParameter("userID")
                 .passwordParameter("password")
                 .failureUrl("/user/loginView?error=true")
-                .defaultSuccessUrl("/user/user")
+                .defaultSuccessUrl("/")
                 .permitAll()
         );
         return http.build();

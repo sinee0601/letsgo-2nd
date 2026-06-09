@@ -3,121 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <title>일정 게시판 - Let's GO!</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/css/mySchedule.css}"/>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
     <script th:src="@{/js/postScheduleDetail.js}" defer></script>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="logo">
-            <a href="/" title="Let's GO! 홈">
-                <img src="/img/logo.png" alt="Let's GO!" class="site-logo"/>
-            </a>
-        </div>
-        <ul class="menu">
-            <li><a href="/">홈</a></li>
-            <li><a href="/leisureUI">플레이스 조회</a></li>
-            <li><a href="/postSchedule/list">일정게시판</a></li>
-            <li><a href="/myschedule/list">내일정</a></li>
-            <li class="user-name">문성고 님</li>
-            <li><a href="/logoutAction">로그아웃</a></li>
+<header class="site-header">
+    <div class="logo">
+        <a th:href="@{/}" title="Let's GO! 홈">
+            <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo"/>
+        </a>
+    </div>
+
+    <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
+        <li><a th:href="@{/}">홈</a></li>
+        <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
+        <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
+        <li><a th:href="@{/myschedule/list}">내일정</a></li>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <li><a th:href="@{/user/loginView}">로그인</a></li>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <li class="user-name"
+                th:text="${#authentication.principal.user.name} + ' 님'">
+                사용자 님
+            </li>
+            <li>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        로그아웃
+                    </button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</header>
+<div class="layout-wrapper">
+    <aside class="sidebar">
+        <ul>
+            <li>
+                <button type="button" class="nav-btn" data-filter="route">동선관리</button>
+            </li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="budget">예산관리</button>
+            </li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="todo">To-Do 리스트</button>
+            </li>
         </ul>
-    </header>
-        <div class="layout-wrapper">
-            <aside class="sidebar">
-                <ul>
-                    <li><button type="button" class="nav-btn" data-filter="route">동선관리</button></li>
-                    <li><button type="button" class="nav-btn" data-filter="budget">예산관리</button></li>
-                    <li><button type="button" class="nav-btn" data-filter="todo">To-Do 리스트</button></li>
+
+        <ul>
+            <li>
+                <button type="button" class="nav-btn" data-filter="list">삭제하기</button>
+            </li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="delete">내 일정에 추가하기</button>
+            </li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="add">목록으로</button>
+            </li>
+        </ul>
+    </aside>
+    <main>
+        <div class="content-container">
+
+            <div class="content-left">
+                <div class="schedule-header">
+                    <div th:text="${detail.scheduleTitle}">일정제목</div>
+                </div>
+
+                <ul id="sortableList">
+                    <li th:each="route : ${detail.routes}"
+                        class="sortable-item"
+                        th:data-visit-id="${route.visitId}">
+                        <span th:text="${route.visitOrder} + '. ' + ${route.title}">방문서순</span>
+                        <button type="button"
+                                class="delete-visit-btn"
+                                th:data-visit-id="${route.visitId}">×
+                        </button>
+                    </li>
                 </ul>
 
-                <ul>
-                    <li><button type="button" class="nav-btn" data-filter="list">삭제하기</button></li>
-                    <li><button type="button" class="nav-btn" data-filter="delete">내 일정에 추가하기</button></li>
-                    <li><button type="button" class="nav-btn" data-filter="add">목록으로</button></li>
-                </ul>
-            </aside>
-            <main>
-                <div class="content-container">
-
-                    <div class="content-left">
-                        <div class="schedule-header" >
-                            <div th:text="${detail.scheduleTitle}">일정제목</div>
-                        </div>
-
-                        <ul id="sortableList">
-                            <li th:each="route : ${detail.routes}"
-                                class="sortable-item"
-                                th:data-visit-id="${route.visitId}">
-                                <span th:text="${route.visitOrder} + '. ' + ${route.title}">방문서순</span>
-                                <button type="button"
-                                        class="delete-visit-btn"
-                                        th:data-visit-id="${route.visitId}">×
-                                </button>
-                            </li>
-                        </ul>
-
-                        <div class="content-left-bottom">
-                            <button type="button" id="updateRouteBtn">❤️</button>
-                            <div th:text="${detail.likeCount}">좋아요 수</div>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-                    <div id="contentRight"></div>
-
+                <div class="content-left-bottom">
+                    <button type="button" id="updateRouteBtn">❤️</button>
+                    <div th:text="${detail.likeCount}">좋아요 수</div>
                 </div>
-            </main>
-            <template id="tpl-route">
-                <div class="content-right">
-                    <div class="content-right-top">
-                        <div class="map-area">
-                            <div class="map-empty">📍 지도 미리보기 (예시)</div>
-                        </div>
-                    </div>
-                    <div class="content-right-bottom">
-                        <ol class="route-summary">
-                            <li th:each="route : ${detail.routes}" th:text="${detail.scheduleTitle}">수원 화성</li>
-                        </ol>
-                    </div>
+            </div>
+
+            <div class="divider"></div>
+            <div id="contentRight"></div>
+
+        </div>
+    </main>
+    <template id="tpl-route">
+        <div class="content-right">
+            <div class="content-right-top">
+                <div class="map-area">
+                    <div class="map-empty">📍 지도 미리보기 (예시)</div>
                 </div>
-            </template>
+            </div>
+            <div class="content-right-bottom">
+                <ol class="route-summary">
+                    <li th:each="route : ${detail.routes}" th:text="${detail.scheduleTitle}">수원 화성</li>
+                </ol>
+            </div>
+        </div>
+    </template>
 
-            <template id="tpl-budget">
-                <div class="content-right">
-                    <div class="memo">
-                        <div><h3>예산관리</h3></div>
+    <template id="tpl-budget">
+        <div class="content-right">
+            <div class="memo">
+                <div><h3>예산관리</h3></div>
 
-                        <span id="budgetData" th:text="${budgetDetail}" hidden></span>
+                <span id="budgetData" th:text="${budgetDetail}" hidden></span>
 
-                        <ul id="budgetList" class="budget-list">
-                            <li th:each="item : ${scheduleRoute}"
-                                class="budget-row"
-                                th:data-visit-id="${item.visitId}">
+                <ul id="budgetList" class="budget-list">
+                    <li th:each="item : ${scheduleRoute}"
+                        class="budget-row"
+                        th:data-visit-id="${item.visitId}">
                     <span class="budget-place"
                           th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
-                                <input type="number" class="budget-amount" min="0" step="1000" placeholder="0"/>
-                                <span class="budget-won">원</span>
-                            </li>
-                        </ul>
+                        <input type="number" class="budget-amount" min="0" step="1000" placeholder="0"/>
+                        <span class="budget-won">원</span>
+                    </li>
+                </ul>
 
-                        <div class="budget-total">합계: <strong id="budgetTotal">0</strong> 원</div>
-                        <button type="button" id="saveBudgetBtn" class="save-title-btn">예산 저장</button>
-                    </div>
-                </div>
-            </template>
+                <div class="budget-total">합계: <strong id="budgetTotal">0</strong> 원</div>
+                <button type="button" id="saveBudgetBtn" class="save-title-btn">예산 저장</button>
+            </div>
+        </div>
+    </template>
 
-            <template id="tpl-todo">
-                <div class="content-right">
-                    <div class="memo">
-                        <div><h3>To-Do 리스트</h3></div>
-                        <textarea id="todoDetail" class="detail-textarea"
-                                  placeholder="할 일을 입력하세요" th:text="${todoDetail}"></textarea>
-                        <button type="button" id="saveTodoBtn" class="save-title-btn">저장</button>
-                    </div>
-                </div>
-            </template>
+    <template id="tpl-todo">
+        <div class="content-right">
+            <div class="memo">
+                <div><h3>To-Do 리스트</h3></div>
+                <textarea id="todoDetail" class="detail-textarea"
+                          placeholder="할 일을 입력하세요" th:text="${todoDetail}"></textarea>
+                <button type="button" id="saveTodoBtn" class="save-title-btn">저장</button>
+            </div>
+        </div>
+    </template>
 </body>
 
 </html>

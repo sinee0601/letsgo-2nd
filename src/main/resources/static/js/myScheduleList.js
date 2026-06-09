@@ -17,6 +17,8 @@ navBtns.forEach(btn => {
 
 searchBtn.addEventListener("click", fetchSchedules);
 
+sortOrderSelect?.addEventListener("change", fetchSchedules);
+
 function fetchSchedules() {
     const searchTitle = searchTitleInput?.value ?? "";
     const sortOrder = sortOrderSelect?.value ?? "date";
@@ -43,7 +45,7 @@ function renderMySchedules(myScheduleList) {
                     <img src="${item.firstImage}" alt="이미지" class="box-placeholder">
                 </a>
                 <figcaption class="figure-caption">${item.placeTitle}</figcaption>
-                <div>${item.startAt} 📍${item.addr1}</div>
+                <div>${item.startAt}<br>📍${item.addr1}</div>
             </figure>
         `;
     }).join("");

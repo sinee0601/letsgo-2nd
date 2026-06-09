@@ -321,6 +321,15 @@ a.box-placeholder:hover {
 a {
 	text-decoration: none;
 	outline: none;
+	color: inherit;
+}
+
+a:link,
+a:visited,
+.figure-link,
+.figure-link * {
+	color: #222;
+	text-decoration: none;
 }
 
 button:not(.like-btn),

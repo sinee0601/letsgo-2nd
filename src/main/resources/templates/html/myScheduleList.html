@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
     <title>내 일정 목록 - Let's GO!</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/css/myScheduleList.css}"/>
     <script th:src="@{/js/myScheduleList.js}" defer></script>
 </head>
@@ -10,24 +12,44 @@
 
 <header class="site-header">
     <div class="logo">
-        <a href="/" title="Let's GO! 홈">
-            <img src="/img/logo.png" alt="Let's GO!" class="site-logo"/>
+        <a th:href="@{/}" title="Let's GO! 홈">
+            <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo"/>
         </a>
     </div>
-    <ul class="menu">
-        <li><a href="/">홈</a></li>
-        <li><a href="/leisureUI">플레이스 조회</a></li>
-        <li><a href="/postScheduleListUI">일정게시판</a></li>
-        <li><a href="/myScheduleListUI">내일정</a></li>
-        <li class="user-name">강X회 님</li>
-        <li><a href="/logoutAction">로그아웃</a></li>
+
+    <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
+        <li><a th:href="@{/}">홈</a></li>
+        <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
+        <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
+        <li><a th:href="@{/myschedule/list}">내일정</a></li>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <li><a th:href="@{/user/loginView}">로그인</a></li>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <li class="user-name"
+                th:text="${#authentication.principal.user.name} + ' 님'">
+                사용자 님
+            </li>
+            <li>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        로그아웃
+                    </button>
+                </form>
+            </li>
+        </th:block>
     </ul>
 </header>
 <div class="layout-wrapper">
     <aside class="sidebar">
         <ul>
-            <li><button type="button" class="nav-btn" data-filter="all">전체 일정</button></li>
-            <li><button type="button" class="nav-btn" data-filter="shared">공유된 일정</button></li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="all">전체 일정</button>
+            </li>
+            <li>
+                <button type="button" class="nav-btn" data-filter="shared">공유된 일정</button>
+            </li>
         </ul>
     </aside>
 
@@ -59,8 +81,9 @@
                     </div>
                     <img th:src="${item.firstImage}" alt="이미지" class="box-placeholder"/>
                     <figcaption class="figure-caption" th:text="${item.placeTitle}">금원 수원 수영장</figcaption>
-                    <div th:text="${#strings.substring(item.startAt, 0, 10)} ">2026-04-16
-                        <span th:text="' 📍'+ ${item.addr1}">📍경기 안양</span>
+                    <div>
+                        <span th:text="${item.startAt}">2026-04-16</span><br/>
+                        <span th:text="'📍' + ${item.addr1}">📍서울특별시 강남구</span>
                     </div>
                 </figure>
             </a>

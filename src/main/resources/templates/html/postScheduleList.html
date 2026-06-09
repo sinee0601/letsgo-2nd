@@ -8,17 +8,33 @@
 <body>
 <header class="site-header">
     <div class="logo">
-        <a href="/" title="Let's GO! 홈">
-            <img src="/img/logo.png" alt="Let's GO!" class="site-logo"/>
+        <a th:href="@{/}" title="Let's GO! 홈">
+            <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo"/>
         </a>
     </div>
-    <ul class="menu">
-        <li><a href="/">홈</a></li>
-        <li><a href="/leisureUI">플레이스 조회</a></li>
-        <li><a href="/postSchedule/list">일정게시판</a></li>
-        <li><a href="/myScheduleListUI">내일정</a></li>
-        <li class="user-name">문성고 님</li>
-        <li><a href="/logoutAction">로그아웃</a></li>
+
+    <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
+        <li><a th:href="@{/}">홈</a></li>
+        <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
+        <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
+        <li><a th:href="@{/myschedule/list}">내일정</a></li>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <li><a th:href="@{/user/loginView}">로그인</a></li>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <li class="user-name"
+                th:text="${#authentication.principal.user.name} + ' 님'">
+                사용자 님
+            </li>
+            <li>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        로그아웃
+                    </button>
+                </form>
+            </li>
+        </th:block>
     </ul>
 </header>
     <div class="layout-wrapper">

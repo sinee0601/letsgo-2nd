@@ -2,203 +2,212 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8" />
-	<link rel="stylesheet" type="text/css" th:href="@{/view/css/stay.css(v=2)}">
-	<link rel="stylesheet" type="text/css" th:href="@{/view/css/floating-cart.css}">
-	<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/view/css/stay.css(v=2)}">
+    <link rel="stylesheet" type="text/css" th:href="@{/view/css/floating-cart.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
 </head>
 
 <body th:data-context-path="@{/}">
 
-	<header class="site-header">
+<header class="site-header">
+    <div class="logo">
+        <a th:href="@{/}" title="Let's GO! 홈">
+            <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo"/>
+        </a>
+    </div>
 
-		<div class="logo">
-			<a th:href="@{/}" title="Let's GO! 홈">
-				<img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo" />
-			</a>
-		</div>
+    <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
+        <li><a th:href="@{/}">홈</a></li>
+        <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
+        <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
+        <li><a th:href="@{/myschedule/list}">내일정</a></li>
 
-		<ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
-			<li><a th:href="@{/}">홈</a></li>
-			<li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
-			<li><a th:href="@{/postschedule/list}">일정게시판</a></li>
-			<li><a th:href="@{/myschedule/list}">내일정</a></li>
+        <th:block sec:authorize="!isAuthenticated()">
+            <li><a th:href="@{/user/loginView}">로그인</a></li>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <li class="user-name"
+                th:text="${#authentication.principal.user.name} + ' 님'">
+                사용자 님
+            </li>
+            <li>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        로그아웃
+                    </button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</header>
+<form th:action="@{/places/stay}" method="GET">
+    <input type="hidden" name="cmd" value="searchPlace"/>
+    <input type="hidden" name="placeType" value="STAY"/>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <div>
+                <ul>
+                    <li>
+                        <details>
+                            <summary>호텔</summary>
+                            <ul>
+                                <li><label><input type="radio" name="category" value="AC010100"
+                                                  th:checked="${param.category != null && param.category[0] == 'AC010100'}">
+                                    호텔</label></li>
+                            </ul>
+                        </details>
+                    </li>
 
-			<th:block th:if="${session.loginOK == null}">
-				<li><a th:href="@{/user/loginView}">로그인</a></li>
-			</th:block>
-			<th:block th:if="${session.loginOK != null}">
-				<li class="user-name"
-					th:text="${(info != null && info.name != null && info.name != '') ? info.name : session.loginOK} + ' 님'">
-					사용자 님</li>
-				<li><a th:href="@{/logout}">로그아웃</a></li>
-			</th:block>
-		</ul>
-	</header>
+                    <li>
+                        <details>
+                            <summary>콘도</summary>
+                            <ul>
+                                <li><label><input type="radio" name="category" value="NO_DATA_CONDO"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CONDO'}">
+                                    콘도</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_RESIDENCE"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_RESIDENCE'}">
+                                    레지던스</label></li>
+                            </ul>
+                        </details>
+                    </li>
 
-	<form th:action="@{/places/stay}" method="GET">
-		<input type="hidden" name="cmd" value="searchPlace" />
-		<input type="hidden" name="placeType" value="STAY" />
-		<div class="layout-wrapper">
-			<aside class="sidebar">
-				<div>
-					<ul>
-						<li>
-							<details>
-								<summary>호텔</summary>
-								<ul>
-									<li><label><input type="radio" name="category" value="AC010100"
-												th:checked="${param.category != null && param.category[0] == 'AC010100'}">
-											호텔</label></li>
-								</ul>
-							</details>
-						</li>
+                    <li>
+                        <details>
+                            <summary>펜션/민박</summary>
+                            <ul>
+                                <li><label><input type="radio" name="category" value="NO_DATA_PENSION"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_PENSION'}">
+                                    펜션</label></li>
+                                <li><label><input type="radio" name="category" value="AC030200"
+                                                  th:checked="${param.category != null && param.category[0] == 'AC030200'}">
+                                    한옥스테이</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_FARM"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_FARM'}">
+                                    농어촌</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_MINBAK"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_MINBAK'}">
+                                    민박</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_HOMESTAY"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_HOMESTAY'}">
+                                    홈스테이</label></li>
+                            </ul>
+                        </details>
+                    </li>
 
-						<li>
-							<details>
-								<summary>콘도</summary>
-								<ul>
-									<li><label><input type="radio" name="category" value="NO_DATA_CONDO"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_CONDO'}">
-											콘도</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_RESIDENCE"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_RESIDENCE'}">
-											레지던스</label></li>
-								</ul>
-							</details>
-						</li>
+                    <li>
+                        <details>
+                            <summary>모텔</summary>
+                            <ul>
+                                <li><label><input type="radio" name="category" value="NO_DATA_MOTEL"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_MOTEL'}">
+                                    모텔</label></li>
+                            </ul>
+                        </details>
+                    </li>
 
-						<li>
-							<details>
-								<summary>펜션/민박</summary>
-								<ul>
-									<li><label><input type="radio" name="category" value="NO_DATA_PENSION"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_PENSION'}">
-											펜션</label></li>
-									<li><label><input type="radio" name="category" value="AC030200"
-												th:checked="${param.category != null && param.category[0] == 'AC030200'}">
-											한옥스테이</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_FARM"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_FARM'}">
-											농어촌</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_MINBAK"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_MINBAK'}">
-											민박</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_HOMESTAY"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_HOMESTAY'}">
-											홈스테이</label></li>
-								</ul>
-							</details>
-						</li>
+                    <li>
+                        <details>
+                            <summary>캠핑</summary>
+                            <ul>
+                                <li><label><input type="radio" name="category" value="NO_DATA_CAMP_GENERAL"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_GENERAL'}">
+                                    일반야영장</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_CAMP_AUTO"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_AUTO'}">
+                                    오토캠핑장</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_CAMP_CARAVAN"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_CARAVAN'}">
+                                    카라반</label></li>
+                                <li><label><input type="radio" name="category" value="NO_DATA_CAMP_GLAMPING"
+                                                  th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_GLAMPING'}">
+                                    글램핑장</label></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+        </aside>
 
-						<li>
-							<details>
-								<summary>모텔</summary>
-								<ul>
-									<li><label><input type="radio" name="category" value="NO_DATA_MOTEL"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_MOTEL'}">
-											모텔</label></li>
-								</ul>
-							</details>
-						</li>
+        <main>
 
-						<li>
-							<details>
-								<summary>캠핑</summary>
-								<ul>
-									<li><label><input type="radio" name="category" value="NO_DATA_CAMP_GENERAL"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_GENERAL'}">
-											일반야영장</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_CAMP_AUTO"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_AUTO'}">
-											오토캠핑장</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_CAMP_CARAVAN"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_CARAVAN'}">
-											카라반</label></li>
-									<li><label><input type="radio" name="category" value="NO_DATA_CAMP_GLAMPING"
-												th:checked="${param.category != null && param.category[0] == 'NO_DATA_CAMP_GLAMPING'}">
-											글램핑장</label></li>
-								</ul>
-							</details>
-						</li>
-					</ul>
-				</div>
-			</aside>
+            <div class="content-container">
+                <div class="content-left">
+                    <span th:text="'총 ' + ${totalCount} + '개의 항목'">총 0개의 항목</span>
+                    <div class="search-area">
+                        <input type="text" name="keyword" placeholder="장소 이름이나 지역을 검색하세요"
+                               th:value="${param.keyword != null ? param.keyword[0] : ''}"/>
+                        <button type="submit">검색하기</button>
+                        <div class="sort-area">
+                            <select name="sortOrder" id="sortOrderSelect">
+                                <option value="name"
+                                        th:selected="${param.sortOrder == null || param.sortOrder[0] != 'popular'}">이름순
+                                </option>
+                                <option value="popular"
+                                        th:selected="${param.sortOrder != null && param.sortOrder[0] == 'popular'}">인기순
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<main>
+            <div class="container" id="stayPlaceContainer">
+                <figure class="figure" th:each="place : ${stayPlaceList}">
+                    <th:block th:if="${place.firstImage != null && place.firstImage != ''}">
+                        <img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder"/>
+                    </th:block>
+                    <th:block th:unless="${place.firstImage != null && place.firstImage != ''}">
+                        <a href="#" class="box-placeholder">이미지</a>
+                    </th:block>
+                    <figcaption class="figure-caption" th:text="${place.title}">장소제목</figcaption>
+                    <span th:text="${place.addr1}">주소</span>
 
-				<div class="content-container">
-					<div class="content-left">
-						<span th:text="'총 ' + ${totalCount} + '개의 항목'">총 0개의 항목</span>
-						<div class="search-area">
-							<input type="text" name="keyword" placeholder="장소 이름이나 지역을 검색하세요"
-								th:value="${param.keyword != null ? param.keyword[0] : ''}" />
-							<button type="submit">검색하기</button>
-							<div class="sort-area">
-								<select name="sortOrder" id="sortOrderSelect">
-									<option value="name"
-										th:selected="${param.sortOrder == null || param.sortOrder[0] != 'popular'}">이름순
-									</option>
-									<option value="popular"
-										th:selected="${param.sortOrder != null && param.sortOrder[0] == 'popular'}">인기순
-									</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
+                    <button type="button" class="like-btn" th:data-place-id="${place.placeId}"
+                            data-place-type="STAY" th:data-like-url="@{/placeLikeAjax}">
+                        <h1>❤️</h1>
+                    </button>
+                    <div class="like-count" th:id="'likeCount-' + ${place.placeId}"
+                         th:text="'좋아요: ' + ${place.likeCount}">좋아요: 0
+                    </div>
 
-				<div class="container" id="stayPlaceContainer">
-					<figure class="figure" th:each="place : ${stayPlaceList}">
-						<th:block th:if="${place.firstImage != null && place.firstImage != ''}">
-							<img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder" />
-						</th:block>
-						<th:block th:unless="${place.firstImage != null && place.firstImage != ''}">
-							<a href="#" class="box-placeholder">이미지</a>
-						</th:block>
-						<figcaption class="figure-caption" th:text="${place.title}">장소제목</figcaption>
-						<span th:text="${place.addr1}">주소</span>
+                    <button type="button" class="add-to-cart-btn" th:data-place-id="${place.placeId}"
+                            th:data-place-title="${place.title}" th:data-place-type="${place.placeType}">담기
+                    </button>
+                </figure>
+            </div>
 
-						<button type="button" class="like-btn" th:data-place-id="${place.placeId}"
-							data-place-type="STAY" th:data-like-url="@{/placeLikeAjax}">
-							<h1>❤️</h1>
-						</button>
-						<div class="like-count" th:id="'likeCount-' + ${place.placeId}"
-							th:text="'좋아요: ' + ${place.likeCount}">좋아요: 0</div>
+            <div class="button-container">
+                <button type="button" id="leisure" th:onclick="|location.href='@{/places/leisure}'|">
+                    <<= 레저스포츠
+                </button>
+                <button type="button" id="restaurant" th:onclick="|location.href='@{/places/restaurant}'|">
+                    <= 음식점
+                </button>
+            </div>
+        </main>
+    </div>
+</form>
 
-						<button type="button" class="add-to-cart-btn" th:data-place-id="${place.placeId}"
-							th:data-place-title="${place.title}" th:data-place-type="${place.placeType}">담기</button>
-					</figure>
-				</div>
+<script th:src="@{/view/js/place-like.js}"></script>
 
-				<div class="button-container">
-					<button type="button" id="leisure" th:onclick="|location.href='@{/places/leisure}'|">
-						<<= 레저스포츠</button>
-							<button type="button" id="restaurant" th:onclick="|location.href='@{/places/restaurant}'|">
-								<= 음식점 </button>
-				</div>
-			</main>
-		</div>
-	</form>
+<div id="locked-cart-data" style="display: none;">
+    <th:block th:if="${session.fromScheduleMode}">
+        <input type="hidden" id="from-schedule-mode" value="true"/>
+        <input type="hidden" id="current-schedule-id" th:value="${session.currentScheduleId}"/>
+    </th:block>
+    <div th:each="item : ${session.lockedCartItems}" class="locked-cart-item" th:data-place-id="${item.placeId}"
+         th:data-place-title="${item.title}"></div>
+</div>
+<div id="session-cart-data" style="display: none;">
+    <div th:each="cartPlace : ${session.placeCartList}" class="session-cart-item"
+         th:data-place-id="${cartPlace.placeId}" th:data-place-title="${cartPlace.title}"
+         th:data-place-type="${cartPlace.placeType}"></div>
+</div>
 
-	<script th:src="@{/view/js/place-like.js}"></script>
-
-	<div id="locked-cart-data" style="display: none;">
-		<th:block th:if="${session.fromScheduleMode}">
-			<input type="hidden" id="from-schedule-mode" value="true" />
-			<input type="hidden" id="current-schedule-id" th:value="${session.currentScheduleId}" />
-		</th:block>
-		<div th:each="item : ${session.lockedCartItems}" class="locked-cart-item" th:data-place-id="${item.placeId}"
-			th:data-place-title="${item.title}"></div>
-	</div>
-	<div id="session-cart-data" style="display: none;">
-		<div th:each="cartPlace : ${session.placeCartList}" class="session-cart-item"
-			th:data-place-id="${cartPlace.placeId}" th:data-place-title="${cartPlace.title}"
-			th:data-place-type="${cartPlace.placeType}"></div>
-	</div>
-
-	<script th:src="@{/view/js/floating-cart.js}"></script>
-	<script th:src="@{/view/js/stay.js}"></script>
+<script th:src="@{/view/js/floating-cart.js}"></script>
+<script th:src="@{/view/js/stay.js}"></script>
 
 </body>
 

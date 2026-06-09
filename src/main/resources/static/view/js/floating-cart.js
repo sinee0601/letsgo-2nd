@@ -110,6 +110,12 @@ function startFloatingCart(contextPath) {
 
 	addToScheduleButton.addEventListener('click', function () {
 		var isFromScheduleMode = document.getElementById('from-schedule-mode') !== null;
+
+		if (isFromScheduleMode) {
+			addNewVisitsToSchedule(contextPath, cartBox);
+			return;
+		}
+
 		var items = cartBox.querySelectorAll('.place-item');
 		var ids = [];
 		for (var i = 0; i < items.length; i++) {
@@ -125,20 +131,10 @@ function startFloatingCart(contextPath) {
 			return;
 		}
 
-		var body = 'placeIds=' + encodeURIComponent(ids.join(','));
-		if (isFromScheduleMode) {
-			var scheduleIdEl = document.getElementById('current-schedule-id');
-			if (!scheduleIdEl || !scheduleIdEl.value) {
-				alert('일정 정보를 찾을 수 없습니다.');
-				return;
-			}
-			body += '&myScheduleId=' + encodeURIComponent(scheduleIdEl.value);
-		}
-
 		fetch(contextPath + '/addCartToScheduleAjax', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body: body
+			body: 'placeIds=' + encodeURIComponent(ids.join(','))
 		})
 		.then(function (response) { return response.json(); })
 		.then(function (data) {
@@ -162,20 +158,12 @@ function startFloatingCart(contextPath) {
 				}
 			}
 
-			if (isFromScheduleMode) {
-				if (added == 0) {
-					alert('일정에 넣은 장소가 없습니다.');
-				} else {
-					location.href = contextPath + '/controller?cmd=myScheduleRouteManageUI';
-				}
+			refreshCartCount(cartBox, countText);
+			selectAllButton.textContent = '전체 선택';
+			if (added == 0) {
+				alert('일정에 넣은 장소가 없습니다.');
 			} else {
-				refreshCartCount(cartBox, countText);
-				selectAllButton.textContent = '전체 선택';
-				if (added == 0) {
-					alert('일정에 넣은 장소가 없습니다.');
-				} else {
-					alert('카트에 담긴 ' + added + '곳으로 새 일정을 만들었습니다. 내 일정에서 확인할 수 있습니다.');
-				}
+				alert('카트에 담긴 ' + added + '곳으로 새 일정을 만들었습니다. 내 일정에서 확인할 수 있습니다.');
 			}
 		});
 	});
@@ -184,8 +172,57 @@ function startFloatingCart(contextPath) {
 
 	var isFromScheduleMode = document.getElementById('from-schedule-mode') !== null;
 	if (isFromScheduleMode) {
-		addToScheduleButton.textContent = '일정에 추가';
+		addToScheduleButton.textContent = '선택한 장소 일정에 추가';
 	}
+}
+
+function addNewVisitsToSchedule(contextPath, cartBox) {
+	var scheduleIdEl = document.getElementById('current-schedule-id');
+	if (!scheduleIdEl || !scheduleIdEl.value) {
+		alert('일정 정보를 찾을 수 없습니다.');
+		return;
+	}
+	var scheduleId = scheduleIdEl.value;
+
+	var items = cartBox.querySelectorAll('.place-item');
+	var lockedCount = 0;
+	var newIds = [];
+	for (var i = 0; i < items.length; i++) {
+		if (items[i].dataset.locked === 'true') {
+			lockedCount++;
+			continue;
+		}
+		var pid = items[i].dataset.placeId;
+		if (pid != null && pid !== '') {
+			newIds.push(pid);
+		}
+	}
+
+	if (newIds.length === 0) {
+		alert('새로 담은 장소가 없습니다.');
+		return;
+	}
+
+	var requests = [];
+	for (var j = 0; j < newIds.length; j++) {
+		var visitOrder = lockedCount + j + 1;
+		var body = 'visitOrder=' + encodeURIComponent(visitOrder)
+				+ '&placeId=' + encodeURIComponent(newIds[j])
+				+ '&scheduleId=' + encodeURIComponent(scheduleId);
+		requests.push(fetch(contextPath + '/myschedule/api/visit', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: body
+		}));
+	}
+
+	Promise.all(requests)
+		.then(function () {
+			location.href = contextPath + '/myschedule/detail/' + scheduleId;
+		})
+		.catch(function () {
+			alert('일정에 추가하는 중 오류가 발생했습니다.');
+		});
 }
 
 function openCartModal(modal) {
