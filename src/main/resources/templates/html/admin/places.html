@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이스 관리 - LetsGo! Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Outfit & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link href="../../../static/css/admin-dashboard.css" th:href="@{/css/admin-dashboard.css}" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="admin-sidebar">
+                <div class="d-flex align-items-center mb-4 px-2">
+                    <i class="bi bi-send-fill fs-3 text-info me-2"></i>
+                    <span class="fs-4 fw-bold text-white Outfit">LetsGo! Admin</span>
+                </div>
+                <hr class="text-secondary">
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">
+                            <i class="bi bi-speedometer2 me-2"></i> 대시보드
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/places}">
+                            <i class="bi bi-map me-2"></i> 플레이스 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/users}">
+                            <i class="bi bi-people me-2"></i> 회원 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/posts}">
+                            <i class="bi bi-journal-text me-2"></i> 게시물 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/reports}">
+                            <i class="bi bi-exclamation-triangle me-2"></i> 신고 관리
+                        </a>
+                    </li>
+                </ul>
+                <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                    <a href="../html/index.html" th:href="@{/}" class="btn btn-outline-light w-100 btn-sm">
+                        <i class="bi bi-box-arrow-left me-1"></i> 메인 서비스로
+                    </a>
+                </div>
+            </nav>
+
+            <main class="admin-main">
+                <div class="admin-header">
+                    <h1 class="h2 fw-bold text-dark">플레이스 목록 조회 및 관리</h1>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-secondary"><strong class="text-dark">최고관리자</strong> 님 로그인 중</span>
+                        <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-power"></i> 로그아웃</a>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">전체 등록 플레이스 조회</h5>
+                        <form th:action="@{/admin/places}" method="GET" class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" name="keyword" th:value="${param.keyword}"
+                                placeholder="장소명 검색...">
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>장소ID</th>
+                                <th>장소명</th>
+                                <th>타입</th>
+                                <th>주소</th>
+                                <th>노출 상태</th>
+                                <th>동작</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="place : ${places}" th:id="'place-row-' + ${place.placeId}">
+                                <td th:text="${place.placeId}">101</td>
+                                <td><strong th:text="${place.title}">경복궁</strong></td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${place.placeType == 'TOURIST' || place.placeType == 'TOUR' ? 'badge-tourist' : (place.placeType == 'RESTAURANT' || place.placeType == 'FOOD' ? 'badge-restaurant' : (place.placeType == 'ACCOMMODATION' || place.placeType == 'STAY' ? 'badge-accommodation' : 'badge-leisure'))}"
+                                        th:text="${place.placeType}">TOURIST</span>
+                                </td>
+                                <td th:text="${place.addr1}">서울특별시 종로구 사직로 161</td>
+                                <td>
+                                    <span class="admin-badge admin-badge-success" th:if="${place.isActive}">공개</span>
+                                    <span class="admin-badge admin-badge-danger"
+                                        th:unless="${place.isActive}">비공개</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        th:onclick="|openEditPlaceModal('${place.placeId}', '${place.title}', '${place.placeType}', '${place.addr1}', '${place.addr2}', '${place.lclssystm1}', '${place.lclssystm2}', '${place.lclssystm3}')|"><i
+                                            class="bi bi-pencil-square"></i>
+                                    </button>
+
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                        th:onclick="|togglePlaceVisibility('${place.placeId}', ${!place.isActive})|">
+                                        <i class="bi bi-eye-slash"></i>
+                                    </button>
+
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        th:onclick="|deletePlace('${place.placeId}')|"><i
+                                            class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editPlaceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">플레이스 상세 정보 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="placeEditForm" th:action="@{/admin/places/edit}" method="POST">
+                        <input type="hidden" name="placeId" id="edit_placeId">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">플레이스명</label>
+                            <input type="text" class="form-control" name="title" id="edit_title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">플레이스 타입 *</label>
+                            <select class="form-select" name="placeType" id="edit_placeType" required>
+                                <option value="TOURIST">관광지</option>
+                                <option value="RESTAURANT">음식점</option>
+                                <option value="ACCOMMODATION">숙박</option>
+                                <option value="LEISURE">레저/액티비티</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <label class="form-label fw-semibold small">대분류 *</label>
+                                <select class="form-select form-select-sm" name="lclssystm1" id="edit_lclssystm1"
+                                    required>
+                                    <option value="">대분류 선택</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-semibold small">중분류 *</label>
+                                <select class="form-select form-select-sm" name="lclssystm2" id="edit_lclssystm2"
+                                    required>
+                                    <option value="">중분류 선택</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-semibold small">소분류 *</label>
+                                <select class="form-select form-select-sm" name="lclssystm3" id="edit_lclssystm3"
+                                    required>
+                                    <option value="">소분류 선택</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">도로명 주소</label>
+                            <input type="text" class="form-control" name="addr1" id="edit_addr1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">상세 주소</label>
+                            <input type="text" class="form-control" name="addr2" id="edit_addr2">
+                        </div>
+                        <button type="submit" class="admin-btn-primary w-100">수정 사항 저장</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/js/admin-places.js" th:src="@{/js/admin-places.js}"></script>
+</body>
+
+</html>

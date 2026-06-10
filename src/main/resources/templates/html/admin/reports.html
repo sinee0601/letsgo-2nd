@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신고 관리 - LetsGo! Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Outfit & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link href="../../../static/css/admin-dashboard.css" th:href="@{/css/admin-dashboard.css}" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard-body">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <nav class="admin-sidebar">
+                <div class="d-flex align-items-center mb-4 px-2">
+                    <i class="bi bi-send-fill fs-3 text-info me-2"></i>
+                    <span class="fs-4 fw-bold text-white Outfit">LetsGo! Admin</span>
+                </div>
+                <hr class="text-secondary">
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">
+                            <i class="bi bi-speedometer2 me-2"></i> 대시보드
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/places}">
+                            <i class="bi bi-map me-2"></i> 플레이스 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/users}">
+                            <i class="bi bi-people me-2"></i> 회원 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/posts}">
+                            <i class="bi bi-journal-text me-2"></i> 게시물 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/reports}">
+                            <i class="bi bi-exclamation-triangle me-2"></i> 신고 관리
+                        </a>
+                    </li>
+                </ul>
+                <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                    <a href="../html/index.html" th:href="@{/}" class="btn btn-outline-light w-100 btn-sm">
+                        <i class="bi bi-box-arrow-left me-1"></i> 메인 서비스로
+                    </a>
+                </div>
+            </nav>
+
+            <main class="admin-main">
+                <div class="admin-header">
+                    <h1 class="h2 fw-bold text-dark">신고 관리 및 심사</h1>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-secondary"><strong class="text-dark">최고관리자</strong> 님 로그인 중</span>
+                        <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-power"></i> 로그아웃</a>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    <h5 class="fw-bold mb-4">게시물 신고 내역 처리</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>신고번호</th>
+                                <th>게시글 제목</th>
+                                <th>신고자</th>
+                                <th>신고일</th>
+                                <th>신고 사유</th>
+                                <th>처리 상태</th>
+                                <th>동작</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="report : ${reports}" th:id="'report-row-' + ${report.reportId}" id="report-row">
+                                <td th:text="${report.reportId}">1</td>
+                                <td><strong class="text-primary" th:text="${report.postTitle}">압구정 수상스키와 파르나스 호텔 1박 2일</strong></td>
+                                <td th:text="${report.reporterId}">user05</td>
+                                <td th:text="${report.createdAt}">2026-06-10 15:01:56</td>
+                                <td class="text-danger" th:text="${report.reason}">광고 및 도배글 의심</td>
+                                <td>
+                                    <span class="admin-badge admin-badge-warning"
+                                        th:if="${report.status == 'PENDING'}">대기 중</span>
+                                    <span class="admin-badge admin-badge-success"
+                                        th:if="${report.status == 'REJECTED'}">반려됨</span>
+                                    <span class="admin-badge admin-badge-danger"
+                                        th:if="${report.status == 'PROCESSED'}">삭제완료</span>
+                                </td>
+                                <td>
+                                    <th:block th:if="${report.status == 'PENDING'}">
+                                        <button class="btn btn-sm btn-success"
+                                            th:onclick="|processReport('${report.reportId}', 'REJECT')|">
+                                            <i class="bi bi-check-circle"></i> 반려</button>
+                                        <button class="btn btn-sm btn-danger"
+                                            th:onclick="|processReport('${report.reportId}', 'DELETE_POST')|"><i
+                                                class="bi bi-trash"></i> 게시글 삭제</button>
+                                    </th:block>
+                                    <th:block th:unless="${report.status == 'PENDING'}">
+                                        <span class="text-muted"
+                                            th:text="${report.status == 'REJECTED' ? '반려 처리됨' : '삭제 처리됨'}">처리 완료</span>
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/js/admin-reports.js" th:src="@{/js/admin-reports.js}"></script>
+</body>
+
+</html>

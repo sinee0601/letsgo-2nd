@@ -1,0 +1,206 @@
+:root {
+    --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --admin-sidebar-bg: #1e1b4b;
+}
+
+body.admin-dashboard-body {
+    font-family: 'Pretendard', 'Outfit', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    overflow-x: hidden;
+}
+
+
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16.666667%;
+    height: 100vh;
+    background: var(--admin-sidebar-bg);
+    color: #ffffff;
+    padding: 1.5rem 1rem;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.admin-sidebar .nav-link {
+    color: #94a3b8;
+    border-radius: 8px;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+.admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+
+.admin-main {
+    margin-left: 16.666667%;
+    width: 83.333333%;
+    padding: 2rem 2.5rem;
+    min-height: 100vh;
+}
+
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.admin-stat-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #ffffff;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.admin-stat-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+}
+
+.admin-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+
+.admin-custom-tabs {
+    border: none;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.admin-custom-tabs .nav-link {
+    border: none;
+    border-radius: 8px;
+    color: #6b7280;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.admin-custom-tabs .nav-link.active {
+    background: var(--primary-gradient);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+
+.admin-table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.admin-table-container th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6b7280;
+    border-bottom: 2px solid #f3f4f6;
+    padding: 12px 8px;
+}
+
+.admin-table-container td {
+    vertical-align: middle;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding: 12px 8px;
+}
+
+.admin-quick-form {
+    border: none;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    padding: 24px;
+}
+
+.admin-btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 16px;
+    transition: opacity 0.2s;
+}
+
+.admin-btn-primary:hover {
+    opacity: 0.9;
+    color: white;
+}
+
+.admin-badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.admin-badge-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.admin-badge-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+
+.admin-badge-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge-tourist {
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+}
+.badge-restaurant {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+}
+.badge-accommodation {
+    background-color: #dbeafe !important;
+    color: #1e40af !important;
+}
+.badge-leisure {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+}
+
+

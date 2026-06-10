@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시물 관리 - LetsGo! Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Outfit & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link href="../../../static/css/admin-dashboard.css" th:href="@{/css/admin-dashboard.css}" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="admin-sidebar">
+                <div class="d-flex align-items-center mb-4 px-2">
+                    <i class="bi bi-send-fill fs-3 text-info me-2"></i>
+                    <span class="fs-4 fw-bold text-white Outfit">LetsGo! Admin</span>
+                </div>
+                <hr class="text-secondary">
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">
+                            <i class="bi bi-speedometer2 me-2"></i> 대시보드
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/places}">
+                            <i class="bi bi-map me-2"></i> 플레이스 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/users}">
+                            <i class="bi bi-people me-2"></i> 회원 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/posts}">
+                            <i class="bi bi-journal-text me-2"></i> 게시물 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/reports}">
+                            <i class="bi bi-exclamation-triangle me-2"></i> 신고 관리
+                        </a>
+                    </li>
+                </ul>
+                <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                    <a href="../html/index.html" th:href="@{/}" class="btn btn-outline-light w-100 btn-sm">
+                        <i class="bi bi-box-arrow-left me-1"></i> 메인 서비스로
+                    </a>
+                </div>
+            </nav>
+
+            <main class="admin-main">
+                <div class="admin-header">
+                    <h1 class="h2 fw-bold text-dark">게시물 관리 및 숨김</h1>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-secondary"><strong class="text-dark">최고관리자</strong> 님 로그인 중</span>
+                        <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-power"></i> 로그아웃</a>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">일정 공유 게시판 글 모니터링</h5>
+                        <form th:action="@{/admin/posts}" method="GET" class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" name="keyword" th:value="${param.keyword}"
+                                placeholder="게시글 제목 또는 작성자 검색...">
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>글번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>등록일</th>
+                                <th>공개 여부</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="post : ${posts}" th:id="'post-row-' + ${post.postId}" id="post-row">
+                                <td th:text="${post.postId}">P001</td>
+                                <td><strong th:text="${post.title}">서울 도심 속 숲세권, 북한산 자락길 힐링 투어</strong></td>
+                                <td th:text="${post.userId}">user01</td>
+                                <td th:text="${post.postedAt}">2026-06-10</td>
+                                <td>
+                                    <span class="admin-badge admin-badge-success" th:if="${post.isActive}">노출 중</span>
+                                    <span class="admin-badge admin-badge-danger" th:unless="${post.isActive}">숨김</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                        th:onclick="|togglePostVisibility('${post.postId}', ${!post.isActive})|">
+                                        <i class="bi bi-eye-slash-fill"></i> 숨김
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        th:onclick="|deletePost('${post.postId}')|"><i class="bi bi-trash"></i>삭제
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/js/admin-posts.js" th:src="@{/js/admin-posts.js}"></script>
+</body>
+
+</html>

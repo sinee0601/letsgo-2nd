@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 - LetsGo! Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Outfit & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link href="../../../static/css/admin-dashboard.css" th:href="@{/css/admin-dashboard.css}" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="admin-sidebar">
+                <div class="d-flex align-items-center mb-4 px-2">
+                    <i class="bi bi-send-fill fs-3 text-info me-2"></i>
+                    <span class="fs-4 fw-bold text-white Outfit">LetsGo! Admin</span>
+                </div>
+                <hr class="text-secondary">
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">
+                            <i class="bi bi-speedometer2 me-2"></i> 대시보드
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/places}">
+                            <i class="bi bi-map me-2"></i> 플레이스 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/users}">
+                            <i class="bi bi-people me-2"></i> 회원 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/posts}">
+                            <i class="bi bi-journal-text me-2"></i> 게시물 관리
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/reports}">
+                            <i class="bi bi-exclamation-triangle me-2"></i> 신고 관리
+                        </a>
+                    </li>
+                </ul>
+                <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                    <a href="../html/index.html" th:href="@{/}" class="btn btn-outline-light w-100 btn-sm">
+                        <i class="bi bi-box-arrow-left me-1"></i> 메인 서비스로
+                    </a>
+                </div>
+            </nav>
+
+            <main class="admin-main">
+                <div class="admin-header">
+                    <h1 class="h2 fw-bold text-dark">회원 관리 및 제재</h1>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-secondary"><strong class="text-dark">최고관리자</strong> 님 로그인 중</span>
+                        <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-power"></i> 로그아웃</a>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">가입 회원 목록 조회 및 제재</h5>
+                        <form th:action="@{/admin/users}" method="GET" class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" name="keyword" th:value="${param.keyword}"
+                                placeholder="회원 ID 또는 이름 검색...">
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>아이디</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>경고 횟수</th>
+                                <th>계정 상태</th>
+                                <th>동작</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}"
+                                th:classappend="${user.warningCount >= 3} ? 'table-danger' : ''"
+                                th:id="'user-row-' + ${user.userID}" id="user-row">
+                                <td th:text="${user.userID}">user03</td>
+                                <td><strong th:text="${user.name}">박민수</strong></td>
+                                <td th:text="${user.email}">park@test.com</td>
+                                <td>
+                                    <span class="badge bg-warning-subtle text-warning fs-6"
+                                        th:if="${user.warningCount < 3}" th:text="|${user.warningCount}회|">2회</span>
+                                    <span class="badge bg-danger fs-6" th:if="${user.warningCount >= 3}">3회 (자동 정지)</span>
+                                </td>
+                                <td>
+                                    <span class="admin-badge admin-badge-success" th:if="${user.enabled}">정상</span>
+                                    <span class="admin-badge admin-badge-danger" th:unless="${user.enabled}">영구
+                                        정지</span>
+                                </td>
+                                <td>
+                                    <th:block th:if="${user.enabled}">
+                                        <button class="btn btn-sm btn-warning text-white"
+                                            onclick="openGiveWarningModal('user03')"
+                                            th:onclick="|openGiveWarningModal('${user.userID}')|"><i
+                                                class="bi bi-exclamation-octagon"></i> 경고 부여</button>
+                                        <button class="btn btn-sm btn-danger"
+                                            th:onclick="|suspendUser('${user.userID}')|"><i class="bi bi-person-x"></i>
+                                            영구 정지</button>
+                                    </th:block>
+                                    <th:block th:unless="${user.enabled}">
+                                        <button class="btn btn-sm btn-success"
+                                            th:onclick="|unsuspendUser('${user.userID}')|"><i
+                                                class="bi bi-person-check"></i> 정지 해제</button>
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-warning"><i class="bi bi-exclamation-octagon-fill me-1"></i> 회원
+                        경고 부여</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="warningForm" th:action="@{/admin/users/warning}" method="POST">
+                        <input type="hidden" name="userId" id="warning_userId">
+                        <div class="mb-3">
+                            <p>경고를 부여받을 유저 ID: <strong class="text-danger" id="warning_userDisplay">user03</strong></p>
+                            <label class="form-label fw-semibold">경고 사유 입력 *</label>
+                            <textarea class="form-control" name="reason" required placeholder="예: 악성 도배글 업로드 유포"
+                                rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning text-white w-100 py-2">경고 확정 및 횟수 추가</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/js/admin-users.js" th:src="@{/js/admin-users.js}"></script>
+</body>
+
+</html>

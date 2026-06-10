@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LetsGo! Admin Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Outfit & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link href="../../../static/css/admin-dashboard.css" th:href="@{/css/admin-dashboard.css}" rel="stylesheet">
+</head>
+
+<body class="admin-dashboard-body">
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="admin-sidebar">
+            <div class="d-flex align-items-center mb-4 px-2">
+                <i class="bi bi-send-fill fs-3 text-info me-2"></i>
+                <span class="fs-4 fw-bold text-white Outfit">LetsGo! Admin</span>
+            </div>
+            <hr class="text-secondary">
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/admin}">
+                        <i class="bi bi-speedometer2 me-2"></i> 대시보드
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/places}">
+                        <i class="bi bi-map me-2"></i> 플레이스 관리
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/users}">
+                        <i class="bi bi-people me-2"></i> 회원 관리
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/posts}">
+                        <i class="bi bi-journal-text me-2"></i> 게시물 관리
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/reports}">
+                        <i class="bi bi-exclamation-triangle me-2"></i> 신고 관리
+                    </a>
+                </li>
+            </ul>
+            <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                <a href="../html/index.html" th:href="@{/}" class="btn btn-outline-light w-100 btn-sm">
+                    <i class="bi bi-box-arrow-left me-1"></i> 메인 서비스로
+                </a>
+            </div>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 class="h2 fw-bold text-dark">서비스 통합 운영 대시보드</h1>
+                <div class="d-flex align-items-center">
+                    <span class="me-3 text-secondary"><strong class="text-dark">최고관리자</strong> 님 로그인 중</span>
+                    <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-power"></i> 로그아웃</a>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card admin-stat-card">
+                        <div class="admin-stat-card-body">
+                            <div>
+                                <p class="text-muted mb-1 fs-6">총 회원 수</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalUsers}">1,245 명</h3>
+                            </div>
+                            <div class="admin-card-icon" style="background: var(--primary-gradient);">
+                                <i class="bi bi-people-fill fs-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card admin-stat-card">
+                        <div class="admin-stat-card-body">
+                            <div>
+                                <p class="text-muted mb-1 fs-6">총 등록 장소 수</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalPlaces}">485 개</h3>
+                            </div>
+                            <div class="admin-card-icon" style="background: var(--success-gradient);">
+                                <i class="bi bi-geo-alt-fill fs-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card admin-stat-card">
+                        <div class="admin-stat-card-body">
+                            <div>
+                                <p class="text-muted mb-1 fs-6">총 작성 일정 수</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalSchedules}">932 개</h3>
+                            </div>
+                            <div class="admin-card-icon" style="background: var(--warning-gradient);">
+                                <i class="bi bi-calendar-event-fill fs-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="admin-quick-form">
+                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-plus-circle-fill me-1"></i> 플레이스 간편 등록
+                        </h5>
+                        <form id="placeRegForm" th:action="@{/admin/places/new}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">플레이스명 *</label>
+                                <input type="text" class="form-control" name="title" required
+                                       placeholder="예: 해운대 엘시티">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">플레이스 타입 *</label>
+                                <select class="form-select" name="placeType" id="placeType" required>
+                                    <option value="TOURIST">관광지</option>
+                                    <option value="RESTAURANT">음식점</option>
+                                    <option value="ACCOMMODATION">숙박</option>
+                                    <option value="LEISURE">레저/액티비티</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">주소 *</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="addr1" name="addr1" required
+                                           placeholder="주소 검색 버튼을 이용해 주세요" readonly>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="openPostcode()">주소 검색</button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">상세 주소</label>
+                                <input type="text" class="form-control" name="addr2" placeholder="예: 2층 201호">
+                            </div>
+
+                            <!-- 위경도 숨김 전송 -->
+                            <input type="hidden" id="mapx" name="mapx">
+                            <input type="hidden" id="mapy" name="mapy">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">대표 이미지 URL</label>
+                                <input type="url" class="form-control" name="firstImage"
+                                       placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="row g-2 mb-4">
+                                <div class="col-4">
+                                    <select class="form-select form-select-sm" name="lclssystm1" id="lclssystm1"
+                                            required>
+                                        <option value="">대분류 선택</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select form-select-sm" name="lclssystm2" id="lclssystm2"
+                                            required>
+                                        <option value="">중분류 선택</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select form-select-sm" name="lclssystm3" id="lclssystm3"
+                                            required>
+                                        <option value="">소분류 선택</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="admin-btn-primary w-100">
+                                <i class="bi bi-check-circle me-1"></i> 플레이스 추가하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="admin-table-container">
+                        <h5 class="fw-bold mb-4"><i class="bi bi-clock-history me-1"></i> 최근 등록 장소 0개</h5>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>장소명</th>
+                                <th>타입</th>
+                                <th>주소</th>
+                                <th>관리</th>
+                            </tr>
+                            </thead>
+                            <tbody id="recentPlacesBody">
+                            <tr th:each="place : ${recentPlaces}">
+                                <td><strong th:text="${place.title}">여의도 롤파크</strong></td>
+                                <td>
+                                            <span class="badge"
+                                                  th:classappend="${place.placeType == 'TOURIST' || place.placeType == 'TOUR' ? 'badge-tourist' : (place.placeType == 'RESTAURANT' || place.placeType == 'FOOD' ? 'badge-restaurant' : (place.placeType == 'ACCOMMODATION' || place.placeType == 'STAY' ? 'badge-accommodation' : 'badge-leisure'))}"
+                                                  th:text="${place.placeType}">LEISURE</span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 180px;" th:text="${place.addr1}">
+                                    서울특별시 종로구 종로 33</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            th:onclick="|deletePlace('${place.placeId}')|"><i
+                                            class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Kakao Postcode Service API -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../../static/js/admin-dashboard.js" th:src="@{/js/admin-dashboard.js}"></script>
+</body>
+
+</html>
