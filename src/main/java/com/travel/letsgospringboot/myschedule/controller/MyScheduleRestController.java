@@ -4,6 +4,7 @@ import com.travel.letsgospringboot.myschedule.service.MyScheduleService;
 import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -135,4 +136,11 @@ public class MyScheduleRestController {
 //        log.info("결과", bool);
         return bool;
     }
+
+    @GetMapping("/{scheduleId}/mapSchedule")
+    public ResponseEntity<List<MapScheduleVO>> getMapSchedule(@PathVariable String scheduleId){
+        List<MapScheduleVO> mapSchedule = myScheduleService.getMapSchedule(scheduleId);
+        return ResponseEntity.ok(mapSchedule);
+    }
+
 }
