@@ -11,7 +11,7 @@ const PANELS = ["route", "budget", "todo"];
 
 likeBtn.addEventListener("click", () => {
         fetchPlueLike(postId)
-    });
+});
 
 deleteBtn?.addEventListener("click", () => {
     deletePostSchedule(postId)
@@ -23,7 +23,6 @@ reportBtn?.addEventListener("click", () => {
 
 addBtn.addEventListener("click", () => {
     addPostScheduleToMySchedule(postId)
-    location.replace(`/postschedule/detail/${postId}`);
 });
 
 function readRouteOrder() {
@@ -33,14 +32,6 @@ function readRouteOrder() {
     }));
 }
 
-// function readBudgetItems() {
-//     const items = {};
-//     document.querySelectorAll(".budget-row").forEach(row => {
-//         const amount = Number(row.querySelector(".budget-amount").value) || 0;
-//         if (amount > 0) items[row.dataset.visitId] = { amount };
-//     });
-//     return items;
-// }
 
 function readSavedBudget() {
     const data = document.querySelector("#budgetData");
@@ -50,11 +41,10 @@ function readSavedBudget() {
         return {};
     }
 }
-function fetchPlueLike(postId) {
 
+function fetchPlueLike(postId) {
     fetch(`/postschedule/api/${postId}/plusLike`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json"}
         })
         .then(res => res.json())
         .then(count => likeCountEL.textContent = count)
@@ -86,7 +76,7 @@ function addPostScheduleToMySchedule(postId){
     fetch(`/postschedule/api/${postId}/copy`, {
         method: "PUT",
     })
-        .then(ok => alert(ok ? "일정이 추가되었습니다" : "일정 추가에 실패했습니다."))
+        .then(res => alert(res.ok ? "일정이 추가되었습니다" : "일정 추가에 실패했습니다."))
         .catch(err => console.error("fetch 오류:", err));
 }
 
@@ -109,12 +99,6 @@ function reportPostSchedule(postId) {
             console.error("fetch 오류:", err);
             alert("신고 처리 중 오류가 발생했습니다.");
         });
-}
-
-function calcBudgetTotal() {
-    let total = 0;
-    document.querySelectorAll(".budget-amount").forEach(i => total += Number(i.value) || 0);
-    return total;
 }
 
 function showPanel(name) {
@@ -146,18 +130,25 @@ function renderBudget() {
     if (!budgetList) return;
 
     const budgetDetailText = document.querySelector("#budgetDetailText");
-    const budgetData = document.querySelector("#budgetData")?.textContent?.trim();
+    const savedBudget = readSavedBudget();
+    const budgetItems = savedBudget.items || {};
+    const budgetValues = Object.values(budgetItems);
     if (budgetDetailText) {
-        budgetDetailText.textContent = budgetData || "등록된 예산 정보가 없습니다.";
+        budgetDetailText.textContent = Object.keys(budgetItems).length > 0 ? "" : "등록된 예산 정보가 없습니다.";
     }
 
-    budgetList.innerHTML = routes.map(route => `
+    budgetList.innerHTML = routes.map((route, index) => {
+        const savedItem = budgetItems[route.visitId] || budgetValues[index] || {};
+        const amount = savedItem.amount ?? "";
+
+        return `
         <li class="budget-row" data-visit-id="${route.visitId}">
             <span class="budget-place">${route.visitOrder}. ${route.title}</span>
-            <input type="number" class="budget-amount" min="0" step="1000" placeholder="0"/>
+            <input type="number" class="budget-amount" min="0" step="1000" placeholder="0" value="${amount}"/>
             <span class="budget-won">원</span>
         </li>
-    `).join("");
+    `;
+    }).join("");
 
     bindBudgetTotal();
 }
