@@ -5,43 +5,83 @@ import com.travel.letsgospringboot.exception.DuplicateUserIdException;
 import com.travel.letsgospringboot.exception.InvalidInputException;
 import com.travel.letsgospringboot.exception.UserNotFoundException;
 import com.travel.letsgospringboot.exception.PostNotFoundException;
+import com.travel.letsgospringboot.exception.PlaceOperationException;
+import com.travel.letsgospringboot.exception.PostOperationException;
+import com.travel.letsgospringboot.exception.ReportNotFoundException;
+import com.travel.letsgospringboot.exception.ReportOperationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import java.util.Map;
+import java.util.HashMap;
 
 @Slf4j
 @RestControllerAdvice
 public class RestExceptionHandling {
 
+    private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("ok", false);
+        body.put("result", "fail");
+        body.put("message", message);
+        return ResponseEntity.status(status).body(body);
+    }
+
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<String> handleInvalidInput(InvalidInputException ex) {
-        log.warn("잘못된 입력값: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleInvalidInput(InvalidInputException ex) {
+        log.error("잘못된 입력값: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateUserIdException.class)
-    public ResponseEntity<String> handleDuplicateUserId(DuplicateUserIdException ex) {
-        log.warn("중복 아이디 시도: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleDuplicateUserId(DuplicateUserIdException ex) {
+        log.error("중복 아이디 시도: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {
-        log.warn("사용자 없음: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
+        log.error("사용자 없음: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        log.warn("권한 위반 차단: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<String> PostNotFoundException(PostNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<Map<String, Object>> PostNotFoundException(PostNotFoundException ex) {
+        log.error("게시글 없음: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(ReportNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleReportNotFound(ReportNotFoundException ex) {
+        log.error("신고 내역 없음: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(PlaceOperationException.class)
+    public ResponseEntity<Map<String, Object>> handlePlaceOperation(PlaceOperationException ex) {
+        log.error("장소 작업 실패: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PostOperationException.class)
+    public ResponseEntity<Map<String, Object>> handlePostOperation(PostOperationException ex) {
+        log.error("게시글 작업 실패: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(ReportOperationException.class)
+    public ResponseEntity<Map<String, Object>> handleReportOperation(ReportOperationException ex) {
+        log.error("신고 처리 실패: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     // 정적 리소스 미존재(favicon.ico 등)는 실제 오류가 아니므로 404로 조용히 응답
@@ -51,8 +91,8 @@ public class RestExceptionHandling {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
         log.error("API 처리 중 오류", ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong");
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "something went wrong");
     }
 }

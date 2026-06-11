@@ -4,6 +4,7 @@ import com.travel.letsgospringboot.place.repository.PlaceMapper;
 import com.travel.letsgospringboot.place.vo.PlaceVO;
 import com.travel.letsgospringboot.place.vo.VisitItemVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -82,7 +84,9 @@ public class PlaceService {
 
     @Transactional
     public int setPlaceLikeCount(String placeId) {
-        return placeMapper.setPlaceLikeCount(placeId);
+        int result = placeMapper.setPlaceLikeCount(placeId);
+        log.info("장소 좋아요 수 증가 성공: placeId={}", placeId);
+        return result;
     }
 
     public int getPlaceLikeCount(String placeType, String placeId) {
@@ -100,7 +104,9 @@ public class PlaceService {
         params.put("placeId", placeId);
         params.put("scheduleId", scheduleId);
         params.put("scheduleType", scheduleType);
-        return placeMapper.insertVisitItem(params);
+        int result = placeMapper.insertVisitItem(params);
+        log.info("일정 방문 항목 등록 성공: scheduleId={}, placeId={}, order={}", scheduleId, placeId, visitOrder);
+        return result;
     }
 
     public List<VisitItemVO> getVisitItemsByScheduleId(String scheduleId) {
@@ -188,7 +194,9 @@ public class PlaceService {
 
     @Transactional
     public int insertVisitItem(Map<String, Object> params) {
-        return placeMapper.insertVisitItem(params);
+        int result = placeMapper.insertVisitItem(params);
+        log.info("일정 방문 항목 등록 성공: params={}", params);
+        return result;
     }
 
     public List<PlaceVO> searchPlacesOrderByTitle(Map<String, Object> params) {
@@ -234,6 +242,8 @@ public class PlaceService {
         params.put("title", title);
         params.put("startAt", startAt);
         params.put("userId", userId);
-        return placeMapper.insertMySchedule(params);
+        int result = placeMapper.insertMySchedule(params);
+        log.info("내 일정 등록 성공: scheduleId={}, userId={}", myScheduleId, userId);
+        return result;
     }
 }

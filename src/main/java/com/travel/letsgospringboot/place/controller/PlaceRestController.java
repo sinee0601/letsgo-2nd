@@ -6,6 +6,7 @@ import com.travel.letsgospringboot.user.auth.AppUserDetails;
 import com.travel.letsgospringboot.place.service.PlaceService;
 import com.travel.letsgospringboot.place.vo.PlaceVO;
 import com.travel.letsgospringboot.place.vo.VisitItemVO;
+import com.travel.letsgospringboot.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,24 +37,21 @@ public class PlaceRestController {
             @RequestParam("placeType") String placeType,
             @AuthenticationPrincipal AppUserDetails userDetails) {
 
-        Map<String, Object> response = new HashMap<>();
-
         if (userDetails == null) {
-            response.put("result", "fail");
-            response.put("message", "로그인이 필요합니다.");
-            return response;
+            throw new AccessDeniedException("로그인이 필요합니다.");
         }
 
         try {
             placeService.setPlaceLikeCount(placeId);
             int updatedCount = placeService.getPlaceLikeCount(placeType, placeId);
 
+            Map<String, Object> response = new HashMap<>();
             response.put("result", "success");
             response.put("likeCount", updatedCount);
+            return response;
         } catch (Exception e) {
-            response.put("result", "fail");
+            throw new PlaceOperationException("좋아요 처리에 실패했습니다.");
         }
-        return response;
     }
 
     @SuppressWarnings("unchecked")
@@ -114,20 +112,14 @@ public class PlaceRestController {
             @AuthenticationPrincipal AppUserDetails userDetails,
             HttpSession session) {
 
-        Map<String, Object> result = new HashMap<>();
-
         if (userDetails == null) {
-            result.put("ok", false);
-            result.put("message", "로그인이 필요합니다.");
-            return ResponseEntity.ok(result);
+            throw new AccessDeniedException("로그인이 필요합니다.");
         }
 
         String loginUser = userDetails.getUsername();
 
         if (placeIdsStr == null || placeIdsStr.trim().isEmpty()) {
-            result.put("ok", false);
-            result.put("message", "새로 담은 장소가 없습니다.");
-            return ResponseEntity.ok(result);
+            throw new InvalidInputException("새로 담은 장소가 없습니다.");
         }
 
         String[] placeIds = placeIdsStr.split(",");
@@ -161,16 +153,15 @@ public class PlaceRestController {
                 cart.removeIf(p -> p.getPlaceId() != null && idSet.contains(p.getPlaceId().toString()));
             }
 
+            Map<String, Object> result = new HashMap<>();
             result.put("ok", true);
             result.put("added", added);
             result.put("addedPlaceIds", addedPlaceIds);
+            return ResponseEntity.ok(result);
 
         } catch (Exception e) {
-            result.put("ok", false);
-            result.put("message", "일정 등록 중 오류가 발생했습니다: " + e.getMessage());
+            throw new PlaceOperationException("일정 등록 중 오류가 발생했습니다: " + e.getMessage());
         }
-
-        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/restaurantListAjax")

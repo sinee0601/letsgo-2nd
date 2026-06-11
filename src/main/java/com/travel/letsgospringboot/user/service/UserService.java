@@ -4,11 +4,13 @@ import com.travel.letsgospringboot.user.repository.JpaUsers;
 import com.travel.letsgospringboot.user.repository.UserJpaRepository;
 import com.travel.letsgospringboot.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -36,6 +38,7 @@ public class UserService {
                 user.setEnabled(false);
             }
             userJpaRepository.save(user);
+            log.info("사용자 경고 부여 성공: userID={}, warningCount={}, enabled={}", userID, nextWarningCount, user.isEnabled());
         }
     }
 
@@ -45,6 +48,7 @@ public class UserService {
         if (user != null) {
             user.setEnabled(false);
             userJpaRepository.save(user);
+            log.info("사용자 계정 정지 성공: userID={}", userID);
         }
     }
 
@@ -55,6 +59,7 @@ public class UserService {
             user.setEnabled(true);
             user.setWarningCount(0);
             userJpaRepository.save(user);
+            log.info("사용자 계정 정지 해제 성공: userID={}", userID);
         }
     }
 
@@ -62,12 +67,16 @@ public class UserService {
         if (userJpaRepository.findByUserID(userVO.getUserID()) != null) {
             return false;
         }
-        return (userJpaRepository.save(JpaUsers.builder()
+        boolean success = (userJpaRepository.save(JpaUsers.builder()
                 .userID(userVO.getUserID())
                 .password(bCryptPasswordEncoder.encode(userVO.getPassword()))
                 .email(userVO.getEmail())
                 .name(userVO.getName())
                 .role("ROLE_USER").build())) != null;
+        if (success) {
+            log.info("사용자 회원가입 성공: userID={}", userVO.getUserID());
+        }
+        return success;
     }
 
     public boolean idCheck(String userID) {
@@ -79,7 +88,7 @@ public class UserService {
         if (jpaUsers == null || !jpaUsers.getEmail().equals(userVO.getEmail())) {
             return false;
         }
-        return (userJpaRepository.save(JpaUsers.builder()
+        boolean success = (userJpaRepository.save(JpaUsers.builder()
                 .id(jpaUsers.getId())
                 .userID(jpaUsers.getUserID())
                 .password(bCryptPasswordEncoder.encode(userVO.getPassword()))
@@ -88,6 +97,10 @@ public class UserService {
                 .role(jpaUsers.getRole())
                 .created(jpaUsers.getCreated())
                 .build())) != null;
+        if (success) {
+            log.info("사용자 비밀번호 변경 성공: userID={}", userVO.getUserID());
+        }
+        return success;
     }
 
     public String findUserIdByNameAndEmail(UserVO userVO) {
