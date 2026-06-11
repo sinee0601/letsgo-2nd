@@ -1,5 +1,8 @@
 package com.travel.letsgospringboot.user.controller;
 
+import com.travel.letsgospringboot.exception.DuplicateUserIdException;
+import com.travel.letsgospringboot.exception.InvalidInputException;
+import com.travel.letsgospringboot.exception.UserNotFoundException;
 import com.travel.letsgospringboot.user.service.UserService;
 import com.travel.letsgospringboot.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +32,15 @@ public class UserRestController {
         if (userId == null || name == null || email == null || password == null || passwordConfirm == null
                 || userId.trim().isEmpty() || name.trim().isEmpty()
                 || email.trim().isEmpty() || password.trim().isEmpty() || passwordConfirm.trim().isEmpty()) {
-            throw new IllegalArgumentException("필수 항목을 모두 입력해주세요.");
+            throw new InvalidInputException("필수 항목을 모두 입력해주세요.");
         }
 
         if (!password.equals(passwordConfirm)) {
-            throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
+            throw new InvalidInputException("비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (!userService.idCheck(userId)) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new DuplicateUserIdException("이미 사용 중인 아이디입니다.");
         }
 
         if (!userService.signUp(UserVO.builder()
@@ -61,7 +64,7 @@ public class UserRestController {
         String email = userRequest.getEmail();
 
         if (name == null || email == null || name.trim().isEmpty() || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("이름과 이메일을 입력해주세요.");
+            throw new InvalidInputException("이름과 이메일을 입력해주세요.");
         }
 
         String userId = userService.findUserIdByNameAndEmail(UserVO.builder()
@@ -70,7 +73,7 @@ public class UserRestController {
                 .build());
 
         if (userId == null) {
-            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+            throw new UserNotFoundException("일치하는 회원 정보가 없습니다.");
         }
 
         return ResponseEntity.ok(Map.of("result", "success", "userId", userId));
@@ -86,11 +89,11 @@ public class UserRestController {
         if (userId == null || email == null || newPassword == null || newPasswordConfirm == null
                 || userId.trim().isEmpty() || email.trim().isEmpty()
                 || newPassword.trim().isEmpty() || newPasswordConfirm.trim().isEmpty()) {
-            throw new IllegalArgumentException("필수 항목을 모두 입력해주세요.");
+            throw new InvalidInputException("필수 항목을 모두 입력해주세요.");
         }
 
         if (!newPassword.equals(newPasswordConfirm)) {
-            throw new IllegalArgumentException("새 비밀번호 확인이 일치하지 않습니다.");
+            throw new InvalidInputException("새 비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (!userService.updatePassword(UserVO.builder()
@@ -98,7 +101,7 @@ public class UserRestController {
                 .email(email)
                 .password(newPassword)
                 .build())) {
-            throw new IllegalArgumentException("아이디 또는 이메일이 일치하지 않습니다.");
+            throw new UserNotFoundException("아이디 또는 이메일이 일치하지 않습니다.");
         }
 
         return ResponseEntity.ok(Map.of(
