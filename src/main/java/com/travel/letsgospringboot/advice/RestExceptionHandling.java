@@ -1,6 +1,9 @@
 package com.travel.letsgospringboot.advice;
 
 import com.travel.letsgospringboot.exception.AccessDeniedException;
+import com.travel.letsgospringboot.exception.DuplicateUserIdException;
+import com.travel.letsgospringboot.exception.InvalidInputException;
+import com.travel.letsgospringboot.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +30,23 @@ public class RestExceptionHandling {
     public ResponseEntity<String> handleException(Exception ex) {
         log.error("API 처리 중 오류", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong");
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInvalidInput(InvalidInputException ex) {
+        log.warn("잘못된 입력값: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateUserIdException.class)
+    public ResponseEntity<String> handleDuplicateUserId(DuplicateUserIdException ex) {
+        log.warn("중복 아이디 시도: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {
+        log.warn("사용자 없음: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
