@@ -1,6 +1,6 @@
 package com.travel.letsgospringboot.myschedule.service;
 
-import com.travel.letsgospringboot.myschedule.exception.ScheduleAccessDeniedException;
+import com.travel.letsgospringboot.exception.AccessDeniedException;
 import com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository;
 import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
@@ -100,19 +100,19 @@ public class MyScheduleService {
 
     public boolean setMyScheduleTitle(String title, String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.setMyScheduleTitle(title, scheduleId, userId);
     }
 
     public boolean setTodoDetail(String scheduleId, String todoDetail, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.setTodoDetail(scheduleId, todoDetail);
     }
 
     public ScheduleDetailVO getScheduleDetail(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getScheduleDetail(scheduleId);
     }
 
@@ -122,7 +122,7 @@ public class MyScheduleService {
 
     public boolean setBudgetDetail(String scheduleId, String budgetDetail, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.setBudgetDetail(scheduleId, budgetDetail);
     }
 
@@ -140,7 +140,7 @@ public class MyScheduleService {
 
     public boolean setStartAt(String scheduleId, String startAt, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.setStartAt(scheduleId, startAt, userId);
     }
 
@@ -160,25 +160,25 @@ public class MyScheduleService {
 
     public List<RouteScheduleVO> getScheduleRoute(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getScheduleRoute(scheduleId);
     }
 
     public List<MapScheduleVO> getMapSchedule(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getMapSchedule(scheduleId);
     }
     @Transactional
     public boolean addVisitItem(int visitOrder, String placeId, String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.addVisitItem(visitOrder, placeId, scheduleId);
     }
     @Transactional
     public boolean deleteVisitItemById(String visitItemId, String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.deleteVisitItemById(visitItemId);
     }
     @Transactional
@@ -188,20 +188,20 @@ public class MyScheduleService {
     @Transactional
     public boolean setCompanionPermission(String scheduleId, String sharedUserId, String permission, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.setCompanionPermission(scheduleId, sharedUserId, permission);
     }
     @Transactional
     public List<ColleagueVO> getCompanionList(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getCompanionList(scheduleId);
     }
 
     @Transactional
     public boolean deleteMySchedule(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         myScheduleRepository.deleteVisitItemsByScheduleId(scheduleId);
         return myScheduleRepository.deleteScheduleById(scheduleId) > 0;
     }
@@ -233,7 +233,7 @@ public class MyScheduleService {
     @Transactional
     public boolean updateVisitOrders(List<VisitOrderVO> orders, String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         boolean allUpdated = !orders.isEmpty();
         for (VisitOrderVO order : orders) {
             if (myScheduleRepository.updateVisitItem(
@@ -255,7 +255,7 @@ public class MyScheduleService {
     @Transactional
     public String shareToPost(String scheduleId, String userId, int isAnonymous) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new ScheduleAccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("권한이 없습니다");
         myScheduleRepository.shareToPostInsert(scheduleId, userId, isAnonymous);
         myScheduleRepository.shareVisitItemsToPost(scheduleId);
         return myScheduleRepository.getLastPostId();
