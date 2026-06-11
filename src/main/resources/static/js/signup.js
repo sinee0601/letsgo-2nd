@@ -18,7 +18,6 @@ document.getElementById("signupForm").onsubmit = function (event) {
         message.innerText = "필수 항목을 모두 입력해주세요.";
         return;
     }
-
     if (password != passwordConfirm) {
         message.style.display = "block";
         message.innerText = "비밀번호 확인이 일치하지 않습니다.";
@@ -27,23 +26,26 @@ document.getElementById("signupForm").onsubmit = function (event) {
 
     fetch("/user/api/signUpAjax", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: "name=" + encodeURIComponent(name)
             + "&userID=" + encodeURIComponent(userId)
             + "&email=" + encodeURIComponent(email)
             + "&password=" + encodeURIComponent(password)
             + "&passwordConfirm=" + encodeURIComponent(passwordConfirm)
-    }).then(response => response.json())
-        .then(data => {
-            message.style.display = "block";
-            message.innerText = data.message;
-            if (data.result == "success") {
-                message.style.color = "black";
-                setTimeout(() => { location.href = data.url; }, 700);
-            }
-        }).catch(error => {
-        console.error("signup error", error);
+    }).then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+    }).then(data => {
         message.style.display = "block";
-        message.innerText = "회원가입 오류.";
+        message.innerText = data.message;
+        if (data.result === "success") {
+            message.style.color = "black";
+            setTimeout(() => { location.href = data.url; }, 700);
+        }
+    }).catch(error => {
+        message.style.display = "block";
+        message.innerText = error.message;
     });
 };

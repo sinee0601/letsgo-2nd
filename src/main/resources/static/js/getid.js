@@ -19,21 +19,19 @@ document.getElementById("getIdForm").onsubmit = function (event) {
 
     fetch("/user/api/getIdAjax", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: "name=" + encodeURIComponent(name)
             + "&email=" + encodeURIComponent(email)
-    }).then(response => response.json())
-        .then(data => {
-            if (data.result == "success") {
-                found.style.display = "block";
-                found.innerText = "회원님의 아이디는 \"" + data.userId + "\" 입니다.";
-            } else {
-                message.style.display = "block";
-                message.innerText = data.message;
-            }
-        }).catch(error => {
-        console.error("getid error", error);
+    }).then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+    }).then(data => {
+        found.style.display = "block";
+        found.innerText = "회원님의 아이디는 \"" + data.userId + "\" 입니다.";
+    }).catch(error => {
         message.style.display = "block";
-        message.innerText = "아이디 찾기 오류.";
+        message.innerText = error.message;
     });
 };
