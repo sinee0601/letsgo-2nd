@@ -5,8 +5,8 @@ import com.travel.letsgospringboot.postschedule.vo.MapScheduleTO;
 import com.travel.letsgospringboot.postschedule.vo.PostScheduleListTO;
 import com.travel.letsgospringboot.postschedule.vo.RouteScheduleTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -111,29 +111,32 @@ public class PostScheduleRestController {
     }
 
     @PutMapping("/{postId}/plusLike")
-    public int plusLike(@PathVariable("postId") String postId) {
-        return postScheduleService.plusLike(postId);
+    public ResponseEntity<Integer> plusLike(@PathVariable("postId") String postId) {
+        int likeCount = postScheduleService.plusLike(postId);
+        return ResponseEntity.ok(likeCount);
     }
 
     @PutMapping("/{postId}/plusView")
-    public int plusView(@PathVariable("postId") String postId) {
-        return postScheduleService.plusView(postId);
+    public ResponseEntity<Integer> plusView(@PathVariable("postId") String postId) {
+        int viewCount = postScheduleService.plusView(postId);
+        return ResponseEntity.ok(viewCount);
     }
 
     @DeleteMapping("/{postId}")
-    public void deletePostSchedule(Principal principal, @PathVariable("postId") String postId){
-        String loginUserId = principal.getName();
-        postScheduleService.deletePostSchedule(postId, loginUserId);
+    public ResponseEntity<Void> deletePostSchedule(Principal principal, @PathVariable("postId") String postId) {
+        postScheduleService.deletePostSchedule(postId, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{postId}/copy")
-    public void addToMySchedule(Principal principal, @PathVariable("postId") String postId) {
+    ResponseEntity<Void> addToMySchedule(Principal principal, @PathVariable("postId") String postId) {
         postScheduleService.addToMySchedule(postId, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{postId}/report")
     public ResponseEntity<Void> reportPostSchedule(Principal principal, @PathVariable("postId") String postId, @RequestBody Map<String, String> body) {
         postScheduleService.reportPostSchedule(postId, principal.getName(), body.get("reason"));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

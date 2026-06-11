@@ -75,6 +75,7 @@ public class PostScheduleService {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new PostScheduleSearchConditionVO(userId, keyword)));
     }
 
+    @Transactional
     public PostScheduleDetailTO getPostScheduleDetail(String postId, String loginUserId) {
         PostScheduleDetailTO detail = postScheduleRepository.getPostScheduleDetail(postId);
         if(detail == null || detail.getIsHidden() == 1)
@@ -88,6 +89,7 @@ public class PostScheduleService {
         detail.setBudgetDetail(postScheduleRepository.getBudgetDetail(postId));
         detail.setTodoDetail(postScheduleRepository.getTodoDetail(postId));
         postScheduleRepository.plusView(postId);
+
 
         return detail;
     }
