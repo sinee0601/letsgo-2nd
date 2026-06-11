@@ -1,6 +1,9 @@
 package com.travel.letsgospringboot.postschedule.service;
 
+import com.travel.letsgospringboot.exception.AccessDeniedException;
+import com.travel.letsgospringboot.exception.InvalidInputException;
 import com.travel.letsgospringboot.exception.PostNotFoundException;
+import com.travel.letsgospringboot.exception.AlreadyReportedException;
 import com.travel.letsgospringboot.postschedule.repository.PostScheduleRepository;
 import com.travel.letsgospringboot.postschedule.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,13 +106,6 @@ public class PostScheduleService {
         return postScheduleRepository.getScheduleTitle(postId);
     }
 
-    public int getLikeCount(String postId) {
-        return postScheduleRepository.getLikeCount(postId);
-    }
-    public int getViewCount(String postId) {
-        return postScheduleRepository.getViewCount(postId);
-    }
-
     @Transactional
     public int plusLike(String postId) {
         postScheduleRepository.plusLike(postId);
@@ -127,14 +123,17 @@ public class PostScheduleService {
     }
 
     @Transactional
-    public void deletePostSchedule(String postId, String loingUserId) {
+    public void deletePostSchedule(String postId, String loginUserId) {
         postScheduleRepository.deleteVisitItem(postId);
         String writerId = getUserId(postId);
-        if(writerId.equals(loingUserId)){
-            postScheduleRepository.deleteSchedulePost(postId);
+
+        if (!writerId.equals(loginUserId)) {
+            throw new AccessDeniedException("게시물 삭제 권한이 없습니다.");
         }
 
-        
+        if(writerId.equals(loginUserId)){
+            postScheduleRepository.deleteSchedulePost(postId);
+        }
     }
 
     @Transactional
@@ -159,6 +158,19 @@ public class PostScheduleService {
     }
 
     public void reportPostSchedule(String postId, String reporterId, String reason){
+        if (reason == null || reason.trim().isEmpty()) {
+            throw new InvalidInputException("신고 사유를 입력해주세요.");
+        }
+        PostScheduleDetailTO detail = postScheduleRepository.getPostScheduleDetail(postId);
+
+        if (detail == null || detail.getIsHidden() == 1) {
+            throw new PostNotFoundException("존재하지 않는 게시물입니다.");
+        }
+
+        if (postScheduleRepository.countReport(postId, reporterId) > 0) {
+            throw new AlreadyReportedException("이미 신고한 게시물입니다.");
+        }
+
         ReportPostScheduleVO reportPostScheduleVO = ReportPostScheduleVO.builder()
                 .postId(postId)
                 .reporterId(reporterId)
@@ -167,7 +179,6 @@ public class PostScheduleService {
                 .build();
 
         postScheduleRepository.reportPostSchedule(reportPostScheduleVO);
-
     }
 
     public List<PostScheduleListTO> processPostScheduleList(List<PostScheduleListTO> list){

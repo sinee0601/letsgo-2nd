@@ -133,9 +133,7 @@ public class PostScheduleRestController {
 
     @PostMapping("/{postId}/report")
     public ResponseEntity<Void> reportPostSchedule(Principal principal, @PathVariable("postId") String postId, @RequestBody Map<String, String> body) {
-        postScheduleService.reportPostSchedule(postId, principal.getName(), body.get("reason")
-        );
-
+        postScheduleService.reportPostSchedule(postId, principal.getName(), body.get("reason"));
         return ResponseEntity.ok().build();
     }
 }
