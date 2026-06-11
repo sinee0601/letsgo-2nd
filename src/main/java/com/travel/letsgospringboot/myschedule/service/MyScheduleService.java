@@ -102,7 +102,7 @@ public class MyScheduleService {
         String userId = scheduleTitleUpdateVO.getUserId();
         if(!isScheduleOwnedByUser(scheduleId, userId))
             throw new AccessDeniedException("권한이 없습니다");
-        boolean result = myScheduleRepository.setMyScheduleTitle(scheduleTitleUpdateVO.getTitle(), scheduleId, userId);
+        boolean result = myScheduleRepository.setMyScheduleTitle(scheduleTitleUpdateVO);
         log.info("일정 제목 수정 - scheduleId={}, userId={}", scheduleId, userId);
         return result;
     }
@@ -154,7 +154,7 @@ public class MyScheduleService {
         String userId = startAtUpdateVO.getUserId();
         if(!isScheduleOwnedByUser(scheduleId, userId))
             throw new AccessDeniedException("권한이 없습니다");
-        boolean result = myScheduleRepository.setStartAt(scheduleId, startAtUpdateVO.getStartAt(), userId);
+        boolean result = myScheduleRepository.setStartAt(startAtUpdateVO);
         log.info("일정 시작일 수정 - scheduleId={}, userId={}", scheduleId, userId);
         return result;
     }
@@ -162,7 +162,7 @@ public class MyScheduleService {
     public boolean addMySchedule(ScheduleCreateVO scheduleCreateVO) {
         String myScheduleId = scheduleCreateVO.getMyScheduleId();
         String userId = scheduleCreateVO.getUserId();
-        boolean result = myScheduleRepository.addMySchedule(myScheduleId, scheduleCreateVO.getTitle(), userId);
+        boolean result = myScheduleRepository.addMySchedule(scheduleCreateVO);
         log.info("내 일정 추가 - userId={}, scheduleId={}, title={}", userId, myScheduleId, scheduleCreateVO.getTitle());
         return result;
     }
@@ -308,7 +308,7 @@ public class MyScheduleService {
         String userId = shareVO.getUserId();
         if(!isScheduleOwnedByUser(scheduleId, userId))
             throw new AccessDeniedException("권한이 없습니다");
-        myScheduleRepository.shareToPostInsert(scheduleId, userId, shareVO.getIsAnonymous());
+        myScheduleRepository.shareToPostInsert(shareVO);
         myScheduleRepository.shareVisitItemsToPost(scheduleId);
         String postId = myScheduleRepository.getLastPostId();
         log.info("일정 게시판 공유 - scheduleId={}, userId={}, postId={}", scheduleId, userId, postId);

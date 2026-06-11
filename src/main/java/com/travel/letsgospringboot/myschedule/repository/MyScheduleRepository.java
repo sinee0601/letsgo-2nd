@@ -4,8 +4,12 @@ import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
 import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleCreateVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleDetailVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleTitleUpdateVO;
+import com.travel.letsgospringboot.myschedule.vo.ShareVO;
+import com.travel.letsgospringboot.myschedule.vo.StartAtUpdateVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -46,13 +50,13 @@ public interface MyScheduleRepository {
     int updateSchedule(String scheduleId, String scheduleTitle, String startAt, String budgetDetail,
                        String todoDetail, int isShared, String userId);
 
-    boolean setMyScheduleTitle(String title, String myScheduleId, String userId);
+    boolean setMyScheduleTitle(ScheduleTitleUpdateVO scheduleTitleUpdateVO);
 
     boolean setTodoDetail(String scheduleId, String todoDetail);
 
     boolean setBudgetDetail(String scheduleId, String budgetDetail);
 
-    boolean setStartAt(String scheduleId, String startAt, String userId);
+    boolean setStartAt(StartAtUpdateVO startAtUpdateVO);
 
     boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
 
@@ -76,13 +80,13 @@ public interface MyScheduleRepository {
     int isScheduleOwnedByUser(String scheduleId, String userId);
 
     // ---- 삽입 ----
-    boolean addMySchedule(String myScheduleId, String title, String userId);
+    boolean addMySchedule(ScheduleCreateVO scheduleCreateVO);
 
     boolean addVisitItem(int visitOrder, String placeId, String scheduleId);
 
     boolean addCompanion(String myScheduleId, String sharedUserId);
 
-    int shareToPostInsert(String myScheduleId, String userId, int isAnonymous);
+    int shareToPostInsert(ShareVO shareVO);
 
     int shareVisitItemsToPost(String myScheduleId);
 
