@@ -83,8 +83,11 @@
                 </ul>
 
                 <div class="content-left-bottom">
-                    <button type="button" id="likeBtn">❤️</button>
-                    <div id="likeCount" th:text="${detail.likeCount}">좋아요 수</div>
+                    <div><button type="button" id="likeBtn">❤️</button> 좋아요!</div>
+                    <div class="like-count-box">
+                        <span>❤️ + </span>
+                        <span id="likeCount"  th:text="${detail.likeCount}">0</span>
+                    </div>
                 </div>
             </div>
 
@@ -127,7 +130,7 @@
             <div class="memo">
                 <div><h3>To-Do 리스트</h3></div>
                 <textarea id="todoDetail" class="detail-textarea"
-                          placeholder="할 일을 입력하세요" th:text="${detail.todoDetail}"></textarea>
+                          placeholder="할 일을 입력하세요" th:text="${detail.todoDetail}"  readonly></textarea>
             </div>
         </div>
     </template>

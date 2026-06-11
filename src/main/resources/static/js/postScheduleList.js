@@ -19,8 +19,11 @@ navBtns.forEach(btn => {
     });
 });
 
+window.addEventListener("pageshow", () => {
+    fetchSchedules();
+});
+
 function fetchSchedules(){
-    // const userId = document.querySelector("#userId").value;
     const sortOrder = document.querySelector("#sortOrder").value;
     const keyword = document.querySelector("#keyword").value;
 

@@ -62,13 +62,9 @@ function deletePostSchedule(postId){
     fetch(`/postschedule/api/${postId}`, {
         method: "DELETE",
     })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("게시물 삭제 실패");
-            }
-            location.replace("/postschedule/list");
-        })
+        .then(res => alert(res.ok ? "게시물이 삭제되었습니다" : "게시물 삭제에 실패했습니다."))
         .catch(err => console.error("fetch 오류:", err));
+    location.replace("/postschedule/list");
 }
 
 function addPostScheduleToMySchedule(postId){
@@ -144,7 +140,7 @@ function renderBudget() {
         return `
         <li class="budget-row" data-visit-id="${route.visitId}">
             <span class="budget-place">${route.visitOrder}. ${route.title}</span>
-            <input type="number" class="budget-amount" min="0" step="1000" placeholder="0" value="${amount}"/>
+            <input type="number" class="budget-amount" min="0" step="1000" placeholder="0" value="${amount}"  readonly/>
             <span class="budget-won">원</span>
         </li>
     `;
