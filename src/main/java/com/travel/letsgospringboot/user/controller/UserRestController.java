@@ -26,45 +26,33 @@ public class UserRestController {
         String password = userRequest.getPassword();
         String passwordConfirm = userRequest.getPasswordConfirm();
 
-        Map<String, Object> result = new HashMap<>();
-
         if (userId == null || name == null || email == null || password == null || passwordConfirm == null
                 || userId.trim().isEmpty() || name.trim().isEmpty()
                 || email.trim().isEmpty() || password.trim().isEmpty() || passwordConfirm.trim().isEmpty()) {
-            result.put("result", "fail");
-            result.put("message", "필수 항목을 모두 입력해주세요.");
-            return ResponseEntity.badRequest().body(result);
+            throw new IllegalArgumentException("필수 항목을 모두 입력해주세요.");
         }
 
         if (!password.equals(passwordConfirm)) {
-            result.put("result", "fail");
-            result.put("message", "비밀번호 확인이 일치하지 않습니다.");
-            return ResponseEntity.ok(result);
+            throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (!userService.idCheck(userId)) {
-            result.put("result", "fail");
-            result.put("message", "이미 사용 중인 아이디입니다.");
-            return ResponseEntity.ok(result);
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
 
-        boolean success = userService.signUp(UserVO.builder()
+        if (!userService.signUp(UserVO.builder()
                 .userID(userId)
                 .email(email)
                 .name(name)
                 .password(password)
-                .build());
-
-        if (!success) {
-            result.put("result", "fail");
-            result.put("message", "회원가입에 실패했습니다.");
-            return ResponseEntity.ok(result);
+                .build())) {
+            throw new RuntimeException("회원가입에 실패했습니다.");
         }
 
-        result.put("result", "success");
-        result.put("message", "회원가입 완료. 로그인 해주세요.");
-        result.put("url", "/user/loginView");
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(Map.of(
+                "result", "success",
+                "message", "회원가입 완료. 로그인 해주세요.",
+                "url", "/user/loginView"));
     }
 
     @PostMapping("/getIdAjax")
@@ -72,12 +60,8 @@ public class UserRestController {
         String name = userRequest.getName();
         String email = userRequest.getEmail();
 
-        Map<String, Object> result = new HashMap<>();
-
         if (name == null || email == null || name.trim().isEmpty() || email.trim().isEmpty()) {
-            result.put("result", "fail");
-            result.put("message","이름과 이메일을 입력해주세요.");
-            return ResponseEntity.badRequest().body(result);
+            throw new IllegalArgumentException("이름과 이메일을 입력해주세요.");
         }
 
         String userId = userService.findUserIdByNameAndEmail(UserVO.builder()
@@ -86,14 +70,10 @@ public class UserRestController {
                 .build());
 
         if (userId == null) {
-            result.put("result", "fail");
-            result.put("message", "일치하는 회원 정보가 없습니다.");
-            return ResponseEntity.ok(result);
+            throw new NullPointerException("일치하는 회원 정보가 없습니다.");
         }
 
-        result.put("result", "success");
-        result.put("userId", userId);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(Map.of("result", "success", "userId", userId));
     }
 
     @PostMapping("/updatePwAjax")
@@ -103,37 +83,27 @@ public class UserRestController {
         String newPassword = userRequest.getPassword();
         String newPasswordConfirm = userRequest.getPasswordConfirm();
 
-        Map<String, Object> result = new HashMap<>();
-
         if (userId == null || email == null || newPassword == null || newPasswordConfirm == null
                 || userId.trim().isEmpty() || email.trim().isEmpty()
                 || newPassword.trim().isEmpty() || newPasswordConfirm.trim().isEmpty()) {
-            result.put("result", "fail");
-            result.put("message", "필수 항목을 모두 입력해주세요.");
-            return ResponseEntity.badRequest().body(result);
+            throw new IllegalArgumentException("필수 항목을 모두 입력해주세요.");
         }
 
         if (!newPassword.equals(newPasswordConfirm)) {
-            result.put("result", "fail");
-            result.put("message","새 비밀번호 확인이 일치하지 않습니다.");
-            return ResponseEntity.ok(result);
+            throw new IllegalArgumentException("새 비밀번호 확인이 일치하지 않습니다.");
         }
 
-        boolean updated = userService.updatePassword(UserVO.builder()
+        if (!userService.updatePassword(UserVO.builder()
                 .userID(userId)
                 .email(email)
                 .password(newPassword)
-                .build());
-
-        if (!updated) {
-            result.put("result", "fail");
-            result.put("message", "아이디 또는 이메일이 일치하지 않습니다.");
-            return ResponseEntity.ok(result);
+                .build())) {
+            throw new IllegalArgumentException("아이디 또는 이메일이 일치하지 않습니다.");
         }
 
-        result.put("result", "success");
-        result.put("message", "비밀번호가 변경되었습니다. 로그인 해주세요.");
-        result.put("url", "/user/loginView");
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(Map.of(
+                "result", "success",
+                "message", "비밀번호가 변경되었습니다. 로그인 해주세요.",
+                "url", "/user/loginView"));
     }
 }

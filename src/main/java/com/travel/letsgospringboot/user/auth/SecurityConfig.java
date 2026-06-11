@@ -6,10 +6,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -21,7 +27,6 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
 
-        //비로그인
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
                                 "/user/getIdView", "/user/getId",
@@ -33,7 +38,6 @@ public class SecurityConfig {
                         .requestMatchers("/postschedule/detail/**").authenticated()
                         .anyRequest().permitAll());
 
-        //로그인
         http.formLogin(form
                 -> form.loginPage("/user/loginView")
                 .loginProcessingUrl("/login")
@@ -51,6 +55,25 @@ public class SecurityConfig {
                 })
                 .permitAll()
         );
+
+        http.logout(logout
+                -> logout.logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+        );
+
+        http.sessionManagement(session -> session
+                .sessionFixation(sf -> sf.changeSessionId())
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+        );
+
+
+
         return http.build();
+
+
     }
 }
