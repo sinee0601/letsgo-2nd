@@ -66,34 +66,33 @@
 	}
 
 	function requestSort(sortOrder) {
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState !== 4) {
-				return;
-			}
-			if (xhr.status !== 200) {
-				alert("목록 정렬 요청 실패 (HTTP " + xhr.status + ")");
-				return;
-			}
-			var data;
-			try {
-				data = JSON.parse(xhr.responseText);
-			} catch (e) {
-				alert("JSON이 아닙니다.");
-				return;
-			}
-			if (data && data.error === true) {
-				alert(data.message || "목록을 불러오지 못했습니다.");
-				return;
-			}
-			if (!Array.isArray(data)) {
-				alert("목록 형식 오류");
-				return;
-			}
-			renderPlaces(data);
-		};
-		xhr.open("GET", apiBase + "/leisureListAjax?sortOrder=" + encodeURIComponent(sortOrder), true);
-		xhr.send(null);
+		var url = apiBase + "/leisureListAjax?sortOrder=" + encodeURIComponent(sortOrder);
+
+		fetch(url)
+			.then(function (response) {
+				if (!response.ok) {
+					throw new Error("HTTP " + response.status);
+				}
+				return response.json();
+			})
+			.then(function (data) {
+				if (data && data.error === true) {
+					alert(data.message || "목록을 불러오지 못했습니다.");
+					return;
+				}
+				if (!Array.isArray(data)) {
+					alert("목록 형식 오류");
+					return;
+				}
+				renderPlaces(data);
+			})
+			.catch(function (error) {
+				if (error instanceof SyntaxError) {
+					alert("JSON이 아닙니다.");
+				} else {
+					alert("목록 정렬 요청 실패 (" + error.message + ")");
+				}
+			});
 	}
 
 	var sortSel = document.getElementById("sortOrderSelect");

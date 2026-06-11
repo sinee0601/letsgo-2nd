@@ -24,4 +24,12 @@ public class PlaceVO {
     private String lclssystm3;
     // 노출 여부 상태 플래그
     private boolean isActive;
+
+    public boolean getIsActive() {
+        return this.isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 }

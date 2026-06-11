@@ -28,6 +28,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{lclssystm3}
+		  AND IS_ACTIVE = 1
 	</select>
 
 	<select id="getPlaceOrderByLike" parameterType="map" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
@@ -41,6 +42,7 @@
 		       #{placeType} AS placeType
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -55,6 +57,7 @@
 		       #{placeType} AS placeType
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
+		  AND IS_ACTIVE = 1
 		ORDER BY TITLE ASC
 	</select>
 
@@ -70,6 +73,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND ADDR1 LIKE #{addrPattern}
+		  AND IS_ACTIVE = 1
 	</select>
 
 	
@@ -131,6 +135,7 @@
 		       PLACE_TYPE AS placeType
 		FROM place
 		WHERE PLACE_TYPE = 'LEISURE'
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -145,6 +150,7 @@
 		       PLACE_TYPE AS placeType
 		FROM place
 		WHERE PLACE_TYPE = 'LEISURE'
+		  AND IS_ACTIVE = 1
 	</select>
 
 	<select id="getPlaceById" parameterType="string" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
@@ -194,6 +200,7 @@
 		       #{placeType} AS placeType
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
+		  AND IS_ACTIVE = 1
 		ORDER BY TITLE ASC
 	</select>
 
@@ -208,6 +215,7 @@
 		       #{placeType} AS placeType
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -223,6 +231,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
+		  AND IS_ACTIVE = 1
 		ORDER BY TITLE ASC
 	</select>
 
@@ -238,6 +247,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -253,6 +263,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
+		  AND IS_ACTIVE = 1
 		ORDER BY TITLE ASC
 	</select>
 
@@ -268,6 +279,7 @@
 		FROM place
 		WHERE PLACE_TYPE = #{placeType}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -284,6 +296,7 @@
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
+		  AND IS_ACTIVE = 1
 		ORDER BY TITLE ASC
 	</select>
 
@@ -300,6 +313,7 @@
 		WHERE PLACE_TYPE = #{placeType}
 		  AND LCLSSYSTM3 = #{category}
 		  AND (TITLE LIKE #{keywordPattern} OR ADDR1 LIKE #{keywordPattern})
+		  AND IS_ACTIVE = 1
 		ORDER BY LIKE_COUNT DESC
 	</select>
 
@@ -331,6 +345,7 @@
 			WHERE PLACE_TYPE = #{placeType}
 			  AND MAPX IS NOT NULL
 			  AND MAPY IS NOT NULL
+			  AND IS_ACTIVE = 1
 			<if test="category != null and category != ''">
 			  AND LCLSSYSTM3 = #{category}
 			</if>

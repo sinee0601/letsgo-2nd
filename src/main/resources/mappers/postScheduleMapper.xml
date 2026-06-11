@@ -74,24 +74,28 @@
     <select id="getPostScheduleListLike" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
+        WHERE p.is_hidden = 0
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListView" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
+        WHERE p.is_hidden = 0
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListTitle" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
+        WHERE p.is_hidden = 0
         ORDER BY p.title DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListLatest" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
+        WHERE p.is_hidden = 0
         ORDER BY p.posted_at DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
@@ -100,28 +104,32 @@
     <select id="getPostScheduleListSearchLike" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND p.is_hidden = 0
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchView" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND p.is_hidden = 0
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchTitle" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND p.is_hidden = 0
         ORDER BY p.title DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
     <select id="getPostScheduleListSearchLatest" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND p.is_hidden = 0
         ORDER BY p.posted_at DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 

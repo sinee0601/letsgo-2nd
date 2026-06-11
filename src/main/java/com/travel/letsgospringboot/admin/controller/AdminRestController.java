@@ -15,22 +15,24 @@ public class AdminRestController {
     private final UserService userService;
 
     @DeleteMapping("/places/{placeId}")
-    public ResponseEntity<String> deletePlace(@PathVariable("placeId") int placeId) {
+    public ResponseEntity<String> deletePlace(@PathVariable("placeId") Long placeId) {
         try {
             adminService.deletePlace(placeId);
             return ResponseEntity.ok("삭제되었습니다.");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("삭제에 실패했습니다.");
         }
     }
 
     @PostMapping("/places/{placeId}/toggle")
-    public ResponseEntity<String> togglePlaceVisibility(@PathVariable("placeId") int placeId,
+    public ResponseEntity<String> togglePlaceVisibility(@PathVariable("placeId") Long placeId,
                                                          @RequestParam("isActive") boolean isActive) {
         try {
             adminService.togglePlaceVisibility(placeId, isActive);
             return ResponseEntity.ok("success");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("상태 변경에 실패했습니다.");
         }
     }

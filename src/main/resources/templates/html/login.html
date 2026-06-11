@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <link rel="stylesheet" th:href="@{/css/auth-common.css}">
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <meta charset="UTF-8">
     <title>로그인</title>
 </head>
+
 <body>
-<button type="button" class="back-button" onclick="history.back()">뒤로가기</button>
-<div class="loginbox">
-    <h1>로그인</h1>
+    <button type="button" class="back-button" onclick="history.back()">뒤로가기</button>
+    <div class="loginbox">
+        <h1>로그인</h1>
 
-    <div th:if="${param.error}" style="color:red;">아이디/비밀번호를 다시 입력하세요.</div>
-    <div id="loginMessage"></div>
+        <div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;">아이디/비밀번호를 다시 입력하세요.</div>
+        <div id="loginMessage"></div>
 
-    <form id="loginForm" method="post" action="/login">
-        <div class="id">
-            <input id="userId" name="userID" placeholder="아이디">
-        </div>
-        <div class="pw">
-            <input type="password" id="password" name="password" placeholder="비밀번호">
-        </div>
+        <form id="loginForm" method="post" action="/login">
+            <div class="id">
+                <input id="userId" name="userID" placeholder="아이디">
+            </div>
+            <div class="pw">
+                <input type="password" id="password" name="password" placeholder="비밀번호">
+            </div>
+            <div>
+                <button type="submit">로그인</button>
+            </div>
+        </form>
         <div>
-            <button type="submit">로그인</button>
+            <a href="/user/getIdView">아이디 찾기</a>
+            <a href="/user/updatePwView">비밀번호 찾기</a>
+            <a href="/user/signUpView">회원가입</a>
         </div>
-    </form>
-    <div>
-        <a href="/user/getIdView">아이디 찾기</a>
-        <a href="/user/updatePwView">비밀번호 찾기</a>
-        <a href="/user/signUpView">회원가입</a>
     </div>
-</div>
 </body>
+
 </html>

@@ -2,6 +2,7 @@ package com.travel.letsgospringboot.user.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,7 +44,13 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login")
                 .usernameParameter("userID")
                 .passwordParameter("password")
-                .failureUrl("/user/loginView?error=true")
+                .failureHandler((request, response, exception) -> {
+                    String errorType = "true";
+                    if (exception instanceof DisabledException) {
+                        errorType = "disabled";
+                    }
+                    response.sendRedirect("/user/loginView?error=" + errorType);
+                })
                 .successHandler((request, response, authentication) -> {
                     boolean isAdmin = authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
