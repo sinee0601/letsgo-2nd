@@ -25,4 +25,12 @@ public class JpaUsers {
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp created;
+    
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int warningCount = 0;
+
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled = true;
 }

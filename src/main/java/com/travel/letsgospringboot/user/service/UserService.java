@@ -6,6 +6,8 @@ import com.travel.letsgospringboot.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +18,45 @@ public class UserService {
 //    public UserVO login(UserVO userVO) {
 //        return userRepository.login(userVO);
 //    }
+    public List<JpaUsers>getAllUsers(){
+        return userJpaRepository.findAll();
+    }
+
+    public List<JpaUsers> searchUsers(String keyword){
+        return userJpaRepository.findByUserIDContainingOrNameContaining(keyword, keyword);
+    }
+
+    @Transactional
+    public void giveWarning(String userID, String reason) {
+        JpaUsers user = userJpaRepository.findByUserID(userID);
+        if (user != null) {
+            int nextWarningCount = user.getWarningCount() + 1;
+            user.setWarningCount(nextWarningCount);
+            if (nextWarningCount >= 3) {
+                user.setEnabled(false);
+            }
+            userJpaRepository.save(user);
+        }
+    }
+
+    @Transactional
+    public void suspendUser(String userID) {
+        JpaUsers user = userJpaRepository.findByUserID(userID);
+        if (user != null) {
+            user.setEnabled(false);
+            userJpaRepository.save(user);
+        }
+    }
+
+    @Transactional
+    public void unsuspendUser(String userID) {
+        JpaUsers user = userJpaRepository.findByUserID(userID);
+        if (user != null) {
+            user.setEnabled(true);
+            user.setWarningCount(0);
+            userJpaRepository.save(user);
+        }
+    }
 
     public boolean signUp(UserVO userVO) {
         if (userJpaRepository.findByUserID(userVO.getUserID()) != null) {

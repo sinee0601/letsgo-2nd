@@ -37,6 +37,7 @@ CREATE TABLE place
     lclssystm1  VARCHAR(50),
     lclssystm2  VARCHAR(50),
     lclssystm3  VARCHAR(50),
+    is_active   TINYINT(1)   NOT NULL DEFAULT 1,
     CONSTRAINT pk_place PRIMARY KEY (place_id)
 ) DEFAULT CHARSET=utf8mb4;
 

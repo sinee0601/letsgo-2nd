@@ -13,6 +13,7 @@ const startAtInput = document.querySelector("#startAtInput");
 const companionBtn = document.querySelector("#companionBtn");
 const PANELS = ["route", "budget", "todo", "companion"];
 
+
 function readTitle() {
     return document.getElementById("scheduleTitleInput").value.trim();
 }

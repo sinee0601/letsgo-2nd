@@ -19,4 +19,9 @@ public class PlaceVO {
     private String mapy;
     private Long likeCount;
     private String placeType;
+    private String lclssystm1;
+    private String lclssystm2;
+    private String lclssystm3;
+    // 노출 여부 상태 플래그
+    private boolean isActive;
 }

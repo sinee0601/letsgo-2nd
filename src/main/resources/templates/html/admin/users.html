@@ -99,7 +99,8 @@
                                 <td>
                                     <span class="badge bg-warning-subtle text-warning fs-6"
                                         th:if="${user.warningCount < 3}" th:text="|${user.warningCount}회|">2회</span>
-                                    <span class="badge bg-danger fs-6" th:if="${user.warningCount >= 3}">3회 (자동 정지)</span>
+                                    <span class="badge bg-danger fs-6" th:if="${user.warningCount >= 3}">3회 (자동
+                                        정지)</span>
                                 </td>
                                 <td>
                                     <span class="admin-badge admin-badge-success" th:if="${user.enabled}">정상</span>
@@ -108,18 +109,20 @@
                                 </td>
                                 <td>
                                     <th:block th:if="${user.enabled}">
-                                        <button class="btn btn-sm btn-warning text-white"
-                                            onclick="openGiveWarningModal('user03')"
-                                            th:onclick="|openGiveWarningModal('${user.userID}')|"><i
-                                                class="bi bi-exclamation-octagon"></i> 경고 부여</button>
-                                        <button class="btn btn-sm btn-danger"
-                                            th:onclick="|suspendUser('${user.userID}')|"><i class="bi bi-person-x"></i>
-                                            영구 정지</button>
+                                        <button class="btn btn-sm btn-warning text-white btn-give-warning"
+                                                th:data-userid="${user.userID}">
+                                            <i class="bi bi-exclamation-octagon"></i> 경고 부여
+                                        </button>
+                                        <button class="btn btn-sm btn-danger btn-suspend"
+                                                th:data-userid="${user.userID}">
+                                            <i class="bi bi-person-x"></i> 영구 정지
+                                        </button>
                                     </th:block>
                                     <th:block th:unless="${user.enabled}">
-                                        <button class="btn btn-sm btn-success"
-                                            th:onclick="|unsuspendUser('${user.userID}')|"><i
-                                                class="bi bi-person-check"></i> 정지 해제</button>
+                                        <button class="btn btn-sm btn-success btn-unsuspend"
+                                                th:data-userid="${user.userID}">
+                                            <i class="bi bi-person-check"></i> 정지 해제
+                                        </button>
                                     </th:block>
                                 </td>
                             </tr>

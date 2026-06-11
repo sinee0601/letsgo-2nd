@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.travel.letsgospringboot.admin.repository.AdminRepository">
+
+    <select id="selectTotalUserCount" resultType="int">
+        SELECT COUNT(*) FROM jpa_users;
+    </select>
+
+    <select id="selectTotalPlaceCount" resultType="int">
+        SELECT COUNT(*) FROM place;
+    </select>
+
+    <select id="selectTotalScheduleCount" resultType="int">
+        SELECT COUNT(*) FROM my_schedule;
+    </select>
+
+    <select id="selectRecentPlaces" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
+        SELECT
+            place_id AS placeId,
+            title,
+            addr1,
+            addr2,
+            mapx,
+            mapy,
+            first_image AS firstImage,
+            like_count AS likeCount,
+            place_type AS placeType
+        FROM place
+        ORDER BY CAST(place_id AS UNSIGNED) DESC
+        LIMIT 5
+    </select>
+
+    <insert id="insertPlace" parameterType="com.travel.letsgospringboot.place.vo.PlaceVO">
+        <selectKey keyProperty="placeId" resultType="long" order="BEFORE">
+            SELECT NEXT VALUE FOR seq_place
+        </selectKey>
+        INSERT INTO place (
+            place_id, title, addr1, addr2, mapx, mapy,
+            first_image, like_count, place_type,
+            lclssystm1, lclssystm2, lclssystm3, is_active
+        )
+        VALUES (
+            #{placeId}, #{title}, #{addr1}, #{addr2}, #{mapx}, #{mapy},
+            #{firstImage}, 0, #{placeType},
+            #{lclssystm1}, #{lclssystm2}, #{lclssystm3}, 1
+        )
+    </insert>
+
+    <delete id="deletePlace">
+        DELETE FROM place WHERE place_id = #{placeId}
+    </delete>
+
+    <select id="selectAdminPlaces" resultType="com.travel.letsgospringboot.place.vo.PlaceVO">
+        SELECT
+            place_id AS placeId,
+            title,
+            addr1,
+            addr2,
+            mapx,
+            mapy,
+            first_image AS firstImage,
+            like_count AS likeCount,
+            place_type AS placeType,
+            lclssystm1,
+            lclssystm2,
+            lclssystm3,
+            is_active AS isActive
+        FROM place
+        <where>
+            <if test="keyword != null and keyword != ''">
+                title LIKE CONCAT('%', #{keyword}, '%')
+                OR addr1 LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY CAST(place_id AS UNSIGNED) DESC
+    </select>
+
+    <update id="updatePlace" parameterType="com.travel.letsgospringboot.place.vo.PlaceVO">
+        UPDATE place
+        SET
+            title = #{title},
+            place_type = #{placeType},
+            lclssystm1 = #{lclssystm1},
+            lclssystm2 = #{lclssystm2},
+            lclssystm3 = #{lclssystm3},
+            addr1 = #{addr1},
+            addr2 = #{addr2}
+        WHERE place_id = #{placeId}
+    </update>
+
+    <update id="updatePlaceVisibility">
+        UPDATE place
+        SET is_active = #{isActive}
+        WHERE place_id = #{placeId}
+    </update>
+
+    <select id="selectAllReports" resultType="com.travel.letsgospringboot.admin.vo.AdminReportVO">
+        SELECT
+            r.report_id AS reportId,
+            r.post_id AS postId,
+            p.title AS postTitle,
+            r.reporter_id AS reporterId,
+            r.reason AS reason,
+            r.status AS status,
+            r.reported_at AS createdAt
+        FROM report_schedule_post r
+        JOIN schedule_post p ON r.post_id = p.post_id
+        ORDER BY r.reported_at DESC
+    </select>
+
+    <update id="updateReportStatus">
+        UPDATE report_schedule_post
+        SET status = #{status}
+        WHERE report_id = #{reportId}
+    </update>
+
+    <select id="selectReportById" resultType="com.travel.letsgospringboot.admin.vo.AdminReportVO">
+        SELECT
+            report_id AS reportId,
+            post_id AS postId,
+            reporter_id AS reporterId,
+            reason AS reason,
+            status AS status,
+            reported_at AS createdAt
+        FROM report_schedule_post
+        WHERE report_id = #{reportId}
+    </select>
+
+    <select id="selectAdminPosts" resultType="com.travel.letsgospringboot.admin.vo.AdminPostVO">
+        SELECT
+            post_id AS postId,
+            title,
+            user_id AS userId,
+            posted_at AS postedAt,
+            CASE WHEN is_hidden = 0 THEN 1 ELSE 0 END AS isActive
+        FROM schedule_post
+        <where>
+            <if test="keyword != null and keyword != ''">
+                title LIKE CONCAT('%', #{keyword}, '%')
+                OR user_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY posted_at DESC
+    </select>
+
+    <update id="updatePostVisibility">
+        UPDATE schedule_post
+        SET is_hidden = #{isHidden}
+        WHERE post_id = #{postId}
+    </update>
+</mapper>

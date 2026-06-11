@@ -42,36 +42,29 @@ public class UserRestController {
             return ResponseEntity.ok(result);
         }
 
-        try {
-            if (!userService.idCheck(userId)) {
-                result.put("result", "fail");
-                result.put("message", "이미 사용 중인 아이디입니다.");
-                return ResponseEntity.ok(result);
-            }
-
-            boolean success = userService.signUp(UserVO.builder()
-                    .userID(userId)
-                    .email(email)
-                    .name(name)
-                    .password(password)
-                    .build());
-
-            if (!success) {
-                result.put("result", "fail");
-                result.put("message", "회원가입에 실패했습니다.");
-                return ResponseEntity.ok(result);
-            }
-
-            result.put("result", "success");
-            result.put("message", "회원가입 완료. 로그인 해주세요.");
-            result.put("url", "/user/loginView");
-            return ResponseEntity.ok(result);
-
-        } catch (Exception e) {
+        if (!userService.idCheck(userId)) {
             result.put("result", "fail");
-            result.put("message", "회원가입 중 오류가 발생했습니다.");
-            return ResponseEntity.internalServerError().body(result);
+            result.put("message", "이미 사용 중인 아이디입니다.");
+            return ResponseEntity.ok(result);
         }
+
+        boolean success = userService.signUp(UserVO.builder()
+                .userID(userId)
+                .email(email)
+                .name(name)
+                .password(password)
+                .build());
+
+        if (!success) {
+            result.put("result", "fail");
+            result.put("message", "회원가입에 실패했습니다.");
+            return ResponseEntity.ok(result);
+        }
+
+        result.put("result", "success");
+        result.put("message", "회원가입 완료. 로그인 해주세요.");
+        result.put("url", "/user/loginView");
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/getIdAjax")
@@ -87,27 +80,20 @@ public class UserRestController {
             return ResponseEntity.badRequest().body(result);
         }
 
-        try {
-            String userId = userService.findUserIdByNameAndEmail(UserVO.builder()
-                    .name(name.trim())
-                    .email(email.trim())
-                    .build());
+        String userId = userService.findUserIdByNameAndEmail(UserVO.builder()
+                .name(name.trim())
+                .email(email.trim())
+                .build());
 
-            if (userId == null) {
-                result.put("result", "fail");
-                result.put("message", "일치하는 회원 정보가 없습니다.");
-                return ResponseEntity.ok(result);
-            }
-
-            result.put("result", "success");
-            result.put("userId", userId);
-            return ResponseEntity.ok(result);
-
-        } catch (Exception e) {
+        if (userId == null) {
             result.put("result", "fail");
-            result.put("message", "조회 중 오류가 발생했습니다.");
-            return ResponseEntity.internalServerError().body(result);
+            result.put("message", "일치하는 회원 정보가 없습니다.");
+            return ResponseEntity.ok(result);
         }
+
+        result.put("result", "success");
+        result.put("userId", userId);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/updatePwAjax")
@@ -133,28 +119,21 @@ public class UserRestController {
             return ResponseEntity.ok(result);
         }
 
-        try {
-            boolean updated = userService.updatePassword(UserVO.builder()
-                    .userID(userId)
-                    .email(email)
-                    .password(newPassword)
-                    .build());
+        boolean updated = userService.updatePassword(UserVO.builder()
+                .userID(userId)
+                .email(email)
+                .password(newPassword)
+                .build());
 
-            if (!updated) {
-                result.put("result", "fail");
-                result.put("message", "아이디 또는 이메일이 일치하지 않습니다.");
-                return ResponseEntity.ok(result);
-            }
-
-            result.put("result", "success");
-            result.put("message", "비밀번호가 변경되었습니다. 로그인 해주세요.");
-            result.put("url", "/user/loginView");
-            return ResponseEntity.ok(result);
-
-        } catch (Exception e) {
+        if (!updated) {
             result.put("result", "fail");
-            result.put("message", "비밀번호 변경 중 오류가 발생했습니다.");
-            return ResponseEntity.internalServerError().body(result);
+            result.put("message", "아이디 또는 이메일이 일치하지 않습니다.");
+            return ResponseEntity.ok(result);
         }
+
+        result.put("result", "success");
+        result.put("message", "비밀번호가 변경되었습니다. 로그인 해주세요.");
+        result.put("url", "/user/loginView");
+        return ResponseEntity.ok(result);
     }
 }

@@ -85,32 +85,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="report : ${reports}" th:id="'report-row-' + ${report.reportId}" id="report-row">
+                            <tr th:each="report : ${reports}" th:id="'report-row-' + ${report.reportId}"
+                                id="report-row">
                                 <td th:text="${report.reportId}">1</td>
-                                <td><strong class="text-primary" th:text="${report.postTitle}">압구정 수상스키와 파르나스 호텔 1박 2일</strong></td>
+                                <td><strong class="text-primary" th:text="${report.postTitle}">압구정 수상스키와 파르나스 호텔 1박
+                                        2일</strong></td>
                                 <td th:text="${report.reporterId}">user05</td>
                                 <td th:text="${report.createdAt}">2026-06-10 15:01:56</td>
                                 <td class="text-danger" th:text="${report.reason}">광고 및 도배글 의심</td>
                                 <td>
                                     <span class="admin-badge admin-badge-warning"
-                                        th:if="${report.status == 'PENDING'}">대기 중</span>
+                                        th:if="${report.status == '대기중'}">대기 중</span>
                                     <span class="admin-badge admin-badge-success"
-                                        th:if="${report.status == 'REJECTED'}">반려됨</span>
+                                        th:if="${report.status == '반려됨'}">반려됨</span>
                                     <span class="admin-badge admin-badge-danger"
-                                        th:if="${report.status == 'PROCESSED'}">삭제완료</span>
+                                        th:if="${report.status == '삭제완료'}">삭제완료</span>
+                                    <span class="text-secondary small" 
+                                        th:if="${report.status != '대기중' and report.status != '반려됨' and report.status != '삭제완료'}" 
+                                        th:text="|(${report.status})|"></span>
                                 </td>
                                 <td>
-                                    <th:block th:if="${report.status == 'PENDING'}">
-                                        <button class="btn btn-sm btn-success"
-                                            th:onclick="|processReport('${report.reportId}', 'REJECT')|">
+                                    <th:block th:if="${report.status == '대기중'}">
+                                        <button class="btn btn-sm btn-success btn-process-report"
+                                                th:data-id="${report.reportId}"
+                                                th:data-action="REJECT">
                                             <i class="bi bi-check-circle"></i> 반려</button>
-                                        <button class="btn btn-sm btn-danger"
-                                            th:onclick="|processReport('${report.reportId}', 'DELETE_POST')|"><i
-                                                class="bi bi-trash"></i> 게시글 삭제</button>
+                                        <button class="btn btn-sm btn-danger btn-process-report"
+                                                th:data-id="${report.reportId}"
+                                                th:data-action="DELETE_POST">
+                                            <i class="bi bi-trash"></i> 게시글 삭제</button>
                                     </th:block>
-                                    <th:block th:unless="${report.status == 'PENDING'}">
+                                    <th:block th:unless="${report.status == '대기중'}">
                                         <span class="text-muted"
-                                            th:text="${report.status == 'REJECTED' ? '반려 처리됨' : '삭제 처리됨'}">처리 완료</span>
+                                            th:text="${report.status == '반려됨' ? '반려 처리됨' : '삭제 처리됨'}">처리 완료</span>
                                     </th:block>
                                 </td>
                             </tr>
