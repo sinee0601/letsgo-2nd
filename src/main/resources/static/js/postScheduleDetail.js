@@ -48,7 +48,7 @@ function fetchPlueLike(postId) {
         })
         .then(res => res.json())
         .then(count => likeCountEL.textContent = count)
-        .catch(err => console.error("좋아요 증가 실패", err));
+        .catch(err => console.error("fetch 오류:", err));
 }
 
 
@@ -85,14 +85,8 @@ function reportPostSchedule(postId) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: reason.trim() })
     })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("게시물 신고 실패");
-            }
-            alert("신고가 접수되었습니다.");
-        })
-        .catch(err => {
-            console.error("fetch 오류:", err);
+        .then(res => alert(res.ok ? "신고 처리되었습니다." : "신고 처리에 실패했습니다."))
+        .catch(err => {console.error("fetch 오류:", err);
             alert("신고 처리 중 오류가 발생했습니다.");
         });
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserPostScheduleListVO {
+public class PostScheduleSearchConditionVO {
     private String userId;
     private String keyword;
 }

@@ -2,7 +2,7 @@ package com.travel.letsgospringboot.postschedule.controller;
 
 import com.travel.letsgospringboot.postschedule.service.PostScheduleService;
 import com.travel.letsgospringboot.postschedule.vo.MapScheduleTO;
-import com.travel.letsgospringboot.postschedule.vo.PostScheduleTO;
+import com.travel.letsgospringboot.postschedule.vo.PostScheduleListTO;
 import com.travel.letsgospringboot.postschedule.vo.RouteScheduleTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class PostScheduleRestController {
 
     private final PostScheduleService postScheduleService;
     @GetMapping("/list")
-    public List<PostScheduleTO> getPostScheduleList(@RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
+    public List<PostScheduleListTO> getPostScheduleList(@RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
         if (sortOrder == null || sortOrder.trim().isEmpty()) {
             sortOrder = "latest";
         }
@@ -50,7 +50,7 @@ public class PostScheduleRestController {
     }
 
     @GetMapping("/mylist")
-    public List<PostScheduleTO> getUserPostScheduleList(Principal principal, @RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
+    public List<PostScheduleListTO> getUserPostScheduleList(Principal principal, @RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
         String userId = principal.getName();
         if (sortOrder == null || sortOrder.trim().isEmpty()) {
             sortOrder = "latest";

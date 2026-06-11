@@ -22,4 +22,6 @@ public class PostScheduleDetailTO {
 
     private String budgetDetail;
     private String todoDetail;
+
+    private int isHidden;
 }

@@ -7,25 +7,25 @@ import java.util.List;
 
 @Mapper
 public interface PostScheduleRepository {
-    List<PostScheduleTO> getPostScheduleListLike();
-    List<PostScheduleTO> getPostScheduleListView();
-    List<PostScheduleTO> getPostScheduleListTitle();
-    List<PostScheduleTO> getPostScheduleListLatest();
+    List<PostScheduleListTO> getPostScheduleListLike();
+    List<PostScheduleListTO> getPostScheduleListView();
+    List<PostScheduleListTO> getPostScheduleListTitle();
+    List<PostScheduleListTO> getPostScheduleListLatest();
 
-    List<PostScheduleTO> getPostScheduleListSearchLike(String keyword);
-    List<PostScheduleTO> getPostScheduleListSearchView(String keyword);
-    List<PostScheduleTO> getPostScheduleListSearchTitle(String keyword);
-    List<PostScheduleTO> getPostScheduleListSearchLatest(String keyword);
+    List<PostScheduleListTO> getPostScheduleListSearchLike(String keyword);
+    List<PostScheduleListTO> getPostScheduleListSearchView(String keyword);
+    List<PostScheduleListTO> getPostScheduleListSearchTitle(String keyword);
+    List<PostScheduleListTO> getPostScheduleListSearchLatest(String keyword);
 
-    List<PostScheduleTO> getUserPostScheduleListLike(String userId);
-    List<PostScheduleTO> getUserPostScheduleListView(String userId);
-    List<PostScheduleTO> getUserPostScheduleListTitle(String userId);
-    List<PostScheduleTO> getUserPostScheduleListLatest(String userId);
+    List<PostScheduleListTO> getUserPostScheduleListLike(String userId);
+    List<PostScheduleListTO> getUserPostScheduleListView(String userId);
+    List<PostScheduleListTO> getUserPostScheduleListTitle(String userId);
+    List<PostScheduleListTO> getUserPostScheduleListLatest(String userId);
 
-    List<PostScheduleTO> getUserPostScheduleListSearchLike(UserPostScheduleListVO userPostScheduleListVO);
-    List<PostScheduleTO> getUserPostScheduleListSearchView(UserPostScheduleListVO userPostScheduleListVO);
-    List<PostScheduleTO> getUserPostScheduleListSearchTitle(UserPostScheduleListVO userPostScheduleListVO);
-    List<PostScheduleTO> getUserPostScheduleListSearchLatest(UserPostScheduleListVO userPostScheduleListVO);
+    List<PostScheduleListTO> getUserPostScheduleListSearchLike(PostScheduleSearchConditionVO postScheduleSearchConditionVO);
+    List<PostScheduleListTO> getUserPostScheduleListSearchView(PostScheduleSearchConditionVO postScheduleSearchConditionVO);
+    List<PostScheduleListTO> getUserPostScheduleListSearchTitle(PostScheduleSearchConditionVO postScheduleSearchConditionVO);
+    List<PostScheduleListTO> getUserPostScheduleListSearchLatest(PostScheduleSearchConditionVO postScheduleSearchConditionVO);
 
     String getBudgetDetail(String postId);
     String getTodoDetail(String postId);

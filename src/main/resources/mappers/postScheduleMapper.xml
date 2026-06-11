@@ -3,7 +3,7 @@
 
 <mapper namespace="com.travel.letsgospringboot.postschedule.repository.PostScheduleRepository">
 
-    <resultMap id="postScheduleResultMap" type="com.travel.letsgospringboot.postschedule.vo.PostScheduleTO">
+    <resultMap id="postScheduleResultMap" type="com.travel.letsgospringboot.postschedule.vo.PostScheduleListTO">
         <result property="postId"       column="POST_ID"/>
         <result property="title"        column="POST_TITLE"/>
         <result property="likeCount"    column="LIKE_COUNT"/>
@@ -42,6 +42,7 @@
         <result property="likeCount"     column="LIKE_COUNT"/>
         <result property="viewCount"     column="VIEW_COUNT"/>
         <result property="writerId"      column="WRITER_ID"/>
+        <result property="isHidden"      column="IS_HIDDEN"/>
     </resultMap>
 
 
@@ -164,7 +165,7 @@
     </select>
 
 
-    <select id="getUserPostScheduleListSearchLike" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListVO" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchLike" parameterType="com.travel.letsgospringboot.postschedule.vo.PostScheduleSearchConditionVO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -172,7 +173,7 @@
         ORDER BY p.like_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchView" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListVO" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchView" parameterType="com.travel.letsgospringboot.postschedule.vo.PostScheduleSearchConditionVO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -180,7 +181,7 @@
         ORDER BY p.view_count DESC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchTitle" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListVO" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchTitle" parameterType="com.travel.letsgospringboot.postschedule.vo.PostScheduleSearchConditionVO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -188,7 +189,7 @@
         ORDER BY p.title ASC, p.post_id ASC, v.VISIT_ORDER ASC
     </select>
 
-    <select id="getUserPostScheduleListSearchLatest" parameterType="com.travel.letsgospringboot.postschedule.vo.UserPostScheduleListVO" resultMap="postScheduleResultMap">
+    <select id="getUserPostScheduleListSearchLatest" parameterType="com.travel.letsgospringboot.postschedule.vo.PostScheduleSearchConditionVO" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
@@ -230,7 +231,8 @@
             TITLE AS SCHEDULE_TITLE,
             LIKE_COUNT,
             VIEW_COUNT,
-            USER_ID AS WRITER_ID
+            USER_ID AS WRITER_ID,
+            IS_HIDDEN
         FROM schedule_post
         WHERE POST_ID = #{postId}
     </select>

@@ -1,13 +1,14 @@
 package com.travel.letsgospringboot.postschedule.vo;
 
+
 import lombok.*;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostScheduleTO {
+@Builder
+public class PostScheduleListTO {
     private String postId;
     private String title;
     private int likeCount;

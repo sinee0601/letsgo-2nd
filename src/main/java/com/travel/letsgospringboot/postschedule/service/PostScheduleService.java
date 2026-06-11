@@ -1,5 +1,6 @@
 package com.travel.letsgospringboot.postschedule.service;
 
+import com.travel.letsgospringboot.exception.PostNotFoundException;
 import com.travel.letsgospringboot.postschedule.repository.PostScheduleRepository;
 import com.travel.letsgospringboot.postschedule.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,65 +18,70 @@ public class PostScheduleService {
     @Autowired
     PostScheduleRepository postScheduleRepository;
 
-    public List<PostScheduleTO> getPostScheduleListLike() {
+    public List<PostScheduleListTO> getPostScheduleListLike() {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListLike());
     }
-    public List<PostScheduleTO> getPostScheduleListView() {
+    public List<PostScheduleListTO> getPostScheduleListView() {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListView());
     }
-    public List<PostScheduleTO> getPostScheduleListTitle() {
+    public List<PostScheduleListTO> getPostScheduleListTitle() {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListTitle());
     }
-    public List<PostScheduleTO> getPostScheduleListLatest() {
+    public List<PostScheduleListTO> getPostScheduleListLatest() {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListLatest());
     }
-    public List<PostScheduleTO> getPostScheduleListSearchLike(String keyword) {
+    public List<PostScheduleListTO> getPostScheduleListSearchLike(String keyword) {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLike(keyword));
     }
-    public List<PostScheduleTO> getPostScheduleListSearchView(String keyword) {
+    public List<PostScheduleListTO> getPostScheduleListSearchView(String keyword) {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchView(keyword));
     }
-    public List<PostScheduleTO> getPostScheduleListSearchTitle(String keyword) {
+    public List<PostScheduleListTO> getPostScheduleListSearchTitle(String keyword) {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchTitle(keyword));
     }
-    public List<PostScheduleTO> getPostScheduleListSearchLatest(String keyword) {
+    public List<PostScheduleListTO> getPostScheduleListSearchLatest(String keyword) {
         return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLatest(keyword));
     }
 
-    public List<PostScheduleTO> getUserPostScheduleListLike(String userId) {
+    public List<PostScheduleListTO> getUserPostScheduleListLike(String userId) {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLike(userId));
     }
-    public List<PostScheduleTO> getUserPostScheduleListView(String userId) {
+    public List<PostScheduleListTO> getUserPostScheduleListView(String userId) {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListView(userId));
     }
-    public List<PostScheduleTO> getUserPostScheduleListTitle(String userId) {
+    public List<PostScheduleListTO> getUserPostScheduleListTitle(String userId) {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListTitle(userId));
     }
-    public List<PostScheduleTO> getUserPostScheduleListLatest(String userId) {
+    public List<PostScheduleListTO> getUserPostScheduleListLatest(String userId) {
         return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLatest(userId));
     }
-    public List<PostScheduleTO> getUserPostScheduleListSearchLike(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListVO(userId, keyword)));
+    public List<PostScheduleListTO> getUserPostScheduleListSearchLike(String userId, String keyword) {
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLike(new PostScheduleSearchConditionVO(userId, keyword)));
     }
-    public List<PostScheduleTO> getUserPostScheduleListSearchView(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListVO(userId, keyword)));
+    public List<PostScheduleListTO> getUserPostScheduleListSearchView(String userId, String keyword) {
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchView(new PostScheduleSearchConditionVO(userId, keyword)));
     }
-    public List<PostScheduleTO> getUserPostScheduleListSearchTitle(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListVO(userId, keyword)));
+    public List<PostScheduleListTO> getUserPostScheduleListSearchTitle(String userId, String keyword) {
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchTitle(new PostScheduleSearchConditionVO(userId, keyword)));
     }
-    public List<PostScheduleTO> getUserPostScheduleListSearchLatest(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO(userId, keyword)));
+    public List<PostScheduleListTO> getUserPostScheduleListSearchLatest(String userId, String keyword) {
+        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new PostScheduleSearchConditionVO(userId, keyword)));
     }
 
-    public PostScheduleDetailTO getPostScheduleDetail(String postId, String loingUserId) {
+    public PostScheduleDetailTO getPostScheduleDetail(String postId, String loginUserId) {
         PostScheduleDetailTO detail = postScheduleRepository.getPostScheduleDetail(postId);
-        boolean isOwner = loingUserId.equals(detail.getWriterId());
+        if(detail == null || detail.getIsHidden() == 1)
+            throw new PostNotFoundException("존재하지않는 게시물입니다.");
+
+        boolean isOwner = loginUserId.equals(detail.getWriterId());
+
         detail.setOwner(isOwner);
-        detail.setRoutes(getScheduleRoute(postId));
-        detail.setMaps(getMapSchedule(postId));
-        detail.setBudgetDetail(getBudgetDetail(postId));
-        detail.setTodoDetail(getTodoDetail(postId));
-        plusView(postId);
+        detail.setRoutes(postScheduleRepository.getScheduleRoute(postId));
+        detail.setMaps(postScheduleRepository.getMapSchedule(postId));
+        detail.setBudgetDetail(postScheduleRepository.getBudgetDetail(postId));
+        detail.setTodoDetail(postScheduleRepository.getTodoDetail(postId));
+        postScheduleRepository.plusView(postId);
+
         return detail;
     }
 
@@ -127,6 +133,8 @@ public class PostScheduleService {
         if(writerId.equals(loingUserId)){
             postScheduleRepository.deleteSchedulePost(postId);
         }
+
+        
     }
 
     @Transactional
@@ -162,14 +170,14 @@ public class PostScheduleService {
 
     }
 
-    public List<PostScheduleTO> processPostScheduleList(List<PostScheduleTO> list){
-        Map<String, PostScheduleTO> uniqueMap = new LinkedHashMap<>();
-        for (PostScheduleTO to : list) {
+    public List<PostScheduleListTO> processPostScheduleList(List<PostScheduleListTO> list){
+        Map<String, PostScheduleListTO> uniqueMap = new LinkedHashMap<>();
+        for (PostScheduleListTO to : list) {
 
             if (!uniqueMap.containsKey(to.getPostId())) {
                 uniqueMap.put(to.getPostId(), to);
             } else {
-                PostScheduleTO existingVO = uniqueMap.get(to.getPostId());
+                PostScheduleListTO existingVO = uniqueMap.get(to.getPostId());
                 if (existingVO.getFirstImage() == null) {
                     existingVO.setFirstImage(to.getFirstImage());
                 }
@@ -177,7 +185,7 @@ public class PostScheduleService {
                 existingVO.setPlaceTitle(combinedPlaces);
             }
         }
-        List<PostScheduleTO> result = new ArrayList<>(uniqueMap.values());
+        List<PostScheduleListTO> result = new ArrayList<>(uniqueMap.values());
         return result;
     }
 
