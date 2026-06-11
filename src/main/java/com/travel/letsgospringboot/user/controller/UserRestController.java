@@ -70,7 +70,7 @@ public class UserRestController {
                 .build());
 
         if (userId == null) {
-            throw new NullPointerException("일치하는 회원 정보가 없습니다.");
+            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
         }
 
         return ResponseEntity.ok(Map.of("result", "success", "userId", userId));
