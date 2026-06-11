@@ -18,16 +18,16 @@ const MyScheduleApi = {
     saveTitle(title) {
         return fetch(`/myschedule/api/${scheduleId}/title`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ title })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title })
         }).then(res => res.json());
     },
 
     saveStartAt(startAt) {
         return fetch(`/myschedule/api/${scheduleId}/startAt`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ startAt })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ startAt })
         }).then(res => res.json());
     },
 
@@ -49,19 +49,19 @@ const MyScheduleApi = {
     },
 
     saveBudget(items) {
-        const payload = JSON.stringify({ items });
+        const budgetDetail = JSON.stringify({ items });
         return fetch(`/myschedule/api/${scheduleId}/budget`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ budgetDetail: payload })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ budgetDetail })
         }).then(res => res.json());
     },
 
     saveTodo(todoDetail) {
         return fetch(`/myschedule/api/${scheduleId}/todo`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ todoDetail })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ todoDetail })
         }).then(res => res.json());
     },
 
@@ -72,24 +72,24 @@ const MyScheduleApi = {
     addCompanion(sharedUserId) {
         return fetch(`/myschedule/api/${scheduleId}/companion`, {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ sharedUserId })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sharedUserId })
         }).then(res => res.json());
     },
 
     changePermission(sharedUserId, permission) {
         return fetch(`/myschedule/api/${scheduleId}/companion/permission`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ sharedUserId, permission })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sharedUserId, permission })
         }).then(res => res.json());
     },
 
     shareToPost(isAnonymous) {
         return fetch(`/myschedule/api/${scheduleId}/share`, {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ isAnonymous })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isAnonymous })
         }).then(res => res.text());
     }
 };

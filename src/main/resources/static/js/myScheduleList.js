@@ -26,10 +26,10 @@ sortOrderSelect?.addEventListener("change", fetchSchedules);
 
 function fetchSchedules() {
     const searchTitle = searchTitleInput?.value ?? "";
-    const sortOrder = sortOrderSelect?.value ?? "date";
+    const sortType = sortOrderSelect?.value ?? "date";
     const isShared = currentFilter === "shared";
 
-    fetch(`/myschedule/api/list?searchTitle=${searchTitle}&sortOrder=${sortOrder}&isShared=${isShared}`, {
+    fetch(`/myschedule/api/list?searchTitle=${searchTitle}&sortType=${sortType}&isShared=${isShared}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     })

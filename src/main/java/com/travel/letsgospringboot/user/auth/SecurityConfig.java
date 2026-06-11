@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/myschedule/api/**", "/user/api/**")
+                .disable()
         );
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
@@ -67,7 +67,7 @@ public class SecurityConfig {
 
         http.sessionManagement(session -> session
                 .sessionFixation(sf -> sf.changeSessionId())
-                .maximumSessions(3)
+                .maximumSessions(15)
                 .maxSessionsPreventsLogin(false)
         );
 

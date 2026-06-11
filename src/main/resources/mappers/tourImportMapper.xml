@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.letsgospringboot.tourapi.repository.TourImportMapper">
+
+	<insert id="insertPlace" parameterType="com.travel.letsgospringboot.tourapi.vo.TourPlaceVO">
+		INSERT INTO place
+			(PLACE_ID, LCLSSYSTM1, LCLSSYSTM2, LCLSSYSTM3, TITLE, ADDR1, ADDR2, FIRST_IMAGE, LIKE_COUNT, MAPX, MAPY, PLACE_TYPE)
+		VALUES
+			(NEXTVAL(seq_place), #{lclssystm1}, #{lclssystm2}, #{lclssystm3}, #{title}, #{addr1}, #{addr2}, #{firstImage}, #{likeCount}, #{mapx}, #{mapy}, #{placeType})
+	</insert>
+
+</mapper>
