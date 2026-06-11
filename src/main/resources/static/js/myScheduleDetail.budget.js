@@ -1,3 +1,5 @@
+let budgetState = null;
+
 function readBudgetItems() {
     const items = {};
     document.querySelectorAll(".budget-row").forEach(row => {
@@ -36,13 +38,16 @@ function renderBudget() {
 
     const showTotal = () => budgetTotalEl.textContent = calcBudgetTotal().toLocaleString();
 
-    const items = readSavedBudget().items || {};
+    const items = budgetState !== null ? budgetState : (readSavedBudget().items || {});
     document.querySelectorAll(".budget-row").forEach(row => {
         const v = items[row.dataset.visitId];
         if (v) row.querySelector(".budget-amount").value = v.amount ?? "";
     });
     showTotal();
 
-    budgetList.addEventListener("input", showTotal);
+    budgetList.addEventListener("input", () => {
+        budgetState = readBudgetItems(); // 편집값을 상태에 보존
+        showTotal();
+    });
     saveBudgetBtn?.addEventListener("click", saveBudget);
 }

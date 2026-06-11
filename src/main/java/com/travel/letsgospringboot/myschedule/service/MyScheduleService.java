@@ -97,15 +97,21 @@ public class MyScheduleService {
         return tokens[0] + " " + tokens[1];
     }
 
-    public boolean setMyScheduleTitle(String title, String myScheduleId, String userId) {
-        return myScheduleRepository.setMyScheduleTitle(title, myScheduleId, userId);
+    public boolean setMyScheduleTitle(String title, String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
+        return myScheduleRepository.setMyScheduleTitle(title, scheduleId, userId);
     }
 
-    public boolean setTodoDetail(String scheduleId, String todoDetail) {
+    public boolean setTodoDetail(String scheduleId, String todoDetail, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.setTodoDetail(scheduleId, todoDetail);
     }
 
-    public ScheduleDetailVO getScheduleDetail(String scheduleId) {
+    public ScheduleDetailVO getScheduleDetail(String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.getScheduleDetail(scheduleId);
     }
 
@@ -113,7 +119,9 @@ public class MyScheduleService {
         return myScheduleRepository.getTodoDetail(scheduleId);
     }
 
-    public boolean setBudgetDetail(String scheduleId, String budgetDetail) {
+    public boolean setBudgetDetail(String scheduleId, String budgetDetail, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.setBudgetDetail(scheduleId, budgetDetail);
     }
 
@@ -130,6 +138,8 @@ public class MyScheduleService {
     }
 
     public boolean setStartAt(String scheduleId, String startAt, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.setStartAt(scheduleId, startAt, userId);
     }
 
@@ -137,27 +147,37 @@ public class MyScheduleService {
         return myScheduleRepository.addMySchedule(myScheduleId, title, userId);
     }
 
-    public int isScheduleOwnedByUser(String scheduleId, String userId) {
-        return myScheduleRepository.isScheduleOwnedByUser(scheduleId, userId);
+    private boolean isScheduleOwnedByUser(String scheduleId, String userId) {
+        if(myScheduleRepository.isScheduleOwnedByUser(scheduleId, userId) > 0)
+            return true;
+        return false;
     }
 
     public List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId) {
         return myScheduleRepository.listMyScheduleIdAndTitle(userId);
     }
 
-    public List<RouteScheduleVO> getScheduleRoute(String scheduleId) {
+    public List<RouteScheduleVO> getScheduleRoute(String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.getScheduleRoute(scheduleId);
     }
 
-    public List<MapScheduleVO> getMapSchedule(String scheduleId) {
+    public List<MapScheduleVO> getMapSchedule(String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.getMapSchedule(scheduleId);
     }
     @Transactional
-    public boolean addVisitItem(int visitOrder, String placeId, String scheduleId) {
+    public boolean addVisitItem(int visitOrder, String placeId, String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.addVisitItem(visitOrder, placeId, scheduleId);
     }
     @Transactional
-    public boolean deleteVisitItemById(String visitItemId) {
+    public boolean deleteVisitItemById(String visitItemId, String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         return myScheduleRepository.deleteVisitItemById(visitItemId);
     }
     @Transactional
@@ -165,16 +185,22 @@ public class MyScheduleService {
         return myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
     }
     @Transactional
-    public boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission) {
-        return myScheduleRepository.setCompanionPermission(myScheduleId, sharedUserId, permission);
+    public boolean setCompanionPermission(String scheduleId, String sharedUserId, String permission, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
+        return myScheduleRepository.setCompanionPermission(scheduleId, sharedUserId, permission);
     }
     @Transactional
-    public List<ColleagueVO> getCompanionList(String myScheduleId) {
-        return myScheduleRepository.getCompanionList(myScheduleId);
+    public List<ColleagueVO> getCompanionList(String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
+        return myScheduleRepository.getCompanionList(scheduleId);
     }
 
     @Transactional
-    public boolean deleteMySchedule(String scheduleId) {
+    public boolean deleteMySchedule(String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
         myScheduleRepository.deleteVisitItemsByScheduleId(scheduleId);
         return myScheduleRepository.deleteScheduleById(scheduleId) > 0;
     }
@@ -204,10 +230,13 @@ public class MyScheduleService {
     }
 
     @Transactional
-    public boolean updateVisitOrders(String[] visitItemIds, int[] visitOrders, String[] distances) {
-        boolean allUpdated = visitItemIds.length > 0;
-        for (int i = 0; i < visitItemIds.length; i++) {
-            if (myScheduleRepository.updateVisitItem(visitItemIds[i], visitOrders[i], distances[i]) <= 0) {
+    public boolean updateVisitOrders(List<VisitOrderVO> orders, String scheduleId, String userId) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
+        boolean allUpdated = !orders.isEmpty();
+        for (VisitOrderVO order : orders) {
+            if (myScheduleRepository.updateVisitItem(
+                    order.getVisitItemId(), order.getVisitOrder(), order.getDistance()) <= 0) {
                 allUpdated = false;
             }
         }
@@ -223,9 +252,11 @@ public class MyScheduleService {
     }
 
     @Transactional
-    public String shareToPost(String myScheduleId, String userId, int isAnonymous) {
-        myScheduleRepository.shareToPostInsert(myScheduleId, userId, isAnonymous);
-        myScheduleRepository.shareVisitItemsToPost(myScheduleId);
+    public String shareToPost(String scheduleId, String userId, int isAnonymous) {
+        if(!isScheduleOwnedByUser(scheduleId, userId))
+            throw new NullPointerException("권한이 없습니다");
+        myScheduleRepository.shareToPostInsert(scheduleId, userId, isAnonymous);
+        myScheduleRepository.shareVisitItemsToPost(scheduleId);
         return myScheduleRepository.getLastPostId();
     }
 }
