@@ -6,6 +6,11 @@ const container = document.querySelector("#scheduleListContainer");
 
 let currentFilter = "all";
 
+window.addEventListener("pageshow", () => {
+    fetchSchedules();
+});
+
+
 navBtns.forEach(btn => {
     btn.addEventListener("click", () => {
         navBtns.forEach(b => b.classList.remove("active"));

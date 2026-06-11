@@ -23,21 +23,23 @@ public class MyScheduleController {
     }
 
     @GetMapping("/detail/{scheduleId}")
-    public String myScheduleDetail(Model model, @PathVariable String scheduleId, HttpSession session) {
+    public String myScheduleDetail(Model model, @PathVariable String scheduleId, Principal principal
+            , HttpSession session) {
         session.removeAttribute("fromScheduleMode");
         session.removeAttribute("currentScheduleId");
         session.removeAttribute("lockedCartItems");
 
-        model.addAttribute("schedule", myScheduleService.getScheduleDetail(scheduleId));
-        model.addAttribute("scheduleRoute", myScheduleService.getScheduleRoute(scheduleId));
+        model.addAttribute("schedule", myScheduleService.getScheduleDetail(scheduleId, principal.getName()));
+        model.addAttribute("scheduleRoute", myScheduleService.getScheduleRoute(scheduleId, principal.getName()));
         return "myScheduleDetail";
     }
 
     @GetMapping("/detail/{scheduleId}/addVisit")
-    public String addVisitToSchedule(@PathVariable String scheduleId, HttpSession session) {
+    public String addVisitToSchedule(@PathVariable String scheduleId,
+                                     Principal principal, HttpSession session) {
         session.setAttribute("fromScheduleMode", true);
         session.setAttribute("currentScheduleId", scheduleId);
-        session.setAttribute("lockedCartItems", myScheduleService.getScheduleRoute(scheduleId));
+        session.setAttribute("lockedCartItems", myScheduleService.getScheduleRoute(scheduleId, principal.getName()));
         session.removeAttribute("placeCartList");
         return "redirect:/places/leisure";
     }

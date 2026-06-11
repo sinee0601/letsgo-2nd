@@ -32,16 +32,15 @@ const MyScheduleApi = {
     },
 
     saveRoute(order) {
-        const body = new URLSearchParams();
-        order.forEach(data => {
-            body.append("visitItemIds", data.visitItemId);
-            body.append("visitOrders", data.visitOrder);
-            body.append("distances", "0");
-        });
+        const payload = order.map(data => ({
+            visitItemId: data.visitItemId,
+            visitOrder: data.visitOrder,
+            distance: "0"
+        }));
         return fetch(`/myschedule/api/${scheduleId}/visit/orders`, {
             method: "PUT",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         }).then(res => res.json());
     },
 
