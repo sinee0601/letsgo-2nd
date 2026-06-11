@@ -20,104 +20,99 @@ public class TestPostScheduleRepository {
 
     @Test
     void getPostScheduleListLike(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListLike();
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListLike();
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListView(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListView();
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListView();
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListTitle(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListTitle();
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListTitle();
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLatest(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListLatest();
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListLatest();
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLikeKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListSearchLike("여의도");
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListSearchLike("여의도");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListViewKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListSearchView("여의도");
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListSearchView("여의도");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListTitleKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListSearchTitle("여의도");
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListSearchTitle("여의도");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLatestKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getPostScheduleListSearchLatest("여의도");
+        List<PostScheduleListTO> list = postScheduleRepository.getPostScheduleListSearchLatest("여의도");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLikeUser(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListLike("user01");
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListLike("user01");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListViewUser(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListView("user01");
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListView("user01");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListTitleUser(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListTitle("user01");
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListTitle("user01");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLatestUser(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListLatest("user01");
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListLatest("user01");
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLikeUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLike(new UserPostScheduleListVO("user01", "여의도"));
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListSearchLike(new PostScheduleSearchConditionVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListViewUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchView(new UserPostScheduleListVO("user01", "여의도"));
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListSearchView(new PostScheduleSearchConditionVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListTitleUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchTitle(new UserPostScheduleListVO("user01", "여의도"));
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListSearchTitle(new PostScheduleSearchConditionVO("user01", "여의도"));
         assertNotNull(list);
     }
 
     @Test
     void getPostScheduleListLatestUserKeyword(){
-        List<PostScheduleTO> list = postScheduleRepository.getUserPostScheduleListSearchLatest(new UserPostScheduleListVO("user01", "여의도"));
+        List<PostScheduleListTO> list = postScheduleRepository.getUserPostScheduleListSearchLatest(new PostScheduleSearchConditionVO("user01", "여의도"));
         assertNotNull(list);
     }
-
-
-    // =========================================================================
-    // 추가 메서드 테스트 코드 (상세 조회, DML 연산, 일정 스크랩 복사 기능 검증)
-    // =========================================================================
 
     @Test
     void getBudgetAndTodoDetail() {
@@ -177,7 +172,6 @@ public class TestPostScheduleRepository {
     void plusLikeAndView() {
         String postId = "P001";
 
-        // 1. 좋아요 증가 검증
         int beforeLike = postScheduleRepository.getLikeCount(postId);
         boolean isLikeUpdated = postScheduleRepository.plusLike(postId);
         int afterLike = postScheduleRepository.getLikeCount(postId);
@@ -185,7 +179,6 @@ public class TestPostScheduleRepository {
         assertTrue(isLikeUpdated);
         assertEquals(beforeLike + 1, afterLike);
 
-        // 2. 조회수 증가 검증
         int beforeView = postScheduleRepository.getViewCount(postId);
         boolean isViewUpdated = postScheduleRepository.plusView(postId);
         int afterView = postScheduleRepository.getViewCount(postId);
@@ -196,7 +189,6 @@ public class TestPostScheduleRepository {
 
     @Test
     void copyScheduleAndVisitItems() {
-        // 1. 내 일정 복사 테스트
         String title = "복사된 힐링 일정";
         String budget = "20만원";
         String todo = "복사본 일정대로 움직이기";
@@ -208,12 +200,11 @@ public class TestPostScheduleRepository {
         vo.setTodoDetail(todo);
         vo.setUserId(targetUserId);
         postScheduleRepository.copyToMySchedule(vo);
-        String generatedMyScheduleId = vo.getGeneratedId(); // selectKey가 VO에 써줌
+        String generatedMyScheduleId = vo.getGeneratedId();
 
         assertNotNull(generatedMyScheduleId);
         assertTrue(generatedMyScheduleId.startsWith("S"));
 
-        // 2. 하위 방문 정보 복사 연계 테스트
         RouteScheduleTO mockRoute = new RouteScheduleTO();
         mockRoute.setVisitOrder("1");
         mockRoute.setDistanceToNext(5.5);
@@ -234,15 +225,12 @@ public class TestPostScheduleRepository {
     void deletePostScheduleAndItems() {
         String postId = "P001";
 
-        // 관계 무결성을 위해 하위 자식 테이블 데이터 먼저 제거
         boolean isItemsDeleted = postScheduleRepository.deleteVisitItem(postId);
         assertTrue(isItemsDeleted);
 
-        // 부모 레코드 삭제
         boolean isPostDeleted = postScheduleRepository.deleteSchedulePost(postId);
         assertTrue(isPostDeleted);
 
-        // 삭제 이후 Null 반환 여부로 제거 성공 확정
         String titleAfterDelete = postScheduleRepository.getScheduleTitle(postId);
         assertNull(titleAfterDelete);
     }
