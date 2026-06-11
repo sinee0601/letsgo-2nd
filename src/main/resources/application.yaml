@@ -28,8 +28,12 @@ spring:
         highlight_sql: true
         default_batch_fetch_size: 100
 
+
 mybatis:
   mapper-locations: classpath:mappers/*.xml
+
+tour:
+  service-key: ${SERVICE_KEY}
 
 server:
   port: 5531

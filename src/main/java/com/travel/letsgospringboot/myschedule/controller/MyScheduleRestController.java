@@ -1,13 +1,14 @@
 package com.travel.letsgospringboot.myschedule.controller;
 
+import com.travel.letsgospringboot.myschedule.controller.request.*;
 import com.travel.letsgospringboot.myschedule.service.MyScheduleService;
 import com.travel.letsgospringboot.myschedule.vo.*;
+import com.travel.letsgospringboot.user.auth.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.*;
 
 @Slf4j
@@ -19,14 +20,13 @@ public class MyScheduleRestController {
     private final MyScheduleService myScheduleService;
 
     @GetMapping("/list")
-    public List<MyScheduleVO> getMyScheduleList(
-            @RequestParam(defaultValue = "") String searchTitle,
-            @RequestParam(defaultValue = "date") String sortOrder,
-            @RequestParam(defaultValue = "false") boolean isShared,
-            Principal principal) {
+    public List<MyScheduleVO> getMyScheduleList(@ModelAttribute SearchRequest searchRequest,
+                                                @AuthenticationPrincipal AppUserDetails userDetails) {
 
-        String userId = principal.getName();
-        boolean isSortTitle = "title".equals(sortOrder);
+        String userId = userDetails.getUsername();
+        String searchTitle = searchRequest.getSearchTitle() == null ? "" : searchRequest.getSearchTitle();
+        boolean isShared = searchRequest.isShared();
+        boolean isSortTitle = "title".equals(searchRequest.getSortType());
         boolean hasKeyword = !searchTitle.isEmpty();
 
         if (isShared) {
@@ -52,102 +52,138 @@ public class MyScheduleRestController {
     }
 
     @PostMapping
-    public boolean addMySchedule(@RequestParam String scheduleId,
-                                 @RequestParam String title,
-                                 Principal principal) {
-
-
-        return myScheduleService.addMySchedule(scheduleId, title, principal.getName());
+    public boolean addMySchedule(@RequestBody AddScheduleRequest addScheduleRequest,
+                                 @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.addMySchedule(ScheduleCreateVO.builder()
+                .myScheduleId(addScheduleRequest.getScheduleId())
+                .title(addScheduleRequest.getTitle())
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @DeleteMapping("/{scheduleId}")
-    public boolean deleteMySchedule(@PathVariable String scheduleId, Principal principal) {
-        return myScheduleService.deleteMySchedule(scheduleId, principal.getName());
+    public boolean deleteMySchedule(@PathVariable String scheduleId,
+                                    @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.deleteMySchedule(scheduleId, userDetails.getUsername());
     }
 
     @PutMapping("/{scheduleId}/title")
     public boolean setMyScheduleTitle(@PathVariable String scheduleId,
-                                      @RequestParam String title,
-                                      Principal principal) {
-        return myScheduleService.setMyScheduleTitle(title, scheduleId, principal.getName());
+                                      @RequestBody ScheduleTitleRequest scheduleTitleRequest,
+                                      @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.setMyScheduleTitle(ScheduleTitleUpdateVO.builder()
+                .title(scheduleTitleRequest.getTitle())
+                .scheduleId(scheduleId)
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PutMapping("/{scheduleId}/startAt")
     public boolean setStartAt(@PathVariable String scheduleId,
-                              @RequestParam String startAt,
-                              Principal principal) {
-        return myScheduleService.setStartAt(scheduleId, startAt, principal.getName());
+                              @RequestBody StartAtRequest startAtRequest,
+                              @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.setStartAt(StartAtUpdateVO.builder()
+                .scheduleId(scheduleId)
+                .startAt(startAtRequest.getStartAt())
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PutMapping("/{scheduleId}/todo")
     public boolean setTodoDetail(@PathVariable String scheduleId,
-                                 @RequestParam String todoDetail,
-                                 Principal principal) {
-        return myScheduleService.setTodoDetail(scheduleId, todoDetail, principal.getName());
+                                 @RequestBody TodoDetailRequest todoDetailRequest,
+                                 @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.setTodoDetail(TodoUpdateVO.builder()
+                .scheduleId(scheduleId)
+                .todoDetail(todoDetailRequest.getTodoDetail())
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PutMapping("/{scheduleId}/budget")
     public boolean setBudgetDetail(@PathVariable String scheduleId,
-                                   @RequestParam String budgetDetail,
-                                   Principal principal) {
-        return myScheduleService.setBudgetDetail(scheduleId, budgetDetail, principal.getName());
+                                   @RequestBody BudgetDetailRequest budgetDetailRequest,
+                                   @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.setBudgetDetail(BudgetUpdateVO.builder()
+                .scheduleId(scheduleId)
+                .budgetDetail(budgetDetailRequest.getBudgetDetail())
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PostMapping("/{scheduleId}/share")
     public String shareToPost(@PathVariable String scheduleId,
-                              @RequestParam int isAnonymous,
-                              Principal principal) {
-        return myScheduleService.shareToPost(scheduleId, principal.getName(), isAnonymous);
+                              @RequestBody ShareRequest shareRequest,
+                              @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.shareToPost(ShareVO.builder()
+                .scheduleId(scheduleId)
+                .userId(userDetails.getUsername())
+                .isAnonymous(shareRequest.getIsAnonymous())
+                .build());
     }
 
     @GetMapping("/{scheduleId}/companion")
     public List<ColleagueVO> getCompanionList(@PathVariable String scheduleId,
-                                              Principal principal) {
-        return myScheduleService.getCompanionList(scheduleId, principal.getName());
+                                              @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.getCompanionList(scheduleId, userDetails.getUsername());
     }
 
     @PostMapping("/{scheduleId}/companion")
     public boolean addCompanion(@PathVariable String scheduleId,
-                                @RequestParam String sharedUserId) {
-        return myScheduleService.addCompanion(scheduleId, sharedUserId);
+                                @RequestBody CompanionRequest companionRequest) {
+        return myScheduleService.addCompanion(scheduleId, companionRequest.getSharedUserId());
     }
 
     @PutMapping("/{scheduleId}/companion/permission")
     public boolean setCompanionPermission(@PathVariable String scheduleId,
-                                          @RequestParam String sharedUserId,
-                                          @RequestParam String permission,
-                                          Principal principal) {
-        return myScheduleService.setCompanionPermission(scheduleId, sharedUserId, permission, principal.getName());
+                                          @RequestBody CompanionPermissionRequest companionPermissionRequest,
+                                          @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.setCompanionPermission(CompanionPermissionVO.builder()
+                .scheduleId(scheduleId)
+                .sharedUserId(companionPermissionRequest.getSharedUserId())
+                .permission(companionPermissionRequest.getPermission())
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PostMapping("/{scheduleId}/visit")
     public boolean addVisitItem(@PathVariable String scheduleId,
-                                @RequestParam int visitOrder,
-                                @RequestParam String placeId,
-                                Principal principal) {
-        return myScheduleService.addVisitItem(visitOrder, placeId, scheduleId, principal.getName());
+                                @RequestBody VisitItemRequest visitItemRequest,
+                                @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.addVisitItem(VisitItemCreateVO.builder()
+                .visitOrder(visitItemRequest.getVisitOrder())
+                .placeId(visitItemRequest.getPlaceId())
+                .scheduleId(scheduleId)
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @PutMapping("/{scheduleId}/visit/orders")
     public boolean updateVisitOrders(@PathVariable String scheduleId,
-                                     @RequestBody List<VisitOrderVO> request,
-                                     Principal principal) {
-        return myScheduleService.updateVisitOrders(request, scheduleId, principal.getName());
+                                     @RequestBody List<VisitOrderVO> visitOrderVOS,
+                                     @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.updateVisitOrders(VisitOrderUpdateVO.builder()
+                .orders(visitOrderVOS)
+                .scheduleId(scheduleId)
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @DeleteMapping("/{scheduleId}/visit/{visitItemId}")
     public boolean deleteVisitItemById(@PathVariable String scheduleId,
                                        @PathVariable String visitItemId,
-                                       Principal principal) {
-        boolean bool = myScheduleService.deleteVisitItemById(visitItemId, scheduleId, principal.getName());
-//        log.info("결과", bool);
-        return bool;
+                                       @AuthenticationPrincipal AppUserDetails userDetails) {
+        return myScheduleService.deleteVisitItemById(VisitItemDeleteVO.builder()
+                .visitItemId(visitItemId)
+                .scheduleId(scheduleId)
+                .userId(userDetails.getUsername())
+                .build());
     }
 
     @GetMapping("/{scheduleId}/mapSchedule")
-    public ResponseEntity<List<MapScheduleVO>> getMapSchedule(@PathVariable String scheduleId, Principal principal){
-        List<MapScheduleVO> mapSchedule = myScheduleService.getMapSchedule(scheduleId, principal.getName());
-        return ResponseEntity.ok(mapSchedule);
+    public List<MapScheduleVO> getMapSchedule(@PathVariable String scheduleId,
+                                              @AuthenticationPrincipal AppUserDetails userDetails){
+        return myScheduleService.getMapSchedule(scheduleId, userDetails.getUsername());
     }
 
 }

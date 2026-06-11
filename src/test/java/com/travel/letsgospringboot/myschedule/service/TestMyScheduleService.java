@@ -1,5 +1,7 @@
 package com.travel.letsgospringboot.myschedule.service;
 
+import com.travel.letsgospringboot.myschedule.vo.ScheduleBatchUpdateVO;
+import com.travel.letsgospringboot.myschedule.vo.ShareVO;
 import com.travel.letsgospringboot.myschedule.vo.VisitOrderVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +40,18 @@ public class TestMyScheduleService {
         String[] visitItemIds = { "4", "5", "6" };
         int[] visitOrders = { 3, 2, 1 };
         String[] distanceToNexts = { "64", "23", "35" };
-        assertTrue(myScheduleService.setMySchedule(visitItemIds, visitOrders, distanceToNexts,
-                OWNED_SCHEDULE, "여의도 대탐방", "2026-05-15",
-                "삼겹살 마구 먹기", "햄부기 사냥하기", USER, 1));
+        assertTrue(myScheduleService.setMySchedule(ScheduleBatchUpdateVO.builder()
+                .visitItemId(visitItemIds)
+                .visitOrder(visitOrders)
+                .distanceToNext(distanceToNexts)
+                .scheduleId(OWNED_SCHEDULE)
+                .scheduleTitle("여의도 대탐방")
+                .startAt("2026-05-15")
+                .budgetDetail("삼겹살 마구 먹기")
+                .todoDetail("햄부기 사냥하기")
+                .userId(USER)
+                .isShared(1)
+                .build()));
     }
 
 //    @Test
@@ -62,7 +73,11 @@ public class TestMyScheduleService {
 
     @Test
     void shareToPost_returnsPostId() {
-        String result = myScheduleService.shareToPost(OWNED_SCHEDULE, USER, 0);
+        String result = myScheduleService.shareToPost(ShareVO.builder()
+                .scheduleId(OWNED_SCHEDULE)
+                .userId(USER)
+                .isAnonymous(0)
+                .build());
         assertNotNull(result);
         assertTrue(result.startsWith("P"), "게시물 ID는 P로 시작해야 합니다");
     }

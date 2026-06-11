@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 public class AppUserDetails implements UserDetails {
 
@@ -59,5 +60,17 @@ public class AppUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return jpaUsers.isEnabled();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppUserDetails)) return false;
+        return Objects.equals(getUsername(), ((AppUserDetails) o).getUsername());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getUsername());
     }
 }

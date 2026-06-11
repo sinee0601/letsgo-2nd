@@ -26,8 +26,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable());
-
+        http.csrf(csrf -> csrf
+                .disable()
+        );
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
                                 "/user/getIdView", "/user/getId",
@@ -73,8 +74,8 @@ public class SecurityConfig {
 
         http.sessionManagement(session -> session
                 .sessionFixation(sf -> sf.changeSessionId())
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(true)
+                .maximumSessions(15)
+                .maxSessionsPreventsLogin(false)
         );
 
 

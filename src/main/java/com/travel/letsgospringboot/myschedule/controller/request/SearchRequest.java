@@ -1,4 +1,4 @@
-package com.travel.letsgospringboot.myschedule.controller;
+package com.travel.letsgospringboot.myschedule.controller.request;
 
 
 import lombok.*;
@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
-    private String userId;
     private String searchTitle;
     private boolean isShared;
     private String sortType;

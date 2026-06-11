@@ -215,10 +215,10 @@
           AND user_id = #{userId}
     </update>
 
-    <update id="setMyScheduleTitle" parameterType="map">
+    <update id="setMyScheduleTitle" parameterType="com.travel.letsgospringboot.myschedule.vo.ScheduleTitleUpdateVO">
         UPDATE my_schedule
         SET title = #{title}
-        WHERE my_schedule_id = #{myScheduleId}
+        WHERE my_schedule_id = #{scheduleId}
           AND user_id = #{userId}
     </update>
 
@@ -234,7 +234,7 @@
         WHERE my_schedule_id = #{scheduleId}
     </update>
 
-    <update id="setStartAt" parameterType="map">
+    <update id="setStartAt" parameterType="com.travel.letsgospringboot.myschedule.vo.StartAtUpdateVO">
         UPDATE my_schedule
         SET start_at = STR_TO_DATE(#{startAt}, '%Y-%m-%d')
         WHERE my_schedule_id = #{scheduleId}
@@ -296,7 +296,7 @@
         SELECT CONCAT('P', LPAD(LASTVAL(seq_schedule_post), 3, '0'))
     </select>
 
-    <insert id="addMySchedule" parameterType="map">
+    <insert id="addMySchedule" parameterType="com.travel.letsgospringboot.myschedule.vo.ScheduleCreateVO">
         INSERT INTO my_schedule (my_schedule_id, title, start_at, user_id, is_shared)
         VALUES (#{myScheduleId}, #{title}, NOW(), #{userId}, 0)
     </insert>
@@ -311,7 +311,7 @@
         VALUES (NEXTVAL(seq_schedule_share_user), 'R', #{myScheduleId}, #{sharedUserId})
     </insert>
 
-    <insert id="shareToPostInsert" parameterType="map">
+    <insert id="shareToPostInsert" parameterType="com.travel.letsgospringboot.myschedule.vo.ShareVO">
         INSERT INTO schedule_post
         (post_id, title, budget_details, todo_details, is_anonymous, view_count, like_count, posted_at, user_id)
         SELECT CONCAT('P', LPAD(NEXTVAL(seq_schedule_post), 3, '0')),
@@ -324,7 +324,7 @@
                NOW(),
                #{userId}
         FROM my_schedule
-        WHERE my_schedule_id = #{myScheduleId}
+        WHERE my_schedule_id = #{scheduleId}
     </insert>
 
     <insert id="shareVisitItemsToPost" parameterType="String">

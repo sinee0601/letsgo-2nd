@@ -213,12 +213,10 @@ function addNewVisitsToSchedule(contextPath, cartBox) {
     var requests = [];
     for (var j = 0; j < newIds.length; j++) {
         var visitOrder = lockedCount + j + 1;
-        var body = 'visitOrder=' + encodeURIComponent(visitOrder)
-            + '&placeId=' + encodeURIComponent(newIds[j]);
         requests.push(fetch(contextPath + '/myschedule/api/' + encodeURIComponent(scheduleId) + '/visit', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: body
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({visitOrder: visitOrder, placeId: newIds[j]})
         }));
     }
 

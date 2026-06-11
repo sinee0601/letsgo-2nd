@@ -4,7 +4,10 @@ import com.travel.letsgospringboot.myschedule.vo.ColleagueVO;
 import com.travel.letsgospringboot.myschedule.vo.MapScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.myschedule.vo.RouteScheduleVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleCreateVO;
 import com.travel.letsgospringboot.myschedule.vo.ScheduleSummaryVO;
+import com.travel.letsgospringboot.myschedule.vo.ScheduleTitleUpdateVO;
+import com.travel.letsgospringboot.myschedule.vo.StartAtUpdateVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -142,12 +145,20 @@ public class TestMyScheduleRepository {
 
     @Test
     void setStartAt_ownedSchedule_returnsTrue() {
-        assertTrue(myScheduleRepository.setStartAt("S002", "2026-05-20", "user01"));
+        assertTrue(myScheduleRepository.setStartAt(StartAtUpdateVO.builder()
+                .scheduleId("S002")
+                .startAt("2026-05-20")
+                .userId("user01")
+                .build()));
     }
 
     @Test
     void setMyScheduleTitle_ownedSchedule_returnsTrue() {
-        assertTrue(myScheduleRepository.setMyScheduleTitle("새 제목 테스트", "S002", "user01"));
+        assertTrue(myScheduleRepository.setMyScheduleTitle(ScheduleTitleUpdateVO.builder()
+                .title("새 제목 테스트")
+                .scheduleId("S002")
+                .userId("user01")
+                .build()));
     }
 
     @Test
@@ -194,7 +205,11 @@ public class TestMyScheduleRepository {
 
     @Test
     void insertMyScheduleRow_returnsTrue() {
-        assertTrue(myScheduleRepository.addMySchedule("S999", "테스트 일정", "user01"));
+        assertTrue(myScheduleRepository.addMySchedule(ScheduleCreateVO.builder()
+                .myScheduleId("S999")
+                .title("테스트 일정")
+                .userId("user01")
+                .build()));
     }
 
     @Test
