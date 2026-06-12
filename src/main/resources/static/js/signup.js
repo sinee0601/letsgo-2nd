@@ -1,12 +1,12 @@
 document.getElementById("signupForm").onsubmit = function (event) {
     event.preventDefault();
 
-    var name = document.getElementById("nameInput").value;
-    var userId = document.getElementById("idInput").value;
-    var email = document.getElementById("emailInput").value;
-    var password = document.getElementById("pwInput").value;
-    var passwordConfirm = document.getElementById("pwConfirmInput").value;
-    var message = document.getElementById("signupMessage");
+    const name = document.getElementById("nameInput").value;
+    const userId = document.getElementById("idInput").value;
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("pwInput").value;
+    const passwordConfirm = document.getElementById("pwConfirmInput").value;
+    const message = document.getElementById("signupMessage");
 
     message.style.display = "none";
     message.innerText = "";
@@ -34,7 +34,7 @@ document.getElementById("signupForm").onsubmit = function (event) {
             + "&passwordConfirm=" + encodeURIComponent(passwordConfirm)
     }).then(response => {
         if (!response.ok) {
-            return response.text().then(text => { throw new Error(text); });
+            return response.json().then(data => { throw new Error(data.message); });
         }
         return response.json();
     }).then(data => {

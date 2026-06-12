@@ -1,11 +1,11 @@
 document.getElementById("updatePwForm").onsubmit = function (event) {
     event.preventDefault();
 
-    var userId = document.getElementById("userIdInput").value;
-    var email = document.getElementById("emailInput").value;
-    var newPassword = document.getElementById("newPasswordInput").value;
-    var newPasswordConfirm = document.getElementById("newPasswordConfirmInput").value;
-    var message = document.getElementById("updatePwMessage");
+    const userId = document.getElementById("userIdInput").value;
+    const email = document.getElementById("emailInput").value;
+    const newPassword = document.getElementById("newPasswordInput").value;
+    const newPasswordConfirm = document.getElementById("newPasswordConfirmInput").value;
+    const message = document.getElementById("updatePwMessage");
 
     message.style.display = "none";
     message.innerText = "";
@@ -32,7 +32,7 @@ document.getElementById("updatePwForm").onsubmit = function (event) {
             + "&passwordConfirm=" + encodeURIComponent(newPasswordConfirm)
     }).then(response => {
         if (!response.ok) {
-            return response.text().then(text => { throw new Error(text); });
+            return response.json().then(data => { throw new Error(data.message); });
         }
         return response.json();
     }).then(data => {
