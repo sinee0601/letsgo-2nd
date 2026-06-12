@@ -119,7 +119,7 @@ public class MyScheduleService {
 
     public ScheduleDetailVO getScheduleDetail(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new AccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("존재하지 않거나 권한이 없습니다");
         return myScheduleRepository.getScheduleDetail(scheduleId);
     }
 
