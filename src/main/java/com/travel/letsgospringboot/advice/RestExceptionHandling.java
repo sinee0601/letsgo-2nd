@@ -56,7 +56,7 @@ public class RestExceptionHandling {
 
     @ExceptionHandler(AlreadyReportedException.class)
     public ResponseEntity<Map<String, Object>> handleAlreadyReported(AlreadyReportedException ex) {
-        log.error("중복 신고 예외: {}", ex.getMessage());
+        log.error("중복 신고: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
@@ -93,6 +93,6 @@ public class RestExceptionHandling {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
         log.error("API 처리 중 오류", ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "something went wrong");
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "잘못된 요청입니다.");
     }
 }

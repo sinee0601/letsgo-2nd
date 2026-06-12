@@ -90,8 +90,8 @@ function reportPostSchedule(postId) {
     })
         .then(async res => {
             if (!res.ok) {
-                const message = await res.text();
-                throw new Error(message || "신고에 실패했습니다.");
+                const data = await res.json().catch(() => null);
+                throw new Error(data?.message || "신고에 실패했습니다.");
             }
             alert("신고가 접수되었습니다.");
         })
