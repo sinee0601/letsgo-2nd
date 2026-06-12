@@ -5,30 +5,83 @@ function openPostcode() {
             const addr = data.roadAddress || data.address;
             document.getElementById('addr1').value = addr;
 
+            const statusDiv = document.getElementById('geocoderStatus');
+            const demoAddressEl = document.getElementById('demoAddress');
+            const kakaoResultEl = document.getElementById('kakaoResult');
+            const naverResultEl = document.getElementById('naverResult');
 
-            if (typeof kakao === 'undefined' || !kakao.maps) {
-                console.error("❌ API 키나 도메인 설정을 다시 확인.");
-                alert(" API 키 설정을 확인해 주세요.");
+            if (statusDiv) statusDiv.style.display = 'block';
+            if (demoAddressEl) demoAddressEl.textContent = addr;
 
-                document.getElementById('mapx').value = '126.9784';
-                document.getElementById('mapy').value = '37.5665';
-                return;
+            if (kakaoResultEl) {
+                kakaoResultEl.textContent = '조회 중...';
+                kakaoResultEl.style.color = 'orange';
+            }
+            if (naverResultEl) {
+                naverResultEl.textContent = '조회 중...';
+                naverResultEl.style.color = 'orange';
             }
 
-            kakao.maps.load(function() {
-                const geocoder = new kakao.maps.services.Geocoder();
+            if (typeof kakao !== 'undefined' && kakao.maps && kakao.maps.load) {
+                kakao.maps.load(function () {
+                    const geocoder = new kakao.maps.services.Geocoder();
+                    const kakaoStartTime = performance.now();
+                    geocoder.addressSearch(addr, function (result, status) {
+                        const kakaoDuration = (performance.now() - kakaoStartTime).toFixed(1);
+                        console.log("카카오 Geocoder 호출 결과:", JSON.stringify({ status: status, result: result }, null, 2));
+                        if (status === kakao.maps.services.Status.OK) {
+                            const x = result[0].x;
+                            const y = result[0].y;
+                            document.getElementById('mapx').value = x;
+                            document.getElementById('mapy').value = y;
+                            if (kakaoResultEl) {
+                                kakaoResultEl.textContent = `성공 (X: ${Number(x).toFixed(4)}, Y: ${Number(y).toFixed(4)}) [${kakaoDuration}ms]`;
+                                kakaoResultEl.style.color = 'green';
+                            }
+                        } else {
+                            if (kakaoResultEl) {
+                                kakaoResultEl.textContent = `실패 [${kakaoDuration}ms]`;
+                                kakaoResultEl.style.color = 'red';
+                            }
+                            document.getElementById('mapx').value = '126.9784';
+                            document.getElementById('mapy').value = '37.5665';
+                        }
+                    });
+                });
+            } else {
+                if (kakaoResultEl) {
+                    kakaoResultEl.textContent = '카카오 API 미로드';
+                    kakaoResultEl.style.color = 'red';
+                }
+                document.getElementById('mapx').value = '126.9784';
+                document.getElementById('mapy').value = '37.5665';
+            }
 
-                geocoder.addressSearch(addr, function(result, status) {
-                    if (status === kakao.maps.services.Status.OK) {
-                        document.getElementById('mapx').value = result[0].x;
-                        document.getElementById('mapy').value = result[0].y;
-                        console.log("좌표 조회 성공 -> X:", result[0].x, "Y:", result[0].y);
+
+            if (typeof naver !== 'undefined' && naver.maps && naver.maps.Service && naver.maps.Service.geocode) {
+                const naverStartTime = performance.now();
+                naver.maps.Service.geocode({ query: addr }, function (status, response) {
+                    const naverDuration = (performance.now() - naverStartTime).toFixed(1);
+                    console.log("네이버 Geocoder 호출 결과:", JSON.stringify({ status: status, response: response }, null, 2));
+                    if (status === naver.maps.Service.Status.ERROR || !response.v2 || !response.v2.addresses || response.v2.addresses.length === 0) {
+                        if (naverResultEl) {
+                            naverResultEl.textContent = `실패 [${naverDuration}ms]`;
+                            naverResultEl.style.color = 'red';
+                        }
                     } else {
-                        document.getElementById('mapx').value = '126.9784';
-                        document.getElementById('mapy').value = '37.5665';
+                        const item = response.v2.addresses[0];
+                        if (naverResultEl) {
+                            naverResultEl.textContent = `성공 (X: ${Number(item.x).toFixed(4)}, Y: ${Number(item.y).toFixed(4)}) [${naverDuration}ms]`;
+                            naverResultEl.style.color = 'green';
+                        }
                     }
                 });
-            });
+            } else {
+                if (naverResultEl) {
+                    naverResultEl.textContent = '네이버 API 미로드';
+                    naverResultEl.style.color = 'red';
+                }
+            }
         }
     }).open();
 }
