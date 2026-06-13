@@ -58,124 +58,144 @@
         JOIN place p ON v.place_id = p.place_id
     </sql>
 
+    <sql id="groupedColumns">
+        t.my_schedule_id,
+        t.sch_title,
+        MAX(t.start_at) AS start_at,
+        MAX(t.is_shared) AS is_shared,
+        GROUP_CONCAT(t.place_title ORDER BY t.visit_order SEPARATOR ' / ') AS place_title,
+        SUBSTRING_INDEX(GROUP_CONCAT(t.addr1 ORDER BY t.visit_order SEPARATOR '||'), '||', 1) AS addr1,
+        SUBSTRING_INDEX(GROUP_CONCAT(t.first_image ORDER BY t.visit_order SEPARATOR '||'), '||', 1) AS first_image
+    </sql>
+
     <select id="getMyScheduleListAllByDate" parameterType="String" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId}
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId}
-        ORDER BY start_at DESC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId}
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId}
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY start_at DESC
     </select>
 
     <select id="getMyScheduleListAllByTitle" parameterType="String" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId}
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId}
-        ORDER BY sch_title ASC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId}
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId}
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY sch_title ASC
     </select>
 
     <select id="getMyScheduleListSharedByDate" parameterType="String" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND s.is_shared = 1
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId}
-        ORDER BY start_at DESC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND s.is_shared = 1
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId}
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY start_at DESC
     </select>
 
     <select id="getMyScheduleListSharedByTitle" parameterType="String" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND s.is_shared = 1
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId}
-        ORDER BY sch_title ASC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND s.is_shared = 1
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId}
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY sch_title ASC
     </select>
 
     <select id="getMyScheduleListSearchByDate" parameterType="map" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        ORDER BY start_at DESC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY start_at DESC
     </select>
 
     <select id="getMyScheduleListSearchByTitle" parameterType="map" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        ORDER BY sch_title ASC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY sch_title ASC
     </select>
 
     <select id="getMyScheduleListSearchSharedByDate" parameterType="map" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND s.is_shared = 1
-        AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        ORDER BY start_at DESC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND s.is_shared = 1
+            AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY start_at DESC
     </select>
 
     <select id="getMyScheduleListSearchSharedByTitle" parameterType="map" resultMap="myScheduleResultMap">
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        WHERE s.user_id = #{userId} AND s.is_shared = 1
-        AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
-        UNION ALL
-        SELECT
-        <include refid="scheduleColumns"/>
-        <include refid="scheduleJoins"/>
-        JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
-        WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%',
-        #{keyword}, '%'))
-        ORDER BY sch_title ASC, visit_order ASC
+        SELECT <include refid="groupedColumns"/>
+        FROM (
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            WHERE s.user_id = #{userId} AND s.is_shared = 1
+            AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+            UNION
+            SELECT <include refid="scheduleColumns"/>
+            <include refid="scheduleJoins"/>
+            JOIN schedule_share_user ssu ON s.my_schedule_id = ssu.my_schedule_id
+            WHERE ssu.shared_user_id = #{userId} AND (s.title LIKE CONCAT('%', #{keyword}, '%') OR p.title LIKE CONCAT('%', #{keyword}, '%'))
+        ) t
+        GROUP BY t.my_schedule_id, t.sch_title
+        ORDER BY sch_title ASC
     </select>
 
     <delete id="deleteVisitItemsByScheduleId" parameterType="String">
