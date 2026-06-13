@@ -331,6 +331,12 @@
         VALUES (NEXTVAL(seq_schedule_share_user), 'R', #{myScheduleId}, #{sharedUserId})
     </insert>
 
+    <update id="markScheduleShared" parameterType="String">
+        UPDATE my_schedule
+        SET is_shared = 1
+        WHERE my_schedule_id = #{myScheduleId}
+    </update>
+
     <insert id="shareToPostInsert" parameterType="com.travel.letsgospringboot.myschedule.vo.ShareVO">
         INSERT INTO schedule_post
         (post_id, title, budget_details, todo_details, is_anonymous, view_count, like_count, posted_at, user_id)

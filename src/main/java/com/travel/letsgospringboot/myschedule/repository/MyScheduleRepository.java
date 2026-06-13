@@ -60,6 +60,8 @@ public interface MyScheduleRepository {
 
     boolean setCompanionPermission(String myScheduleId, String sharedUserId, String permission);
 
+    boolean markScheduleShared(String myScheduleId);
+
     // ---- 단건 조회 ----
     ScheduleDetailVO getScheduleDetail(String scheduleId);
 

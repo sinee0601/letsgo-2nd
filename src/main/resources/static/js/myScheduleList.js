@@ -8,12 +8,10 @@ const pagination = document.querySelector("#pagination");
 let currentFilter = "all";
 let currentPage = 1;
 
-window.addEventListener("pageshow", () => {
-    fetchSchedules(1);
-});
-
-
 navBtns.forEach(btn => {
+    if (btn.dataset.filter === currentFilter) {
+        btn.classList.add("active");
+    }
     btn.addEventListener("click", () => {
         navBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
@@ -22,9 +20,18 @@ navBtns.forEach(btn => {
     });
 });
 
-searchBtn.addEventListener("click", () => fetchSchedules(1));
+searchBtn?.addEventListener("click", () => fetchSchedules(1));
+
+searchTitleInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        fetchSchedules(1);
+    }
+});
 
 sortOrderSelect?.addEventListener("change", () => fetchSchedules(1));
+
+window.addEventListener("pageshow", () => fetchSchedules(currentPage));
 
 function fetchSchedules(page = 1) {
     currentPage = page;
@@ -32,7 +39,7 @@ function fetchSchedules(page = 1) {
     const sortType = sortOrderSelect?.value ?? "date";
     const isShared = currentFilter === "shared";
 
-    fetch(`/myschedule/api/list?searchTitle=${encodeURIComponent(searchTitle)}&sortType=${sortType}&isShared=${isShared}&page=${page}`, {
+    fetch(`/myschedule/api/list?searchTitle=${encodeURIComponent(searchTitle)}&sortType=${sortType}&shared=${isShared}&page=${page}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     })

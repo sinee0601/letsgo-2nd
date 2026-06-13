@@ -41,3 +41,6 @@ tour:
 
 server:
   port: 5531
+  servlet:
+    session:
+      persistent: false

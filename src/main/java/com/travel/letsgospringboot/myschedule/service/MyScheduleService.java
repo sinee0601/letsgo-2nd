@@ -241,6 +241,7 @@ public class MyScheduleService {
             throw new InvalidInputException("본인이 소유한 일정에는 공유 대상으로 추가할 수 없습니다.");
         }
         boolean result = myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
+        myScheduleRepository.markScheduleShared(myScheduleId);
         log.info("동행자 추가 - scheduleId={}, sharedUserId={}", myScheduleId, sharedUserId);
         return result;
     }

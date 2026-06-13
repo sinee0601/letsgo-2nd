@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class SearchRequest {
     private String searchTitle;
-    private boolean isShared;
+    private boolean Shared;
     private String sortType;
 }
