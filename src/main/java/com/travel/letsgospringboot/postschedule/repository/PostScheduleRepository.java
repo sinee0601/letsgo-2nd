@@ -50,6 +50,8 @@ public interface PostScheduleRepository {
 
     void copyToMySchedule(CopyToMyScheduleVO copyToMyScheduleVO);
 
+    int countReport(String postId, String reporterId);
+
     void reportPostSchedule(ReportPostScheduleVO reportPostScheduleVO);
 
     boolean copyToVisitItem(CopyToVisitItemVO copyToVisitItemVO);

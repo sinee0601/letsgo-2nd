@@ -1,6 +1,10 @@
 package com.travel.letsgospringboot.myschedule.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.travel.letsgospringboot.common.PageResponse;
 import com.travel.letsgospringboot.exception.AccessDeniedException;
+import com.travel.letsgospringboot.exception.InvalidInputException;
 import com.travel.letsgospringboot.myschedule.repository.MyScheduleRepository;
 import com.travel.letsgospringboot.myschedule.vo.*;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -59,24 +60,45 @@ public class MyScheduleService {
         return result;
     }
 
-    private List<MyScheduleVO> processMyScheduleList(List<MyScheduleVO> data) {
-        Map<String, MyScheduleVO> uniqueMap = new LinkedHashMap<>();
-        for (MyScheduleVO vo : data) {
-            if (!uniqueMap.containsKey(vo.getMyScheduleId())) {
-                vo.setStartAt(formatStartAt(vo.getStartAt()));
-                vo.setAddr1(formatAddr1(vo.getAddr1()));
-                uniqueMap.put(vo.getMyScheduleId(), vo);
+    public PageResponse<MyScheduleVO> getMyScheduleListPaged(String userId, String searchTitle,
+                                                             boolean isShared, boolean isSortTitle,
+                                                             int page, int size) {
+        String keyword = (searchTitle == null || searchTitle.trim().isEmpty()) ? null : searchTitle.trim();
+        boolean hasKeyword = keyword != null;
+
+        PageHelper.startPage(page, size);
+        List<MyScheduleVO> rows;
+        if (isShared) {
+            if (hasKeyword) {
+                rows = isSortTitle
+                        ? myScheduleRepository.getMyScheduleListSearchSharedByTitle(userId, keyword)
+                        : myScheduleRepository.getMyScheduleListSearchSharedByDate(userId, keyword);
             } else {
-                MyScheduleVO existingVO = uniqueMap.get(vo.getMyScheduleId());
-                if (existingVO.getFirstImage() == null) {
-                    existingVO.setFirstImage(vo.getFirstImage());
-                }
-                String combinedPlaces = existingVO.getPlaceTitle() + " / " + vo.getPlaceTitle();
-                existingVO.setPlaceTitle(combinedPlaces);
+                rows = isSortTitle
+                        ? myScheduleRepository.getMyScheduleListSharedByTitle(userId)
+                        : myScheduleRepository.getMyScheduleListSharedByDate(userId);
             }
+        } else if (hasKeyword) {
+            rows = isSortTitle
+                    ? myScheduleRepository.getMyScheduleListSearchByTitle(userId, keyword)
+                    : myScheduleRepository.getMyScheduleListSearchByDate(userId, keyword);
+        } else {
+            rows = isSortTitle
+                    ? myScheduleRepository.getMyScheduleListAllByTitle(userId)
+                    : myScheduleRepository.getMyScheduleListAllByDate(userId);
         }
-        List<MyScheduleVO> result = new ArrayList<>(uniqueMap.values());
-        return result;
+
+        PageInfo<MyScheduleVO> pageInfo = new PageInfo<>(rows);
+        List<MyScheduleVO> content = processMyScheduleList(rows);
+        return new PageResponse<>(content, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
+    }
+
+    private List<MyScheduleVO> processMyScheduleList(List<MyScheduleVO> data) {
+        for (MyScheduleVO vo : data) {
+            vo.setStartAt(formatStartAt(vo.getStartAt()));
+            vo.setAddr1(formatAddr1(vo.getAddr1()));
+        }
+        return data;
     }
 
     private String formatStartAt(String startAt) {
@@ -119,7 +141,7 @@ public class MyScheduleService {
 
     public ScheduleDetailVO getScheduleDetail(String scheduleId, String userId) {
         if(!isScheduleOwnedByUser(scheduleId, userId))
-            throw new AccessDeniedException("권한이 없습니다");
+            throw new AccessDeniedException("존재하지 않거나 권한이 없습니다");
         return myScheduleRepository.getScheduleDetail(scheduleId);
     }
 
@@ -214,7 +236,12 @@ public class MyScheduleService {
     }
     @Transactional
     public boolean addCompanion(String myScheduleId, String sharedUserId) {
+        if (myScheduleRepository.isScheduleOwnedByUser(myScheduleId, sharedUserId) > 0) {
+            log.warn("본인 소유 일정 공유 차단 - scheduleId={}, sharedUserId={}", myScheduleId, sharedUserId);
+            throw new InvalidInputException("본인이 소유한 일정에는 공유 대상으로 추가할 수 없습니다.");
+        }
         boolean result = myScheduleRepository.addCompanion(myScheduleId, sharedUserId);
+        myScheduleRepository.markScheduleShared(myScheduleId);
         log.info("동행자 추가 - scheduleId={}, sharedUserId={}", myScheduleId, sharedUserId);
         return result;
     }

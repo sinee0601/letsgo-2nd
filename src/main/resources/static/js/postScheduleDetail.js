@@ -78,16 +78,25 @@ function addPostScheduleToMySchedule(postId){
 
 function reportPostSchedule(postId) {
     const reason = prompt("신고 사유를 입력해주세요.");
-    if (!reason || !reason.trim()) return;
+    if (!reason || !reason.trim()) {
+        alert("신고 사유를 입력해주세요.");
+        return;
+    }
 
     fetch(`/postschedule/api/${postId}/report`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: reason.trim() })
     })
-        .then(res => alert(res.ok ? "신고 처리되었습니다." : "신고 처리에 실패했습니다."))
-        .catch(err => {console.error("fetch 오류:", err);
-            alert("신고 처리 중 오류가 발생했습니다.");
+        .then(async res => {
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                throw new Error(data?.message || "신고에 실패했습니다.");
+            }
+            alert("신고가 접수되었습니다.");
+        })
+        .catch(err => {
+            alert(err.message || "신고에 실패했습니다.");
         });
 }
 

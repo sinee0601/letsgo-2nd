@@ -1,10 +1,10 @@
 document.getElementById("getIdForm").onsubmit = function (event) {
     event.preventDefault();
 
-    var name = document.getElementById("nameInput").value;
-    var email = document.getElementById("emailInput").value;
-    var message = document.getElementById("getIdMessage");
-    var found = document.getElementById("foundIdMessage");
+    const name = document.getElementById("nameInput").value;
+    const email = document.getElementById("emailInput").value;
+    const message = document.getElementById("getIdMessage");
+    const found = document.getElementById("foundIdMessage");
 
     message.style.display = "none";
     found.style.display = "none";
@@ -24,7 +24,7 @@ document.getElementById("getIdForm").onsubmit = function (event) {
             + "&email=" + encodeURIComponent(email)
     }).then(response => {
         if (!response.ok) {
-            return response.text().then(text => { throw new Error(text); });
+            return response.json().then(data => { throw new Error(data.message); });
         }
         return response.json();
     }).then(data => {

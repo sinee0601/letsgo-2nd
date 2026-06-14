@@ -17,8 +17,7 @@ public class MyScheduleController {
     private final MyScheduleService myScheduleService;
 
     @GetMapping("/list")
-    public String mySchedule(Model model, Principal principal) {
-        model.addAttribute("myScheduleList", myScheduleService.getMyScheduleListAllByTitle(principal.getName()));
+    public String mySchedule() {
         return "myScheduleList";
     }
 

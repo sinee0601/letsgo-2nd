@@ -291,6 +291,13 @@
             (#{visitOrder}, #{distanceToNext}, #{placeId}, #{myScheduleId}, #{scheduleType})
     </insert>
 
+    <select id="countReport" resultType="int">
+        SELECT COUNT(POST_ID)
+        FROM report_schedule_post
+        WHERE POST_ID = #{postId}
+          AND REPORTER_ID = #{reporterId}
+    </select>
+
     <insert id="reportPostSchedule" parameterType="com.travel.letsgospringboot.postschedule.vo.ReportPostScheduleVO">
         INSERT INTO report_schedule_post
             (POST_ID, REPORTER_ID, REASON, STATUS, REPORTED_AT)

@@ -1,5 +1,6 @@
 package com.travel.letsgospringboot.myschedule.controller;
 
+import com.travel.letsgospringboot.common.PageResponse;
 import com.travel.letsgospringboot.myschedule.controller.request.*;
 import com.travel.letsgospringboot.myschedule.service.MyScheduleService;
 import com.travel.letsgospringboot.myschedule.vo.*;
@@ -20,35 +21,16 @@ public class MyScheduleRestController {
     private final MyScheduleService myScheduleService;
 
     @GetMapping("/list")
-    public List<MyScheduleVO> getMyScheduleList(@ModelAttribute SearchRequest searchRequest,
-                                                @AuthenticationPrincipal AppUserDetails userDetails) {
+    public PageResponse<MyScheduleVO> getMyScheduleList(@ModelAttribute SearchRequest searchRequest,
+                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                        @AuthenticationPrincipal AppUserDetails userDetails) {
 
         String userId = userDetails.getUsername();
-        String searchTitle = searchRequest.getSearchTitle() == null ? "" : searchRequest.getSearchTitle();
         boolean isShared = searchRequest.isShared();
         boolean isSortTitle = "title".equals(searchRequest.getSortType());
-        boolean hasKeyword = !searchTitle.isEmpty();
 
-        if (isShared) {
-            if (hasKeyword) {
-                return isSortTitle
-                        ? myScheduleService.getMyScheduleListSearchSharedByTitle(userId, searchTitle)
-                        : myScheduleService.getMyScheduleListSearchSharedByDate(userId, searchTitle);
-            }
-            return isSortTitle
-                    ? myScheduleService.getMyScheduleListSharedByTitle(userId)
-                    : myScheduleService.getMyScheduleListSharedByDate(userId);
-        }
-
-        if (hasKeyword) {
-            return isSortTitle
-                    ? myScheduleService.getMyScheduleListSearchByTitle(userId, searchTitle)
-                    : myScheduleService.getMyScheduleListSearchByDate(userId, searchTitle);
-        }
-
-        return isSortTitle
-                ? myScheduleService.getMyScheduleListAllByTitle(userId)
-                : myScheduleService.getMyScheduleListAllByDate(userId);
+        return myScheduleService.getMyScheduleListPaged(userId, searchRequest.getSearchTitle(),
+                isShared, isSortTitle, page, 12);
     }
 
     @PostMapping

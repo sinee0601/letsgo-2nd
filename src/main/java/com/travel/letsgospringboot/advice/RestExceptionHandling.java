@@ -1,25 +1,19 @@
 package com.travel.letsgospringboot.advice;
 
-import com.travel.letsgospringboot.exception.AccessDeniedException;
-import com.travel.letsgospringboot.exception.DuplicateUserIdException;
-import com.travel.letsgospringboot.exception.InvalidInputException;
-import com.travel.letsgospringboot.exception.UserNotFoundException;
-import com.travel.letsgospringboot.exception.PostNotFoundException;
-import com.travel.letsgospringboot.exception.PlaceOperationException;
-import com.travel.letsgospringboot.exception.PostOperationException;
-import com.travel.letsgospringboot.exception.ReportNotFoundException;
-import com.travel.letsgospringboot.exception.ReportOperationException;
+import com.travel.letsgospringboot.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.Map;
 import java.util.HashMap;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandling {
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
@@ -50,14 +44,20 @@ public class RestExceptionHandling {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
-        log.warn("권한 위반 차단: {}", ex.getMessage());
+        log.error("권한 위반 차단: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> PostNotFoundException(PostNotFoundException ex) {
+    public ResponseEntity<Map<String, Object>> handlePostNotFoundException(PostNotFoundException ex) {
         log.error("게시글 없음: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(AlreadyReportedException.class)
+    public ResponseEntity<Map<String, Object>> handleAlreadyReported(AlreadyReportedException ex) {
+        log.error("중복 신고: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(ReportNotFoundException.class)
@@ -93,6 +93,6 @@ public class RestExceptionHandling {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
         log.error("API 처리 중 오류", ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "something went wrong");
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "잘못된 요청입니다.");
     }
 }
