@@ -79,6 +79,25 @@ public class PostScheduleService {
         return new PageResponse<>(rows, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
     }
 
+    public List<PostScheduleListTO> processPostScheduleList(List<PostScheduleListTO> list){
+        Map<String, PostScheduleListTO> uniqueMap = new LinkedHashMap<>();
+        for (PostScheduleListTO to : list) {
+
+            if (!uniqueMap.containsKey(to.getPostId())) {
+                uniqueMap.put(to.getPostId(), to);
+            } else {
+                PostScheduleListTO existingVO = uniqueMap.get(to.getPostId());
+                if (existingVO.getFirstImage() == null) {
+                    existingVO.setFirstImage(to.getFirstImage());
+                }
+                String combinedPlaces = existingVO.getPlaceTitle() + " / " + to.getPlaceTitle();
+                existingVO.setPlaceTitle(combinedPlaces);
+            }
+        }
+        List<PostScheduleListTO> result = new ArrayList<>(uniqueMap.values());
+        return result;
+    }
+
 
     @Transactional
     public PostScheduleDetailTO getPostScheduleDetail(String postId, String loginUserId) {
@@ -210,25 +229,4 @@ public class PostScheduleService {
 
         log.info("게시물 신고 등록 완료: postId={}, reporterId={}", postId, reporterId);
     }
-
-    public List<PostScheduleListTO> processPostScheduleList(List<PostScheduleListTO> list){
-        Map<String, PostScheduleListTO> uniqueMap = new LinkedHashMap<>();
-        for (PostScheduleListTO to : list) {
-
-            if (!uniqueMap.containsKey(to.getPostId())) {
-                uniqueMap.put(to.getPostId(), to);
-            } else {
-                PostScheduleListTO existingVO = uniqueMap.get(to.getPostId());
-                if (existingVO.getFirstImage() == null) {
-                    existingVO.setFirstImage(to.getFirstImage());
-                }
-                String combinedPlaces = existingVO.getPlaceTitle() + " / " + to.getPlaceTitle();
-                existingVO.setPlaceTitle(combinedPlaces);
-            }
-        }
-        List<PostScheduleListTO> result = new ArrayList<>(uniqueMap.values());
-        return result;
-    }
-
-
 }

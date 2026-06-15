@@ -3,6 +3,16 @@ let sortOrder = document.querySelector("#sortOrder");
 let currentFilter = "all";
 let currentPage = 1;
 
+document.querySelector("#scheduleListContainer")?.addEventListener("click", (event) => {
+    const button = event.target.closest(".like-btn");
+    if (!button) return;
+
+    const postId = button.dataset.postId;
+    const likeCountEl = button.closest("figure").querySelector(".like-Count");
+
+    fetchPlusLike(postId, likeCountEl);
+});
+
 if (searchButton) {
     searchButton.addEventListener("click", () => fetchSchedules(1));
 }
@@ -55,6 +65,15 @@ function fetchSchedules(page = 1) {
     }).catch(error => {
         console.error("실패 " + error);
     });
+}
+
+function fetchPlusLike(postId, likeCountEl ) {
+    fetch(`/postschedule/api/${postId}/plusLike`, {
+        method: "PUT",
+    })
+        .then(res => res.json())
+        .then(count => likeCountEl.textContent = count)
+        .catch(err => console.error("fetch 오류:", err));
 }
 
 function renderPostSchedules(postScheduleList) {
