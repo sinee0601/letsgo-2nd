@@ -32,7 +32,7 @@ public class RestExceptionHandling {
 
     @ExceptionHandler(DuplicateUserIdException.class)
     public ResponseEntity<Map<String, Object>> handleDuplicateUserId(DuplicateUserIdException ex) {
-        log.error("중복 아이디 시도: {}", ex.getMessage());
+        log.error("중복 값 시도: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

@@ -9,6 +9,8 @@ public interface UserJpaRepository extends JpaRepository<JpaUsers, Long> {
     //아이디 찾기
     JpaUsers findByNameAndEmail(String name, String email);
 
+    JpaUsers findByEmail(String email);
+
     List<JpaUsers> findByUserIDContainingOrNameContaining(String userID, String name);
 
 }
