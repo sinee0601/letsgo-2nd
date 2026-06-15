@@ -1,19 +1,41 @@
 // admin-posts.js
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".btn-toggle-post").forEach(button => {
-        button.addEventListener("click", function () {
-            const postId = this.getAttribute("data-id");
-            const currentActive = this.getAttribute("data-active") === "true";
+    document.addEventListener("click", function (e) {
+        const toggleBtn = e.target.closest(".btn-toggle-post");
+        if (toggleBtn) {
+            const postId = toggleBtn.getAttribute("data-id");
+            const currentActive = toggleBtn.getAttribute("data-active") === "true";
             togglePostVisibility(postId, !currentActive);
-        });
+        }
+
+        const deleteBtn = e.target.closest(".btn-delete-post");
+        if (deleteBtn) {
+            const postId = deleteBtn.getAttribute("data-id");
+            deletePost(postId);
+        }
     });
 
-    document.querySelectorAll(".btn-delete-post").forEach(button => {
-        button.addEventListener("click", function () {
-            const postId = this.getAttribute("data-id");
-            deletePost(postId);
-        });
+    document.addEventListener("submit", function (e) {
+        const searchForm = e.target.closest("form[method='GET']");
+        if (searchForm) {
+            e.preventDefault();
+            const url = new URL(searchForm.action, window.location.origin);
+            const keyword = searchForm.querySelector("input[name='keyword']").value;
+            url.searchParams.set("keyword", keyword);
+
+            fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const newTableContainer = doc.querySelector(".admin-table-container");
+                if (newTableContainer) {
+                    document.querySelector(".admin-table-container").innerHTML = newTableContainer.innerHTML;
+                }
+                history.pushState(null, "", url);
+            });
+        }
     });
 });
 
@@ -25,15 +47,8 @@ function togglePostVisibility(postId, nextStatus) {
         })
         .then(response => {
             if (response.ok) {
-                alert(`게시글이 ${actionText} 상태로 변경되었습니다.`);
                 location.reload();
-            } else {
-                alert("상태 변경 중 오류가 발생했습니다.");
             }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("네트워크 통신 오류가 발생했습니다.");
         });
     }
 }
@@ -45,15 +60,8 @@ function deletePost(postId) {
         })
         .then(response => {
             if (response.ok) {
-                alert("게시글이 삭제되었습니다.");
                 location.reload();
-            } else {
-                alert("게시글 삭제 중 오류가 발생했습니다.");
             }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("네트워크 통신 오류가 발생했습니다.");
         });
     }
 }

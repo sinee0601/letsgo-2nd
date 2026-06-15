@@ -8,7 +8,6 @@ function openPostcode() {
             const statusDiv = document.getElementById('geocoderStatus');
             const demoAddressEl = document.getElementById('demoAddress');
             const kakaoResultEl = document.getElementById('kakaoResult');
-            const naverResultEl = document.getElementById('naverResult');
 
             if (statusDiv) statusDiv.style.display = 'block';
             if (demoAddressEl) demoAddressEl.textContent = addr;
@@ -16,10 +15,6 @@ function openPostcode() {
             if (kakaoResultEl) {
                 kakaoResultEl.textContent = '조회 중...';
                 kakaoResultEl.style.color = 'orange';
-            }
-            if (naverResultEl) {
-                naverResultEl.textContent = '조회 중...';
-                naverResultEl.style.color = 'orange';
             }
 
             if (typeof kakao !== 'undefined' && kakao.maps && kakao.maps.load) {
@@ -56,32 +51,6 @@ function openPostcode() {
                 document.getElementById('mapx').value = '126.9784';
                 document.getElementById('mapy').value = '37.5665';
             }
-
-
-            if (typeof naver !== 'undefined' && naver.maps && naver.maps.Service && naver.maps.Service.geocode) {
-                const naverStartTime = performance.now();
-                naver.maps.Service.geocode({ query: addr }, function (status, response) {
-                    const naverDuration = (performance.now() - naverStartTime).toFixed(1);
-                    console.log("네이버 Geocoder 호출 결과:", JSON.stringify({ status: status, response: response }, null, 2));
-                    if (status === naver.maps.Service.Status.ERROR || !response.v2 || !response.v2.addresses || response.v2.addresses.length === 0) {
-                        if (naverResultEl) {
-                            naverResultEl.textContent = `실패 [${naverDuration}ms]`;
-                            naverResultEl.style.color = 'red';
-                        }
-                    } else {
-                        const item = response.v2.addresses[0];
-                        if (naverResultEl) {
-                            naverResultEl.textContent = `성공 (X: ${Number(item.x).toFixed(4)}, Y: ${Number(item.y).toFixed(4)}) [${naverDuration}ms]`;
-                            naverResultEl.style.color = 'green';
-                        }
-                    }
-                });
-            } else {
-                if (naverResultEl) {
-                    naverResultEl.textContent = '네이버 API 미로드';
-                    naverResultEl.style.color = 'red';
-                }
-            }
         }
     }).open();
 }
@@ -95,18 +64,11 @@ function deletePlace(placeId) {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
-                if (response.ok) {
-                    alert("장소가 삭제되었습니다.");
-                    location.reload();
-                } else {
-                    alert("장소 삭제 중 오류가 발생했습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("네트워크 에러가 발생했습니다.");
-            });
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
     }
 }
 
@@ -258,6 +220,23 @@ const categoryTree = {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    const regForm = document.getElementById("placeRegForm");
+    if (regForm) {
+        regForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(regForm);
+            fetch(regForm.action, {
+                method: "POST",
+                body: new URLSearchParams(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+        });
+    }
+
     const placeTypeSelect = document.getElementById("placeType");
     const lclssystm1Select = document.getElementById("lclssystm1");
     const lclssystm2Select = document.getElementById("lclssystm2");

@@ -141,28 +141,46 @@ const categoryTree = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function (e) {
+        const editBtn = e.target.closest(".btn-edit-place");
+        if (editBtn) {
+            openEditPlaceModal(editBtn);
+        }
 
-    document.querySelectorAll(".btn-edit-place").forEach(button => {
-        button.addEventListener("click", function () {
-            openEditPlaceModal(this);
-        });
-    });
-
-
-    document.querySelectorAll(".btn-toggle-place").forEach(button => {
-        button.addEventListener("click", function () {
-            const placeId = this.getAttribute("data-id");
-            const currentActive = this.getAttribute("data-active") === "true";
+        const toggleBtn = e.target.closest(".btn-toggle-place");
+        if (toggleBtn) {
+            const placeId = toggleBtn.getAttribute("data-id");
+            const currentActive = toggleBtn.getAttribute("data-active") === "true";
             togglePlaceVisibility(placeId, !currentActive);
-        });
+        }
+
+        const deleteBtn = e.target.closest(".btn-delete-place");
+        if (deleteBtn) {
+            const placeId = deleteBtn.getAttribute("data-id");
+            deletePlace(placeId);
+        }
     });
 
+    document.addEventListener("submit", function (e) {
+        const searchForm = e.target.closest("form[method='GET']");
+        if (searchForm) {
+            e.preventDefault();
+            const url = new URL(searchForm.action, window.location.origin);
+            const keyword = searchForm.querySelector("input[name='keyword']").value;
+            url.searchParams.set("keyword", keyword);
 
-    document.querySelectorAll(".btn-delete-place").forEach(button => {
-        button.addEventListener("click", function () {
-            const placeId = this.getAttribute("data-id");
-            deletePlace(placeId);
-        });
+            fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const newTableContainer = doc.querySelector(".admin-table-container");
+                if (newTableContainer) {
+                    document.querySelector(".admin-table-container").innerHTML = newTableContainer.innerHTML;
+                }
+                history.pushState(null, "", url);
+            });
+        }
     });
 
     const editForm = document.getElementById("placeEditForm");
@@ -175,7 +193,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: new URLSearchParams(formData)
             })
             .then(function (response) {
-                location.reload();
+                if (response.ok) {
+                    location.reload();
+                }
             });
         });
     }
@@ -257,15 +277,8 @@ function togglePlaceVisibility(placeId, nextStatus) {
         })
         .then(response => {
             if (response.ok) {
-                alert(`장소가 성공적으로 ${statusText} 상태로 변경되었습니다.`);
                 location.reload();
-            } else {
-                alert("상태 변경 중 오류가 발생했습니다.");
             }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("네트워크 통신 오류가 발생했습니다.");
         });
     }
 }
@@ -277,15 +290,8 @@ function deletePlace(placeId) {
         })
         .then(response => {
             if (response.ok) {
-                alert("장소가 삭제되었습니다.");
                 location.reload();
-            } else {
-                alert("장소 삭제 중 오류가 발생했습니다.");
             }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("네트워크 통신 오류가 발생했습니다.");
         });
     }
 }

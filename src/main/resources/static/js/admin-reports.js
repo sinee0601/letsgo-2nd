@@ -1,12 +1,13 @@
 // admin-reports.js
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".btn-process-report").forEach(button => {
-        button.addEventListener("click", function () {
-            const reportId = this.getAttribute("data-id");
-            const action = this.getAttribute("data-action");
+    document.addEventListener("click", function (e) {
+        const processBtn = e.target.closest(".btn-process-report");
+        if (processBtn) {
+            const reportId = processBtn.getAttribute("data-id");
+            const action = processBtn.getAttribute("data-action");
             processReport(reportId, action);
-        });
+        }
     });
 });
 
@@ -21,15 +22,8 @@ function processReport(reportId, action) {
         })
         .then(response => {
             if (response.ok) {
-                alert("처리되었습니다.");
                 location.reload();
-            } else {
-                alert("처리 중 문제가 발생했습니다.");
             }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("네트워크 에러가 발생했습니다.");
         });
     }
 }
