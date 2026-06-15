@@ -1,5 +1,6 @@
 package com.travel.letsgospringboot.postschedule.controller;
 
+import com.travel.letsgospringboot.common.PageResponse;
 import com.travel.letsgospringboot.postschedule.service.PostScheduleService;
 import com.travel.letsgospringboot.postschedule.vo.MapScheduleTO;
 import com.travel.letsgospringboot.postschedule.vo.PostScheduleListTO;
@@ -20,64 +21,20 @@ public class PostScheduleRestController {
 
     private final PostScheduleService postScheduleService;
     @GetMapping("/list")
-    public List<PostScheduleListTO> getPostScheduleList(@RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
-        if (sortOrder == null || sortOrder.trim().isEmpty()) {
-            sortOrder = "latest";
-        }
-        if (keyword == null || keyword.trim().isEmpty()) {
-            switch (sortOrder) {
-                case "like":
-                    return postScheduleService.getPostScheduleListLike();
-                case "view":
-                    return postScheduleService.getPostScheduleListView();
-                case "title":
-                    return postScheduleService.getPostScheduleListTitle();
-                default:
-                    return postScheduleService.getPostScheduleListLatest();
-            }
-        } else {
-            switch (sortOrder) {
-                case "like":
-                    return postScheduleService.getPostScheduleListSearchLike(keyword);
-                case "view":
-                    return postScheduleService.getPostScheduleListSearchView(keyword);
-                case "title":
-                    return postScheduleService.getPostScheduleListSearchTitle(keyword);
-                default:
-                    return postScheduleService.getPostScheduleListSearchLatest(keyword);
-            }
-        }
+    public PageResponse<PostScheduleListTO> getPostScheduleList(@RequestParam(value = "keyword", required = false) String keyword,
+                                                                @RequestParam(value = "sortOrder", required = false) String sortOrder,
+                                                                @RequestParam(defaultValue = "1") int page,
+                                                                @RequestParam(defaultValue = "12") int size) {
+        return postScheduleService.getPostScheduleList(keyword, sortOrder, page, size);
     }
 
     @GetMapping("/mylist")
-    public List<PostScheduleListTO> getUserPostScheduleList(Principal principal, @RequestParam(value = "sortOrder", required = false) String sortOrder, @RequestParam(value = "keyword", required = false) String keyword) {
-        String userId = principal.getName();
-        if (sortOrder == null || sortOrder.trim().isEmpty()) {
-            sortOrder = "latest";
-        }
-        if (keyword == null || keyword.trim().isEmpty()) {
-            switch (sortOrder) {
-                case "like":
-                    return postScheduleService.getUserPostScheduleListLike(userId);
-                case "view":
-                    return postScheduleService.getUserPostScheduleListView(userId);
-                case "title":
-                    return postScheduleService.getUserPostScheduleListTitle(userId);
-                default:
-                    return postScheduleService.getUserPostScheduleListLatest(userId);
-            }
-        } else {
-            switch (sortOrder) {
-                case "like":
-                    return postScheduleService.getUserPostScheduleListSearchLike(userId, keyword);
-                case "view":
-                    return postScheduleService.getUserPostScheduleListSearchView(userId, keyword);
-                case "title":
-                    return postScheduleService.getUserPostScheduleListSearchTitle(userId, keyword);
-                default:
-                    return postScheduleService.getUserPostScheduleListSearchLatest(userId, keyword);
-            }
-        }
+    public PageResponse<PostScheduleListTO> getUserPostScheduleList(Principal principal,
+                                                                    @RequestParam(value = "keyword", required = false) String keyword,
+                                                                    @RequestParam(value = "sortOrder", required = false) String sortOrder,
+                                                                    @RequestParam(defaultValue = "1") int page,
+                                                                    @RequestParam(defaultValue = "12") int size) {
+        return postScheduleService.getUserPostScheduleList(principal.getName(), keyword, sortOrder, page, size);
     }
 
     @GetMapping("/{postId}/budget")

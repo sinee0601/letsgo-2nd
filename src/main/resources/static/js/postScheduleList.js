@@ -1,11 +1,15 @@
 let searchButton = document.querySelector("#searchButton");
 let sortOrder = document.querySelector("#sortOrder");
-if (searchButton)
-    searchButton.addEventListener("click", fetchSchedules);
-if (sortOrder)
-    sortOrder.addEventListener("change", fetchSchedules);
-
 let currentFilter = "all";
+let currentPage = 1;
+
+if (searchButton) {
+    searchButton.addEventListener("click", () => fetchSchedules(1));
+}
+
+if (sortOrder) {
+    sortOrder.addEventListener("change", () => fetchSchedules(1));
+}
 
 const navBtns = document.querySelectorAll(".nav-btn");
 
@@ -15,31 +19,40 @@ navBtns.forEach(btn => {
         btn.classList.add("active");
 
         currentFilter = btn.dataset.filter;
-        fetchSchedules();
+        fetchSchedules(1);
     });
 });
 
 window.addEventListener("pageshow", () => {
-    fetchSchedules();
+    fetchSchedules(currentPage);
 });
 
-function fetchSchedules(){
-    const sortOrder = document.querySelector("#sortOrder").value;
-    const keyword = document.querySelector("#keyword").value;
+function fetchSchedules(page = 1) {
+    currentPage = page;
+
+    const selectedSortOrder = document.querySelector("#sortOrder")?.value || "latest";
+    const keyword = document.querySelector("#keyword")?.value || "";
+    const params = new URLSearchParams({
+        sortOrder: selectedSortOrder,
+        keyword,
+        page: currentPage,
+    });
 
     const url = currentFilter === "user"
-        ? `/postschedule/api/mylist?sortOrder=${sortOrder}&keyword=${keyword}`
-        : `/postschedule/api/list?sortOrder=${sortOrder}&keyword=${keyword}`;
+        ? `/postschedule/api/mylist?${params}`
+        : `/postschedule/api/list?${params}`;
+
     fetch(url, {
         method: "get",
         headers: {
             "Content-Type": "application/json"
         },
-    }).then((result)=> {
+    }).then((result) => {
         return result.json();
-    }).then((data) => {
-        renderPostSchedules(data);
-    }).catch(error=>{
+    }).then(data => {
+        renderPostSchedules(data.content);
+        renderPagination(data.page, data.totalPages);
+    }).catch(error => {
         console.error("실패 " + error);
     });
 }
@@ -47,6 +60,7 @@ function fetchSchedules(){
 function renderPostSchedules(postScheduleList) {
     const container = document.querySelector("#scheduleListContainer");
     if (!container) return;
+
     container.innerHTML = postScheduleList.map(postSchedule => `
                 <figure class="figure" >
                     <div>
@@ -62,7 +76,7 @@ function renderPostSchedules(postScheduleList) {
                     </figcaption>
 
                     <div>
-                        <button type="button" class="like-btn" data-postId="${postSchedule.postId}">
+                        <button type="button" class="like-btn" data-post-id="${postSchedule.postId}">
                            <h1>❤️</h1>
                         </button>
                         <span>좋아요 : <span class="like-Count">${postSchedule.likeCount}</span></span>
@@ -73,13 +87,40 @@ function renderPostSchedules(postScheduleList) {
                     </div>
                     <div>
                 	    <span>
-                             📍${postSchedule.addr1.substring(0, 10)}
+                             📍${(postSchedule.addr1 || "").substring(0, 10)}
                         </span>
                     </div>
                     
                     <div>
-                        <div>👤 ${postSchedule.isAnonymous == 1 ? '익명' : postSchedule.userName}</div>
+                        <div>👤 ${postSchedule.isAnonymous == 1 ? "익명" : postSchedule.userName}</div>
                     </div>
                 </figure>
         `).join("");
 }
+
+function renderPagination(page, totalPages) {
+    const pagination = document.querySelector("#pagination");
+    if (!pagination) return;
+
+    if (!totalPages || totalPages <= 1) {
+        pagination.innerHTML = "";
+        return;
+    }
+
+    let html = "";
+    html += `<button type="button" class="page-btn" data-page="${page - 1}" ${page <= 1 ? "disabled" : ""}>이전</button>`;
+
+    for (let i = 1; i <= totalPages; i++) {
+        html += `<button type="button" class="page-btn${i === page ? " active" : ""}" data-page="${i}">${i}</button>`;
+    }
+
+    html += `<button type="button" class="page-btn" data-page="${page + 1}" ${page >= totalPages ? "disabled" : ""}>다음</button>`;
+
+    pagination.innerHTML = html;
+}
+
+document.querySelector("#pagination")?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-page]");
+    if (!button) return;
+    fetchSchedules(Number(button.dataset.page));
+});

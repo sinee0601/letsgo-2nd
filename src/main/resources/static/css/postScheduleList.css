@@ -14,7 +14,7 @@ body {
     display: flex;
     flex-direction: row;
     flex: 1 1 auto;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 153px);
     width: 100%;
     box-sizing: border-box;
     align-items: stretch;
@@ -27,10 +27,12 @@ aside.sidebar {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 12px;
-    min-height: 0;
-    overflow-y: auto;
+    height: calc(100vh - 153px);
+    position: sticky;
+    top: 0;
+    overflow-y: hidden;
     padding: 14px 12px;
     background: #fff;
     border-right: 1px solid #e5ddd0;
@@ -49,11 +51,6 @@ aside.sidebar li {
     margin: 0;
 }
 
-aside.sidebar > div:first-child {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
 
 aside.sidebar ul + div {
     margin-top: auto;
@@ -70,13 +67,7 @@ aside.sidebar a {
     color: inherit;
 }
 
-aside.sidebar button a {
-    display: block;
-    width: 100%;
-    text-decoration: none;
-    color: inherit;
-    text-align: center;
-}
+
 
 aside.sidebar button {
     box-sizing: border-box;
@@ -98,23 +89,34 @@ aside.sidebar button:hover {
     background: #fff5eb;
 }
 
-aside.sidebar #deleteBtn {
-    border-color: #cc6666;
-    color: #993333;
+aside.sidebar .share-btn {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #ff7a00;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: #222;
+    text-align: center;
+    text-decoration: none;
 }
+
+aside.sidebar .share-btn:hover {
+    background: #fff5eb;
+}
+
+
 
 aside.sidebar #deleteBtn:hover {
     background: #fff0f0;
 }
 
-.main-content {
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
+aside.sidebar .nav-btn.active {
+    background: #ff7a00;
+    color: #111;
 }
 
 .layout-wrapper > main {
@@ -160,10 +162,6 @@ aside.sidebar #deleteBtn:hover {
     box-sizing: border-box;
 }
 
-.divider {
-    width: 1px;
-    background-color: rgba(255, 122, 0, 0.2);
-}
 
 .search-area {
     display: flex;
@@ -209,24 +207,6 @@ aside.sidebar #deleteBtn:hover {
     font-weight: 700;
 }
 
-#sortableList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    max-width: 300px;
-    overflow: hidden;
-    background: #fff;
-}
-
-.sortable-item {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    background-color: #fafafa;
-    cursor: grab;
-    user-select: none;
-}
 
 .sortable-item:last-child {
     border-bottom: none;
@@ -244,13 +224,6 @@ aside.sidebar #deleteBtn:hover {
     min-width: 120px;
 }
 
-.content-right {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 100%;
-    box-sizing: border-box;
-}
 
 .content-right-top,
 .content-right-bottom {
@@ -316,14 +289,63 @@ a.box-placeholder:hover {
 
 .container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    width: min(1100px, calc(100% - 48px));
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    width: min(1650px, calc(100% - 48px));
     margin: 0 auto 40px;
     box-sizing: border-box;
     padding: 20px 0 40px;
     max-width: 100%;
-    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 40px;
+}
+
+.pagination .page-btn {
+    min-width: 38px;
+    padding: 8px 12px;
+    border: 1px solid #ff7a00;
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pagination .page-btn:hover:not(:disabled) {
+    background: #fff5eb;
+}
+
+.pagination .page-btn.active {
+    background: #ff7a00;
+    color: #111;
+}
+
+.pagination .page-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
 }
 
 
