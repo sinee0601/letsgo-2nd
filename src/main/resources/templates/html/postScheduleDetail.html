@@ -60,7 +60,7 @@
             <button type="button" id="reportBtn">신고하기</button>
             <button type="button" id="addBtn">내 일정에 추가하기</button>
             <button type="button" id="deleteBtn" th:if="${detail.owner}">삭제하기</button>
-            <button><a th:href="@{/postschedule/list}">목록으로</a></button>
+            <a th:href="@{/postschedule/list}" class="sidebar-action">목록으로</a>
         </div>
     </aside>
     <main>

@@ -1,5 +1,5 @@
-let searchButton = document.querySelector("#searchButton");
-let sortOrder = document.querySelector("#sortOrder");
+const searchButton = document.querySelector("#searchButton");
+const sortOrder = document.querySelector("#sortOrder");
 let currentFilter = "all";
 let currentPage = 1;
 
@@ -8,7 +8,7 @@ document.querySelector("#scheduleListContainer")?.addEventListener("click", (eve
     if (!button) return;
 
     const postId = button.dataset.postId;
-    const likeCountEl = button.closest("figure").querySelector(".like-Count");
+    const likeCountEl = button.closest("figure").querySelector(".like-count");
 
     fetchPlusLike(postId, likeCountEl);
 });
@@ -98,7 +98,7 @@ function renderPostSchedules(postScheduleList) {
                         <button type="button" class="like-btn" data-post-id="${postSchedule.postId}">
                            <h1>❤️</h1>
                         </button>
-                        <span>좋아요 : <span class="like-Count">${postSchedule.likeCount}</span></span>
+                        <span>좋아요 : <span class="like-count">${postSchedule.likeCount}</span></span>
                     </div>
                     
                     <div>
