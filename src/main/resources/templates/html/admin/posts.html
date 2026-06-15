@@ -101,18 +101,19 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-secondary btn-toggle-post"
-                                            th:data-id="${post.postId}"
-                                            th:data-active="${post.isActive}">
+                                        th:data-id="${post.postId}" th:data-active="${post.isActive}">
                                         <i class="bi bi-eye-slash-fill"></i> 숨김
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger btn-delete-post"
-                                            th:data-id="${post.postId}">
+                                        th:data-id="${post.postId}">
                                         <i class="bi bi-trash"></i> 삭제
                                     </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+
                 </div>
             </main>
         </div>

@@ -94,25 +94,23 @@
                                 <td th:text="${report.createdAt}">2026-06-10 15:01:56</td>
                                 <td class="text-danger" th:text="${report.reason}">광고 및 도배글 의심</td>
                                 <td>
-                                    <span class="admin-badge admin-badge-warning"
-                                        th:if="${report.status == '대기중'}">대기 중</span>
+                                    <span class="admin-badge admin-badge-warning" th:if="${report.status == '대기중'}">대기
+                                        중</span>
                                     <span class="admin-badge admin-badge-success"
                                         th:if="${report.status == '반려됨'}">반려됨</span>
                                     <span class="admin-badge admin-badge-danger"
                                         th:if="${report.status == '삭제완료'}">삭제완료</span>
-                                    <span class="text-secondary small" 
-                                        th:if="${report.status != '대기중' and report.status != '반려됨' and report.status != '삭제완료'}" 
+                                    <span class="text-secondary small"
+                                        th:if="${report.status != '대기중' and report.status != '반려됨' and report.status != '삭제완료'}"
                                         th:text="|(${report.status})|"></span>
                                 </td>
                                 <td>
                                     <th:block th:if="${report.status == '대기중'}">
                                         <button class="btn btn-sm btn-success btn-process-report"
-                                                th:data-id="${report.reportId}"
-                                                th:data-action="REJECT">
+                                            th:data-id="${report.reportId}" th:data-action="REJECT">
                                             <i class="bi bi-check-circle"></i> 반려</button>
                                         <button class="btn btn-sm btn-danger btn-process-report"
-                                                th:data-id="${report.reportId}"
-                                                th:data-action="DELETE_POST">
+                                            th:data-id="${report.reportId}" th:data-action="DELETE_POST">
                                             <i class="bi bi-trash"></i> 게시글 삭제</button>
                                     </th:block>
                                     <th:block th:unless="${report.status == '대기중'}">
@@ -123,6 +121,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
             </main>
         </div>

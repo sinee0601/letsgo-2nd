@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>내 일정 상세 - Let's GO!</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}"/>
-    <link rel="stylesheet" th:href="@{/css/mySchedule.css}"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/mySchedule.css}" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
     <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=xvyp5v7zoj" defer></script>
     <script th:src="@{/js/myScheduleDetail.api.js}" defer></script>
@@ -15,172 +15,170 @@
     <script th:src="@{/js/myScheduleDetail.companion.js}" defer></script>
     <script th:src="@{/js/myScheduleDetail.js}" defer></script>
 </head>
+
 <body>
 
-<header class="site-header">
-    <div class="logo">
-        <a th:href="@{/}" title="Let's GO! 홈">
-            <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo"/>
-        </a>
-    </div>
-
-    <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
-        <li><a th:href="@{/}">홈</a></li>
-        <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
-        <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
-        <li><a th:href="@{/myschedule/list}">내일정</a></li>
-
-        <th:block sec:authorize="!isAuthenticated()">
-            <li><a th:href="@{/user/loginView}">로그인</a></li>
-        </th:block>
-        <th:block sec:authorize="isAuthenticated()">
-            <li class="user-name"
-                th:text="${#authentication.principal.user.name} + ' 님'">
-                사용자 님
-            </li>
-            <li>
-                <form th:action="@{/logout}" method="post" class="logout-form">
-                    <button type="submit" class="logout-btn">
-                        로그아웃
-                    </button>
-                </form>
-            </li>
-        </th:block>
-    </ul>
-</header>
-
-<div class="layout-wrapper">
-
-    <aside class="sidebar">
-
-        <ul>
-            <li>
-                <button type="button" class="sidebar-link" data-filter="route">동선관리</button>
-            </li>
-            <li>
-                <button type="button" class="sidebar-link" data-filter="budget">예산관리</button>
-            </li>
-            <li>
-                <button type="button" class="sidebar-link" data-filter="todo">To-Do 리스트</button>
-            </li>
-        </ul>
-
-        <div>
-            <button type="button" id="dateEditBtn">날짜 수정</button>
-            <div id="dateEditForm" style="display:none; margin-top:6px;">
-                <input type="date" name="startAt" id="startAtInput" th:value="${schedule.startAt}" required/>
-                <button type="button" id="dateConfirmBtn">확인</button>
-                <button type="button" id="dateCancelBtn">취소</button>
-            </div>
-            <button type="button" class="sidebar-action" id="companionBtn">공유하기</button>
-            <button type="button" id="deleteBtn">삭제하기</button>
+    <header class="site-header">
+        <div class="logo">
+            <a th:href="@{/}" title="Let's GO! 홈">
+                <img th:src="@{/logo/logo.png}" alt="Let's GO!" class="site-logo" />
+            </a>
         </div>
-    </aside>
 
-    <main>
-        <div class="content-container">
+        <ul class="menu" style="list-style: none; display: flex; padding: 0; margin: 0;">
+            <li><a th:href="@{/}">홈</a></li>
+            <li><a th:href="@{/places/leisure}">플레이스 조회</a></li>
+            <li><a th:href="@{/postschedule/list}">일정게시판</a></li>
+            <li><a th:href="@{/myschedule/list}">내일정</a></li>
 
-            <div class="content-left">
-                <div class="schedule-header">
-                    <input type="text" name="title" id="scheduleTitleInput"
-                           th:value="${schedule.scheduleTitle}"
-                           placeholder="일정 제목을 입력하세요"
-                           class="title-input"/>
-                    <button type="button" id="saveTitleBtn" class="save-title-btn">수정</button>
-                </div>
-
-                <ul id="sortableList">
-                    <li th:each="item : ${scheduleRoute}"
-                        class="sortable-item"
-                        th:data-visit-id="${item.visitId}">
-                        <span th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
-                        <button type="button"
-                                class="delete-visit-btn"
-                                th:data-visit-id="${item.visitId}">×
+            <th:block sec:authorize="!isAuthenticated()">
+                <li><a th:href="@{/user/loginView}">로그인</a></li>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <li class="user-name" th:text="${#authentication.principal.user.name} + ' 님'">
+                    사용자 님
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="logout-btn">
+                            로그아웃
                         </button>
-                    </li>
-                </ul>
+                    </form>
+                </li>
+            </th:block>
+        </ul>
+    </header>
 
-                <div class="content-left-bottom">
-                    <button type="button" id="updateRouteBtn">수정하기</button>
-                    <button type="button" id="addVisitBtn">추가하기</button>
-                </div>
-            </div>
+    <div class="layout-wrapper">
 
-            <div class="divider"></div>
-            <div id="contentRight"></div>
+        <aside class="sidebar">
 
-        </div>
-    </main>
-</div>
-
-<template id="tpl-route">
-    <div class="content-right">
-        <div class="content-right-top">
-            <div class="map-area">
-                <div id="routeMap" class="static-map"></div>
-            </div>
-        </div>
-        <div class="content-right-bottom">
-            <ol class="route-summary">
-                <li th:each="item : ${scheduleRoute}" th:text="${item.title}">수원 화성</li>
-            </ol>
-        </div>
-    </div>
-</template>
-
-<template id="tpl-budget">
-    <div class="content-right">
-        <div class="memo">
-            <div><h3>예산관리</h3></div>
-
-            <span id="budgetData" th:text="${schedule.budgetDetail}" hidden></span>
-
-            <ul id="budgetList" class="budget-list">
-                <li th:each="item : ${scheduleRoute}"
-                    class="budget-row"
-                    th:data-visit-id="${item.visitId}">
-                    <span class="budget-place"
-                          th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
-                    <input type="number" class="budget-amount" min="0" step="1000" placeholder="0"/>
-                    <span class="budget-won">원</span>
+            <ul>
+                <li>
+                    <button type="button" class="sidebar-link" data-filter="route">동선관리</button>
+                </li>
+                <li>
+                    <button type="button" class="sidebar-link" data-filter="budget">예산관리</button>
+                </li>
+                <li>
+                    <button type="button" class="sidebar-link" data-filter="todo">To-Do 리스트</button>
                 </li>
             </ul>
 
-            <div class="budget-total">합계: <strong id="budgetTotal">0</strong> 원</div>
-            <button type="button" id="saveBudgetBtn" class="save-title-btn">예산 저장</button>
-        </div>
-    </div>
-</template>
-
-<template id="tpl-todo">
-    <div class="content-right">
-        <div class="memo">
-            <div><h3>To-Do 리스트</h3></div>
-            <textarea id="todoDetail" class="detail-textarea"
-                      placeholder="할 일을 입력하세요" th:text="${schedule.todoDetail}"></textarea>
-            <button type="button" id="saveTodoBtn" class="save-title-btn">저장</button>
-        </div>
-    </div>
-</template>
-<template id="tpl-companion">
-    <div class="content-right">
-        <div class="memo">
-            <div><h3>동반자 관리</h3></div>
-
-            <div class="invite-row">
-                <input type="text" id="sharedUserIdInput" placeholder="추가할 사용자 ID 입력"/>
-                <button type="button" id="addCompanionBtn" class="save-title-btn">동반자 추가</button>
+            <div>
+                <button type="button" id="dateEditBtn">날짜 수정</button>
+                <div id="dateEditForm" style="display:none; margin-top:6px;">
+                    <input type="date" name="startAt" id="startAtInput" th:value="${schedule.startAt}" required />
+                    <button type="button" id="dateConfirmBtn">확인</button>
+                    <button type="button" id="dateCancelBtn">취소</button>
+                </div>
+                <button type="button" class="sidebar-action" id="companionBtn">공유하기</button>
+                <button type="button" id="deleteBtn">삭제하기</button>
             </div>
+        </aside>
 
-            <div class="member-list" id="memberList"></div>
+        <main>
+            <div class="content-container">
 
-            <div class="share-row">
-                <label><input type="checkbox" id="isAnonymousCheck" value="1"/> 익명으로 게시</label>
-                <button type="button" id="shareToPostBtn" class="save-title-btn">게시판에 공유</button>
+                <div class="content-left">
+                    <div class="schedule-header">
+                        <input type="text" name="title" id="scheduleTitleInput" th:value="${schedule.scheduleTitle}"
+                            placeholder="일정 제목을 입력하세요" class="title-input" />
+                        <button type="button" id="saveTitleBtn" class="save-title-btn">수정</button>
+                    </div>
+
+                    <ul id="sortableList">
+                        <li th:each="item : ${scheduleRoute}" class="sortable-item" th:data-visit-id="${item.visitId}">
+                            <span th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
+                            <button type="button" class="delete-visit-btn" th:data-visit-id="${item.visitId}">×
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="content-left-bottom">
+                        <button type="button" id="updateRouteBtn">수정하기</button>
+                        <button type="button" id="addVisitBtn">추가하기</button>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div id="contentRight"></div>
+
+            </div>
+        </main>
+    </div>
+
+    <template id="tpl-route">
+        <div class="content-right">
+            <div class="content-right-top">
+                <div class="map-area">
+                    <div id="routeMap" class="static-map"></div>
+                </div>
+            </div>
+            <div class="content-right-bottom">
+                <ol class="route-summary">
+                    <li th:each="item : ${scheduleRoute}" th:text="${item.title}">수원 화성</li>
+                </ol>
             </div>
         </div>
-    </div>
-</template>
+    </template>
+
+    <template id="tpl-budget">
+        <div class="content-right">
+            <div class="memo">
+                <div>
+                    <h3>예산관리</h3>
+                </div>
+
+                <span id="budgetData" th:text="${schedule.budgetDetail}" hidden></span>
+
+                <ul id="budgetList" class="budget-list">
+                    <li th:each="item : ${scheduleRoute}" class="budget-row" th:data-visit-id="${item.visitId}">
+                        <span class="budget-place" th:text="${item.visitOrder} + '. ' + ${item.title}">1. 수원 화성</span>
+                        <input type="number" class="budget-amount" min="0" step="1000" placeholder="0" />
+                        <span class="budget-won">원</span>
+                    </li>
+                </ul>
+
+                <div class="budget-total">합계: <strong id="budgetTotal">0</strong> 원</div>
+                <button type="button" id="saveBudgetBtn" class="save-title-btn">예산 저장</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-todo">
+        <div class="content-right">
+            <div class="memo">
+                <div>
+                    <h3>To-Do 리스트</h3>
+                </div>
+                <textarea id="todoDetail" class="detail-textarea" placeholder="할 일을 입력하세요"
+                    th:text="${schedule.todoDetail}"></textarea>
+                <button type="button" id="saveTodoBtn" class="save-title-btn">저장</button>
+            </div>
+        </div>
+    </template>
+    <template id="tpl-companion">
+        <div class="content-right">
+            <div class="memo">
+                <div>
+                    <h3>동반자 관리</h3>
+                </div>
+
+                <div class="invite-row">
+                    <input type="text" id="sharedUserIdInput" placeholder="추가할 사용자 ID 입력" />
+                    <button type="button" id="addCompanionBtn" class="save-title-btn">동반자 추가</button>
+                </div>
+
+                <div class="member-list" id="memberList"></div>
+
+                <div class="share-row">
+                    <label><input type="checkbox" id="isAnonymousCheck" value="1" /> 익명으로 게시</label>
+                    <button type="button" id="shareToPostBtn" class="save-title-btn">게시판에 공유</button>
+                </div>
+            </div>
+        </div>
+    </template>
 </body>
+
 </html>

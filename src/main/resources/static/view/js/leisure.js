@@ -40,39 +40,32 @@
         var sortSel = document.getElementById("sortOrderSelect");
         var sortOrder = sortSel ? sortSel.value : "distance";
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
-            }
-            if (xhr.status !== 200) {
-                alert("목록 요청 실패 (HTTP " + xhr.status + ")");
-                return;
-            }
-            var data;
-            try {
-                data = JSON.parse(xhr.responseText);
-            } catch (e) {
-                alert("JSON이 아닙니다.");
-                return;
-            }
-            if (data && data.error === true) {
-                alert(data.message || "목록을 불러오지 못했습니다.");
-                return;
-            }
-            var list = data && Array.isArray(data.content) ? data.content : [];
-            renderPlaces(list, data.totalElements);
-            renderPagination(data.page, data.totalPages);
-        };
-
         var url = apiBase + "/list/leisure"
             + "?sortOrder=" + encodeURIComponent(sortOrder)
             + "&category=" + encodeURIComponent(category)
             + "&keyword=" + encodeURIComponent(keyword)
             + "&page=" + currentPage;
 
-        xhr.open("GET", url, true);
-        xhr.send(null);
+        fetch(url)
+        .then(function (response) {
+            if (!response.ok) {
+                alert("목록 요청 실패 (HTTP " + response.status + ")");
+                return;
+            }
+            response.json()
+            .then(function (data) {
+                if (data && data.error === true) {
+                    alert(data.message || "목록을 불러오지 못했습니다.");
+                    return;
+                }
+                var list = data && Array.isArray(data.content) ? data.content : [];
+                renderPlaces(list, data.totalElements);
+                renderPagination(data.page, data.totalPages);
+            })
+            .catch(function () {
+                alert("JSON이 아닙니다.");
+            });
+        });
     }
 
     function renderPagination(page, totalPages) {

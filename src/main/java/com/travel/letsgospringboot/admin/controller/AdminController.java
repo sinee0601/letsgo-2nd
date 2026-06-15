@@ -33,13 +33,13 @@ public class AdminController {
     }
 
     @PostMapping("/places/new")
-    public String insertPlace(PlaceVO placeVO){
+    public String insertPlace(PlaceVO placeVO) {
         adminService.insertPlace(placeVO);
         return "redirect:/admin/places";
     }
 
     @PostMapping("/places/edit")
-    public String editPlace(PlaceVO placeVO){
+    public String editPlace(PlaceVO placeVO) {
         adminService.updatePlace(placeVO);
         return "redirect:/admin/places";
     }
@@ -58,7 +58,7 @@ public class AdminController {
 
     @PostMapping("/users/warning")
     public String giveWarning(@RequestParam("userId") String userId,
-                              @RequestParam("reason") String reason) {
+            @RequestParam("reason") String reason) {
         userService.giveWarning(userId, reason);
         return "redirect:/admin/users";
     }
