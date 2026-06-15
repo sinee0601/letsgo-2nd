@@ -24,6 +24,21 @@ document.addEventListener("DOMContentLoaded", function () {
             unsuspendUser(userId);
         });
     });
+
+    const warningForm = document.getElementById("warningForm");
+    if (warningForm) {
+        warningForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(warningForm);
+            fetch(warningForm.action, {
+                method: "POST",
+                body: new URLSearchParams(formData)
+            })
+            .then(function (response) {
+                location.reload();
+            });
+        });
+    }
 });
 
 

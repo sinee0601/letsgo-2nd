@@ -85,40 +85,18 @@
 		var sortSel = document.getElementById("sortOrderSelect");
 		var sortOrder = sortSel ? sortSel.value : "name";
 
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState !== 4) {
-				return;
-			}
-			if (xhr.status !== 200) {
-				alert("목록 요청 실패 (HTTP " + xhr.status + ")");
-				return;
-			}
-			var data;
-			try {
-				data = JSON.parse(xhr.responseText);
-			} catch (e) {
-				alert("JSON이 아닙니다.");
-				return;
-			}
-			if (data && data.error === true) {
-				alert(data.message || "목록을 불러오지 못했습니다.");
-				return;
-			}
-			if (!Array.isArray(data)) {
-				alert("목록 형식 오류");
-				return;
-			}
-			renderPlaces(data);
-		};
-
 		var url = apiBase + "/stayListAjax"
 			+ "?sortOrder=" + encodeURIComponent(sortOrder)
 			+ "&category=" + encodeURIComponent(category)
 			+ "&keyword=" + encodeURIComponent(keyword);
 
-		xhr.open("GET", url, true);
-		xhr.send(null);
+		fetch(url)
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (data) {
+				renderPlaces(data);
+			});
 	}
 
 	var sortSel = document.getElementById("sortOrderSelect");

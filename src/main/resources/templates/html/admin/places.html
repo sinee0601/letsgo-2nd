@@ -106,31 +106,28 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary btn-edit-place"
-                                            th:data-id="${place.placeId}"
-                                            th:data-title="${place.title}"
-                                            th:data-type="${place.placeType}"
-                                            th:data-addr1="${place.addr1}"
-                                            th:data-addr2="${place.addr2}"
-                                            th:data-l1="${place.lclssystm1}"
-                                            th:data-l2="${place.lclssystm2}"
-                                            th:data-l3="${place.lclssystm3}">
+                                        th:data-id="${place.placeId}" th:data-title="${place.title}"
+                                        th:data-type="${place.placeType}" th:data-addr1="${place.addr1}"
+                                        th:data-addr2="${place.addr2}" th:data-l1="${place.lclssystm1}"
+                                        th:data-l2="${place.lclssystm2}" th:data-l3="${place.lclssystm3}">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
 
                                     <button class="btn btn-sm btn-outline-secondary btn-toggle-place"
-                                            th:data-id="${place.placeId}"
-                                            th:data-active="${place.isActive}">
+                                        th:data-id="${place.placeId}" th:data-active="${place.isActive}">
                                         <i class="bi bi-eye-slash"></i>
                                     </button>
 
                                     <button class="btn btn-sm btn-outline-danger btn-delete-place"
-                                            th:data-id="${place.placeId}">
+                                        th:data-id="${place.placeId}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+
                 </div>
             </main>
         </div>

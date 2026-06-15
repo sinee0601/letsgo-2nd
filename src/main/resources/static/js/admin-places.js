@@ -164,6 +164,21 @@ document.addEventListener("DOMContentLoaded", function () {
             deletePlace(placeId);
         });
     });
+
+    const editForm = document.getElementById("placeEditForm");
+    if (editForm) {
+        editForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(editForm);
+            fetch(editForm.action, {
+                method: "POST",
+                body: new URLSearchParams(formData)
+            })
+            .then(function (response) {
+                location.reload();
+            });
+        });
+    }
 });
 
 function openEditPlaceModal(button) {

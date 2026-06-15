@@ -139,7 +139,7 @@
                                             onclick="openPostcode()">주소 검색</button>
                                     </div>
 
-                                    <!-- API 비교 데모 -->
+
                                     <div id="geocoderStatus"
                                         style="display: none; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; line-height: 1.6;">
                                         <strong>[좌표 검색 결과 비교]</strong><br>
@@ -232,11 +232,11 @@
 
     <!-- Kakao Postcode Service API -->
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <!-- KakaoMAP API & Geocoder 서비스 추가 -->
+    <!-- KakaoMAP API & Geocoder  -->
     <script type="text/javascript"
         th:src="@{https://dapi.kakao.com/v2/maps/sdk.js(appkey='8ba0eb5dbc087147416355eabd3944aa',libraries='services',autoload='false')}"></script>
 
-    <!-- Naver Maps API & Geocoder 서비스 추가 -->
+    <!-- Naver Maps API & Geocoder  -->
     <script type="text/javascript"
         src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=fkk2j8zd0a&submodules=geocoder"></script>
 
