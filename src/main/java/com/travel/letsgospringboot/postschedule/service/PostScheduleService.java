@@ -1,5 +1,8 @@
 package com.travel.letsgospringboot.postschedule.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.travel.letsgospringboot.common.PageResponse;
 import com.travel.letsgospringboot.exception.AccessDeniedException;
 import com.travel.letsgospringboot.exception.InvalidInputException;
 import com.travel.letsgospringboot.exception.PostNotFoundException;
@@ -8,7 +11,6 @@ import com.travel.letsgospringboot.postschedule.repository.PostScheduleRepositor
 import com.travel.letsgospringboot.postschedule.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,55 +27,58 @@ public class PostScheduleService {
 
     private final PostScheduleRepository postScheduleRepository;
 
-    public List<PostScheduleListTO> getPostScheduleListLike() {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListLike());
-    }
-    public List<PostScheduleListTO> getPostScheduleListView() {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListView());
-    }
-    public List<PostScheduleListTO> getPostScheduleListTitle() {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListTitle());
-    }
-    public List<PostScheduleListTO> getPostScheduleListLatest() {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListLatest());
-    }
-    public List<PostScheduleListTO> getPostScheduleListSearchLike(String keyword) {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLike(keyword));
-    }
-    public List<PostScheduleListTO> getPostScheduleListSearchView(String keyword) {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchView(keyword));
-    }
-    public List<PostScheduleListTO> getPostScheduleListSearchTitle(String keyword) {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchTitle(keyword));
-    }
-    public List<PostScheduleListTO> getPostScheduleListSearchLatest(String keyword) {
-        return processPostScheduleList(postScheduleRepository.getPostScheduleListSearchLatest(keyword));
+    public PageResponse<PostScheduleListTO> getPostScheduleList(String keyword, String sortOrder, int page, int size) {
+        PageHelper.startPage(page, size);
+        if (sortOrder == null || sortOrder.trim().isEmpty()) {
+            sortOrder = "latest";
+        }
+        List<PostScheduleListTO> rows;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            rows = switch (sortOrder) {
+                case "like" -> postScheduleRepository.getPostScheduleListLike();
+                case "view" -> postScheduleRepository.getPostScheduleListView();
+                case "title" -> postScheduleRepository.getPostScheduleListTitle();
+                default -> postScheduleRepository.getPostScheduleListLatest();
+            };
+        } else {
+            rows = switch (sortOrder) {
+                case "like" -> postScheduleRepository.getPostScheduleListSearchLike(keyword);
+                case "view" -> postScheduleRepository.getPostScheduleListSearchView(keyword);
+                case "title" -> postScheduleRepository.getPostScheduleListSearchTitle(keyword);
+                default -> postScheduleRepository.getPostScheduleListSearchLatest(keyword);
+            };
+        }
+        PageInfo<PostScheduleListTO> pageInfo = new PageInfo<>(rows);
+        return new PageResponse<>(rows, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
     }
 
-    public List<PostScheduleListTO> getUserPostScheduleListLike(String userId) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLike(userId));
+    public PageResponse<PostScheduleListTO> getUserPostScheduleList(String userId, String keyword, String sortOrder, int page, int size) {
+        PageHelper.startPage(page, size);
+        if (sortOrder == null || sortOrder.trim().isEmpty()) {
+            sortOrder = "latest";
+        }
+        List<PostScheduleListTO> rows;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            rows = switch (sortOrder) {
+                case "like" -> postScheduleRepository.getUserPostScheduleListLike(userId);
+                case "view" -> postScheduleRepository.getUserPostScheduleListView(userId);
+                case "title" -> postScheduleRepository.getUserPostScheduleListTitle(userId);
+                default -> postScheduleRepository.getUserPostScheduleListLatest(userId);
+            };
+        } else {
+            PostScheduleSearchConditionVO condition = new PostScheduleSearchConditionVO(userId, keyword);
+            rows = switch (sortOrder) {
+                case "like" -> postScheduleRepository.getUserPostScheduleListSearchLike(condition);
+                case "view" -> postScheduleRepository.getUserPostScheduleListSearchView(condition);
+                case "title" -> postScheduleRepository.getUserPostScheduleListSearchTitle(condition);
+                default -> postScheduleRepository.getUserPostScheduleListSearchLatest(condition);
+            };
+        }
+        PageInfo<PostScheduleListTO> pageInfo = new PageInfo<>(rows);
+        return new PageResponse<>(rows, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
     }
-    public List<PostScheduleListTO> getUserPostScheduleListView(String userId) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListView(userId));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListTitle(String userId) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListTitle(userId));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListLatest(String userId) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListLatest(userId));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListSearchLike(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLike(new PostScheduleSearchConditionVO(userId, keyword)));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListSearchView(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchView(new PostScheduleSearchConditionVO(userId, keyword)));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListSearchTitle(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchTitle(new PostScheduleSearchConditionVO(userId, keyword)));
-    }
-    public List<PostScheduleListTO> getUserPostScheduleListSearchLatest(String userId, String keyword) {
-        return processPostScheduleList(postScheduleRepository.getUserPostScheduleListSearchLatest(new PostScheduleSearchConditionVO(userId, keyword)));
-    }
+
+
 
     @Transactional
     public PostScheduleDetailTO getPostScheduleDetail(String postId, String loginUserId) {
