@@ -1,8 +1,10 @@
 (function () {
+	var pagination = document.querySelector("#pagination");
 	var contextPath = document.body.getAttribute("data-context-path") || "";
 	var apiBase = window.location.origin + contextPath.replace(/\/$/, "");
+	var currentPage = 1;
 
-	function renderPlaces(list) {
+	function renderPlaces(list, totalElements) {
 		var container = document.getElementById("restaurantPlaceContainer");
 		if (!container) {
 			return;
@@ -13,7 +15,8 @@
 
 		var countHeader = document.querySelector(".content-left h3") || document.querySelector(".content-container h3");
 		if (countHeader) {
-			countHeader.textContent = "총 " + list.length + "개의 항목";
+			var total = (typeof totalElements === "number") ? totalElements : list.length;
+			countHeader.textContent = "총 " + total + "개의 항목";
 		}
 
 		var frag = document.createDocumentFragment();
@@ -75,28 +78,78 @@
 		container.appendChild(frag);
 	}
 
-	function requestSearch() {
+	function requestSearch(page) {
+		currentPage = page || 1;
+
 		var categoryInput = document.getElementById("categoryInput");
 		var category = categoryInput ? categoryInput.value : "";
-		
+
 		var keywordInput = document.querySelector("input[name='keyword']");
 		var keyword = keywordInput ? keywordInput.value : "";
 
 		var sortSel = document.getElementById("sortOrderSelect");
 		var sortOrder = sortSel ? sortSel.value : "name";
 
-		var url = apiBase + "/restaurantListAjax"
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState !== 4) {
+				return;
+			}
+			if (xhr.status !== 200) {
+				alert("목록 요청 실패 (HTTP " + xhr.status + ")");
+				return;
+			}
+			var data;
+			try {
+				data = JSON.parse(xhr.responseText);
+			} catch (e) {
+				alert("JSON이 아닙니다.");
+				return;
+			}
+			if (data && data.error === true) {
+				alert(data.message || "목록을 불러오지 못했습니다.");
+				return;
+			}
+			var list = data && Array.isArray(data.content) ? data.content : [];
+			renderPlaces(list, data.totalElements);
+			renderPagination(data.page, data.totalPages);
+		};
+
+		var url = apiBase + "/list/restaurant"
 			+ "?sortOrder=" + encodeURIComponent(sortOrder)
 			+ "&category=" + encodeURIComponent(category)
-			+ "&keyword=" + encodeURIComponent(keyword);
+			+ "&keyword=" + encodeURIComponent(keyword)
+			+ "&page=" + currentPage;
 
-		fetch(url)
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (data) {
-				renderPlaces(data);
+		xhr.open("GET", url, true);
+		xhr.send(null);
+	}
+
+	function renderPagination(page, totalPages) {
+		if (!pagination) return;
+
+		if (!totalPages || totalPages <= 1) {
+			pagination.innerHTML = "";
+			return;
+		}
+
+		var html = "";
+		html += '<button type="button" class="page-btn" data-page="' + (page - 1) + '"' + (page <= 1 ? " disabled" : "") + '>이전</button>';
+		for (var i = 1; i <= totalPages; i++) {
+			html += '<button type="button" class="page-btn' + (i === page ? " active" : "") + '" data-page="' + i + '">' + i + '</button>';
+		}
+		html += '<button type="button" class="page-btn" data-page="' + (page + 1) + '"' + (page >= totalPages ? " disabled" : "") + '>다음</button>';
+		pagination.innerHTML = html;
+
+		var btns = pagination.querySelectorAll(".page-btn");
+		for (var j = 0; j < btns.length; j++) {
+			btns[j].addEventListener("click", function () {
+				var target = Number(this.getAttribute("data-page"));
+				if (target >= 1 && target <= totalPages) {
+					requestSearch(target);
+				}
 			});
+		}
 	}
 
 	window.filterCategory = function(value) {
@@ -104,13 +157,13 @@
 		if (categoryInput) {
 			categoryInput.value = value;
 		}
-		requestSearch();
+		requestSearch(1);
 	};
 
 	var sortSel = document.getElementById("sortOrderSelect");
 	if (sortSel) {
 		sortSel.addEventListener("change", function () {
-			requestSearch();
+			requestSearch(1);
 		});
 	}
 
@@ -118,7 +171,9 @@
 	if (form) {
 		form.addEventListener("submit", function (event) {
 			event.preventDefault();
-			requestSearch();
+			requestSearch(1);
 		});
 	}
+
+	requestSearch(1);
 })();

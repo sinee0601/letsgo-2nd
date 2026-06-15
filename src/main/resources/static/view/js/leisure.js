@@ -1,125 +1,180 @@
 (function () {
+    const pagination = document.querySelector("#pagination");
+    var contextPath = document.body.getAttribute("data-context-path") || "";
+    var apiBase = window.location.origin + contextPath.replace(/\/$/, "");
 
-	var contextPath = document.body.getAttribute("data-context-path") || "";
-	var apiBase = window.location.origin + contextPath.replace(/\/$/, "");
 
+    var sortSel = document.getElementById("sortOrderSelect");
+    if (sortSel) {
+        sortSel.addEventListener("change", function () {
+            requestSearch();
+        });
+    }
 
-	var sortSel = document.getElementById("sortOrderSelect");
-	if (sortSel) {
-		sortSel.addEventListener("change", function () {
-			requestSearch();
-		});
-	}
+    var radios = document.querySelectorAll("input[name='category']");
+    for (var i = 0; i < radios.length; i++) {
+        radios[i].addEventListener("change", function () {
+            requestSearch();
+        });
+    }
 
-	var radios = document.querySelectorAll("input[name='category']");
-	for (var i = 0; i < radios.length; i++) {
-		radios[i].addEventListener("change", function () {
-			requestSearch();
-		});
-	}
+    var form = document.getElementById("searchForm");
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            requestSearch();
+        });
+    }
 
-	var form = document.getElementById("searchForm");
-	if (form) {
-		form.addEventListener("submit", function (event) {
-			event.preventDefault();
-			requestSearch();
-		});
-	}
+    var currentPage = 1;
 
-	function requestSearch() {
-		var categoryRadio = document.querySelector("input[name='category']:checked");
-		var category = categoryRadio ? categoryRadio.value : "";
-		
-		var keywordInput = document.querySelector("input[name='keyword']");
-		var keyword = keywordInput ? keywordInput.value : "";
+    function requestSearch(page) {
+        currentPage = page || 1;
 
-		var sortSel = document.getElementById("sortOrderSelect");
-		var sortOrder = sortSel ? sortSel.value : "distance";
+        var categoryRadio = document.querySelector("input[name='category']:checked");
+        var category = categoryRadio ? categoryRadio.value : "";
 
-		var url = apiBase + "/leisureListAjax"
-			+ "?sortOrder=" + encodeURIComponent(sortOrder)
-			+ "&category=" + encodeURIComponent(category)
-			+ "&keyword=" + encodeURIComponent(keyword);
+        var keywordInput = document.querySelector("input[name='keyword']");
+        var keyword = keywordInput ? keywordInput.value : "";
 
-		fetch(url)
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (data) {
-				renderPlaces(data);
-			});
-	}
+        var sortSel = document.getElementById("sortOrderSelect");
+        var sortOrder = sortSel ? sortSel.value : "distance";
 
-	function renderPlaces(list) {
-		var container = document.getElementById("leisurePlaceContainer");
-		if (!container) {
-			return;
-		}
-		while (container.firstChild) {
-			container.removeChild(container.firstChild);
-		}
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                alert("목록 요청 실패 (HTTP " + xhr.status + ")");
+                return;
+            }
+            var data;
+            try {
+                data = JSON.parse(xhr.responseText);
+            } catch (e) {
+                alert("JSON이 아닙니다.");
+                return;
+            }
+            if (data && data.error === true) {
+                alert(data.message || "목록을 불러오지 못했습니다.");
+                return;
+            }
+            var list = data && Array.isArray(data.content) ? data.content : [];
+            renderPlaces(list, data.totalElements);
+            renderPagination(data.page, data.totalPages);
+        };
 
-		var countHeader = document.querySelector(".content-container h3") || document.querySelector("main h3");
-		if (countHeader) {
-			countHeader.textContent = "총 " + list.length + "개의 항목";
-		}
+        var url = apiBase + "/list/leisure"
+            + "?sortOrder=" + encodeURIComponent(sortOrder)
+            + "&category=" + encodeURIComponent(category)
+            + "&keyword=" + encodeURIComponent(keyword)
+            + "&page=" + currentPage;
 
-		var frag = document.createDocumentFragment();
-		for (var i = 0; i < list.length; i++) {
-			var p = list[i];
-			var fig = document.createElement("figure");
-			fig.className = "figure";
-			if (p.firstImage && String(p.firstImage).length > 0) {
-				var img = document.createElement("img");
-				img.src = p.firstImage;
-				img.alt = p.title || "";
-				img.className = "box-placeholder";
-				fig.appendChild(img);
-			} else {
-				var a = document.createElement("a");
-				a.href = "#";
-				a.className = "box-placeholder";
-				a.textContent = "이미지 없음";
-				fig.appendChild(a);
-			}
+        xhr.open("GET", url, true);
+        xhr.send(null);
+    }
 
-			var cap = document.createElement("figcaption");
-			cap.className = "figure-caption";
-			cap.textContent = p.title || "";
-			fig.appendChild(cap);
+    function renderPagination(page, totalPages) {
+        if (!pagination) return;
 
-			var addrSpan = document.createElement("span");
-			addrSpan.textContent = p.addr1 || "";
-			fig.appendChild(addrSpan);
+        if (!totalPages || totalPages <= 1) {
+            pagination.innerHTML = "";
+            return;
+        }
 
-			var likeBtn = document.createElement("button");
-			likeBtn.type = "button";
-			likeBtn.className = "like-btn";
-			likeBtn.setAttribute("data-place-id", p.placeId);
-			likeBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
-			likeBtn.setAttribute("data-like-url", apiBase + "/placeLikeAjax");
+        var html = "";
+        html += '<button type="button" class="page-btn" data-page="' + (page - 1) + '"' + (page <= 1 ? " disabled" : "") + '>이전</button>';
+        for (var i = 1; i <= totalPages; i++) {
+            html += '<button type="button" class="page-btn' + (i === page ? " active" : "") + '" data-page="' + i + '">' + i + '</button>';
+        }
+        html += '<button type="button" class="page-btn" data-page="' + (page + 1) + '"' + (page >= totalPages ? " disabled" : "") + '>다음</button>';
+        pagination.innerHTML = html;
 
-			var h1 = document.createElement("h1");
-			h1.textContent = "❤️";
-			likeBtn.appendChild(h1);
-			fig.appendChild(likeBtn);
+        var btns = pagination.querySelectorAll(".page-btn");
+        for (var j = 0; j < btns.length; j++) {
+            btns[j].addEventListener("click", function () {
+                var target = Number(this.getAttribute("data-page"));
+                if (target >= 1 && target <= totalPages) {
+                    requestSearch(target);
+                }
+            });
+        }
+    }
 
-			var likeDiv = document.createElement("div");
-			likeDiv.className = "like-count";
-			likeDiv.id = "likeCount-" + p.placeId;
-			likeDiv.textContent = "좋아요: " + p.likeCount;
-			fig.appendChild(likeDiv);
+    function renderPlaces(list, totalElements) {
+        var container = document.getElementById("leisurePlaceContainer");
+        if (!container) {
+            return;
+        }
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
 
-			var cartBtn = document.createElement("button");
-			cartBtn.type = "button";
-			cartBtn.className = "add-to-cart-btn";
-			cartBtn.setAttribute("data-place-id", p.placeId);
-			cartBtn.setAttribute("data-place-title", p.title || "");
-			cartBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
-			cartBtn.textContent = "담기";
-			fig.appendChild(cartBtn);
-			frag.appendChild(fig);
-		}
-		container.appendChild(frag);
-	}
+        var countHeader = document.querySelector(".content-container h3") || document.querySelector("main h3");
+        if (countHeader) {
+            var total = (typeof totalElements === "number") ? totalElements : list.length;
+            countHeader.textContent = "총 " + total + "개의 항목";
+        }
+
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < list.length; i++) {
+            var p = list[i];
+            var fig = document.createElement("figure");
+            fig.className = "figure";
+            if (p.firstImage && String(p.firstImage).length > 0) {
+                var img = document.createElement("img");
+                img.src = p.firstImage;
+                img.alt = p.title || "";
+                img.className = "box-placeholder";
+                fig.appendChild(img);
+            } else {
+                var a = document.createElement("a");
+                a.href = "#";
+                a.className = "box-placeholder";
+                a.textContent = "이미지 없음";
+                fig.appendChild(a);
+            }
+
+            var cap = document.createElement("figcaption");
+            cap.className = "figure-caption";
+            cap.textContent = p.title || "";
+            fig.appendChild(cap);
+
+            var addrSpan = document.createElement("span");
+            addrSpan.textContent = p.addr1 || "";
+            fig.appendChild(addrSpan);
+
+            var likeBtn = document.createElement("button");
+            likeBtn.type = "button";
+            likeBtn.className = "like-btn";
+            likeBtn.setAttribute("data-place-id", p.placeId);
+            likeBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
+            likeBtn.setAttribute("data-like-url", apiBase + "/placeLikeAjax");
+
+            var h1 = document.createElement("h1");
+            h1.textContent = "❤️";
+            likeBtn.appendChild(h1);
+            fig.appendChild(likeBtn);
+
+            var likeDiv = document.createElement("div");
+            likeDiv.className = "like-count";
+            likeDiv.id = "likeCount-" + p.placeId;
+            likeDiv.textContent = "좋아요: " + p.likeCount;
+            fig.appendChild(likeDiv);
+
+            var cartBtn = document.createElement("button");
+            cartBtn.type = "button";
+            cartBtn.className = "add-to-cart-btn";
+            cartBtn.setAttribute("data-place-id", p.placeId);
+            cartBtn.setAttribute("data-place-title", p.title || "");
+            cartBtn.setAttribute("data-place-type", p.placeType || "LEISURE");
+            cartBtn.textContent = "담기";
+            fig.appendChild(cartBtn);
+            frag.appendChild(fig);
+        }
+        container.appendChild(frag);
+    }
+
+    requestSearch(1);
 })();

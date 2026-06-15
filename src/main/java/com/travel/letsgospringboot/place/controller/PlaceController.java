@@ -1,5 +1,6 @@
 package com.travel.letsgospringboot.place.controller;
 
+import com.travel.letsgospringboot.common.PageResponse;
 import com.travel.letsgospringboot.place.service.PlaceService;
 import com.travel.letsgospringboot.place.vo.PlaceVO;
 import lombok.RequiredArgsConstructor;
@@ -34,30 +35,34 @@ public class PlaceController {
     public String leisurePage(Model model,
                               @RequestParam(value = "category", required = false) String category,
                               @RequestParam(value = "keyword", required = false) String keyword,
-                              @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder) {
+                              @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder,
+                              @RequestParam(value = "page", defaultValue = "1") int page) {
 
         String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
-        List<PlaceVO> list = placeService.searchPlaces("LEISURE", category, keyword, sortBy);
+        PageResponse<PlaceVO> leisure = placeService.getPlaceListPaged("LEISURE", category, keyword, sortBy, page, 20);
 
 
-        model.addAttribute("leisurePlaceList", list);
-        model.addAttribute("totalCount", list.size());
+        model.addAttribute("leisurePlaceList", leisure);
+        model.addAttribute("totalCount", leisure.getTotalElements());
 
         return "leisure";
     }
+
+
 
 
     @GetMapping("/places/restaurant")
     public String restaurantPage(Model model,
                                  @RequestParam(value = "category", required = false) String category,
                                  @RequestParam(value = "keyword", required = false) String keyword,
-                                 @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder) {
+                                 @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+                                 @RequestParam(value = "page", defaultValue = "1") int page) {
 
         String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
-        List<PlaceVO> list = placeService.searchPlaces("RESTAURANT", category, keyword, sortBy);
+        PageResponse<PlaceVO> restaurant = placeService.getPlaceListPaged("RESTAURANT", category, keyword, sortBy, page, 20);
 
-        model.addAttribute("restaurantPlaceList", list);
-        model.addAttribute("totalCount", list.size());
+        model.addAttribute("restaurantPlaceList", restaurant);
+        model.addAttribute("totalCount", restaurant.getTotalElements());
 
         return "restaurant";
     }
@@ -66,13 +71,14 @@ public class PlaceController {
     public String stayPage(Model model,
                            @RequestParam(value = "category", required = false) String category,
                            @RequestParam(value = "keyword", required = false) String keyword,
-                           @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder) {
+                           @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+                           @RequestParam(value = "page", defaultValue = "1") int page) {
 
         String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
-        List<PlaceVO> list = placeService.searchPlaces("STAY", category, keyword, sortBy);
+        PageResponse<PlaceVO> stay = placeService.getPlaceListPaged("STAY", category, keyword, sortBy, page, 20);
 
-        model.addAttribute("stayPlaceList", list);
-        model.addAttribute("totalCount", list.size());
+        model.addAttribute("stayPlaceList", stay);
+        model.addAttribute("totalCount", stay.getTotalElements());
 
         return "stay";
     }

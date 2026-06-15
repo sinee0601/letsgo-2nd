@@ -372,3 +372,35 @@ button, select {
 	padding: 8px 14px;
 	cursor: pointer;
 }
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	width: 100%;
+	margin: 0 auto 40px;
+	padding-bottom: 20px;
+}
+
+.pagination .page-btn {
+	min-width: 38px;
+	padding: 8px 12px;
+	border: 1px solid #ff7a00;
+	border-radius: 8px;
+	background: #fff;
+	color: #222;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.pagination .page-btn.active {
+	background: #ff7a00;
+	color: #111;
+}
+
+.pagination .page-btn:disabled {
+	opacity: 0.4;
+	cursor: default;
+}

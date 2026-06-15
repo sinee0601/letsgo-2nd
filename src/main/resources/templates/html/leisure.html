@@ -206,7 +206,7 @@
             </div>
             <H1>🏃레저스포츠</H1>
             <div class="container" id="leisurePlaceContainer">
-                <figure class="figure" th:each="place : ${leisurePlaceList}">
+                <figure class="figure" th:each="place : ${leisurePlaceList.content}">
                     <th:block th:if="${place.firstImage != null && place.firstImage != ''}">
                         <img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder"/>
                     </th:block>
@@ -233,6 +233,8 @@
                     </button>
                 </figure>
             </div>
+
+            <div id="pagination" class="pagination"></div>
 
             <div class="button-container">
                 <button type="button" id="restaurant" th:onclick="|location.href='@{/places/restaurant}'|"> 음식점 =>
