@@ -1,4 +1,3 @@
-const sortableList = document.querySelector("#sortableList");
 const contentRight = document.querySelector("#contentRight");
 const addBtn = document.querySelector("#addBtn");
 const deleteBtn = document.querySelector("#deleteBtn");
@@ -9,8 +8,8 @@ const sidebarLinks = document.querySelectorAll(".sidebar-link");
 const postId = location.pathname.split("/").filter(Boolean)[2];
 const PANELS = ["route", "budget", "todo"];
 
-likeBtn.addEventListener("click", () => {
-        fetchPlueLike(postId)
+likeBtn?.addEventListener("click", () => {
+        fetchPlusLike(postId)
 });
 
 deleteBtn?.addEventListener("click", () => {
@@ -21,7 +20,7 @@ reportBtn?.addEventListener("click", () => {
     reportPostSchedule(postId);
 });
 
-addBtn.addEventListener("click", () => {
+addBtn?.addEventListener("click", () => {
     addPostScheduleToMySchedule(postId)
 });
 
@@ -42,7 +41,7 @@ function readSavedBudget() {
     }
 }
 
-function fetchPlueLike(postId) {
+function fetchPlusLike(postId) {
     fetch(`/postschedule/api/${postId}/plusLike`, {
         method: "PUT",
         })
@@ -62,9 +61,18 @@ function deletePostSchedule(postId){
     fetch(`/postschedule/api/${postId}`, {
         method: "DELETE",
     })
-        .then(res => alert(res.ok ? "게시물이 삭제되었습니다" : "게시물 삭제에 실패했습니다."))
-        .catch(err => console.error("fetch 오류:", err));
-    location.replace("/postschedule/list");
+        .then(res => {
+            if (res.ok) {
+                location.replace("/postschedule/list");
+            }
+            alert("게시물이 삭제되었습니다.");
+            location.replace("/postschedule/list");
+        })
+        .catch(err => {
+            alert(err.message || "게시물 삭제에 실패했습니다.");
+            console.error("fetch 오류:", err);
+        });
+
 }
 
 function addPostScheduleToMySchedule(postId){
