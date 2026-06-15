@@ -30,9 +30,8 @@ public class SecurityConfig {
                 .disable()
         );
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/", "/user/loginView", "/user/signUpView", "/user/signUp",
-                                "/user/getIdView", "/user/getId",
-                                "/user/updatePwView", "/user/updatePw",
+                auth.requestMatchers("/", "/user/loginView", "/user/signUpView",
+                                "/user/getIdView", "/user/updatePwView",
                                 "/user/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").authenticated()

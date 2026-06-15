@@ -5,12 +5,13 @@ import com.travel.letsgospringboot.postschedule.service.PostScheduleService;
 import com.travel.letsgospringboot.postschedule.vo.MapScheduleTO;
 import com.travel.letsgospringboot.postschedule.vo.PostScheduleListTO;
 import com.travel.letsgospringboot.postschedule.vo.RouteScheduleTO;
+import com.travel.letsgospringboot.user.auth.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -23,18 +24,16 @@ public class PostScheduleRestController {
     @GetMapping("/list")
     public PageResponse<PostScheduleListTO> getPostScheduleList(@RequestParam(value = "keyword", required = false) String keyword,
                                                                 @RequestParam(value = "sortOrder", required = false) String sortOrder,
-                                                                @RequestParam(defaultValue = "1") int page,
-                                                                @RequestParam(defaultValue = "12") int size) {
-        return postScheduleService.getPostScheduleList(keyword, sortOrder, page, size);
+                                                                @RequestParam(defaultValue = "1") int page) {
+        return postScheduleService.getPostScheduleList(keyword, sortOrder, page, 12);
     }
 
     @GetMapping("/mylist")
-    public PageResponse<PostScheduleListTO> getUserPostScheduleList(Principal principal,
+    public PageResponse<PostScheduleListTO> getUserPostScheduleList(@AuthenticationPrincipal AppUserDetails userDetails,
                                                                     @RequestParam(value = "keyword", required = false) String keyword,
                                                                     @RequestParam(value = "sortOrder", required = false) String sortOrder,
-                                                                    @RequestParam(defaultValue = "1") int page,
-                                                                    @RequestParam(defaultValue = "12") int size) {
-        return postScheduleService.getUserPostScheduleList(principal.getName(), keyword, sortOrder, page, size);
+                                                                    @RequestParam(defaultValue = "1") int page) {
+        return postScheduleService.getUserPostScheduleList(userDetails.getUsername(), keyword, sortOrder, page, 12);
     }
 
     @GetMapping("/{postId}/budget")
@@ -57,16 +56,6 @@ public class PostScheduleRestController {
         return postScheduleService.getMapSchedule(postId);
     }
 
-    @GetMapping("/{postId}/title")
-    public String getScheduleTitle(@PathVariable("postId") String postId) {
-        return postScheduleService.getScheduleTitle(postId);
-    }
-
-    @GetMapping("/{postId}/id")
-    public String getUserId(@PathVariable("postId") String postId) {
-        return postScheduleService.getUserId(postId);
-    }
-
     @PutMapping("/{postId}/plusLike")
     public ResponseEntity<Integer> plusLike(@PathVariable("postId") String postId) {
         int likeCount = postScheduleService.plusLike(postId);
@@ -80,20 +69,20 @@ public class PostScheduleRestController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePostSchedule(Principal principal, @PathVariable("postId") String postId) {
-        postScheduleService.deletePostSchedule(postId, principal.getName());
+    public ResponseEntity<Void> deletePostSchedule(@AuthenticationPrincipal AppUserDetails userDetails, @PathVariable("postId") String postId) {
+        postScheduleService.deletePostSchedule(postId, userDetails.getUsername());
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{postId}/copy")
-    ResponseEntity<Void> addToMySchedule(Principal principal, @PathVariable("postId") String postId) {
-        postScheduleService.addToMySchedule(postId, principal.getName());
+    ResponseEntity<Void> addToMySchedule(@AuthenticationPrincipal AppUserDetails userDetails, @PathVariable("postId") String postId) {
+        postScheduleService.addToMySchedule(postId, userDetails.getUsername());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{postId}/report")
-    public ResponseEntity<Void> reportPostSchedule(Principal principal, @PathVariable("postId") String postId, @RequestBody Map<String, String> body) {
-        postScheduleService.reportPostSchedule(postId, principal.getName(), body.get("reason"));
+    public ResponseEntity<Void> reportPostSchedule(@AuthenticationPrincipal AppUserDetails userDetails, @PathVariable("postId") String postId, @RequestBody Map<String, String> body) {
+        postScheduleService.reportPostSchedule(postId, userDetails.getUsername(), body.get("reason"));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

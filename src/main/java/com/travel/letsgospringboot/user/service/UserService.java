@@ -17,9 +17,6 @@ public class UserService {
     private final UserJpaRepository userJpaRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    public UserVO login(UserVO userVO) {
-//        return userRepository.login(userVO);
-//    }
     public List<JpaUsers>getAllUsers(){
         return userJpaRepository.findAll();
     }
@@ -67,6 +64,9 @@ public class UserService {
         if (userJpaRepository.findByUserID(userVO.getUserID()) != null) {
             return false;
         }
+        if (userJpaRepository.findByEmail(userVO.getEmail()) != null) {
+            return false;
+        }
         boolean success = (userJpaRepository.save(JpaUsers.builder()
                 .userID(userVO.getUserID())
                 .password(bCryptPasswordEncoder.encode(userVO.getPassword()))
@@ -96,6 +96,8 @@ public class UserService {
                 .name(jpaUsers.getName())
                 .role(jpaUsers.getRole())
                 .created(jpaUsers.getCreated())
+                .warningCount(jpaUsers.getWarningCount())
+                .enabled(jpaUsers.isEnabled())
                 .build())) != null;
         if (success) {
             log.info("사용자 비밀번호 변경 성공: userID={}", userVO.getUserID());
@@ -106,5 +108,9 @@ public class UserService {
     public String findUserIdByNameAndEmail(UserVO userVO) {
         JpaUsers jpaUsers = userJpaRepository.findByNameAndEmail(userVO.getName(), userVO.getEmail());
         return jpaUsers != null ? jpaUsers.getUserID() : null;
+    }
+
+    public boolean emailCheck(String email) {
+        return userJpaRepository.findByEmail(email) == null;
     }
 }

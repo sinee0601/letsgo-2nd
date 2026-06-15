@@ -13,7 +13,7 @@
 
     <div id="signupMessage"></div>
 
-    <form id="signupForm" method="post" action="/user/signUp">
+    <form id="signupForm" method="post">
         <div class="name">
             <label for="nameInput">이름</label>
             <input id="nameInput" name="name" placeholder="이름">
@@ -39,7 +39,7 @@
         </div>
     </form>
     <div>
-        <a href="/user/loginView">로그인</a>
+        <a th:href="@{/user/loginView}">로그인</a>
     </div>
 </div>
 <script th:src="@{/js/signup.js}"></script>

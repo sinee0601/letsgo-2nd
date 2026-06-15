@@ -14,7 +14,7 @@
     <div id="getIdMessage"></div>
     <div id="foundIdMessage"></div>
 
-    <form id="getIdForm" method="post" action="/user/getId">
+    <form id="getIdForm" method="post">
         <div class="name">
             <input id="nameInput" name="name" placeholder="이름">
         </div>
@@ -26,7 +26,7 @@
         </div>
     </form>
     <div>
-        <a href="/user/loginView">로그인</a>
+        <a th:href="@{/user/loginView}">로그인</a>
     </div>
 </div>
 <script th:src="@{/js/getid.js}"></script>

@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -41,6 +39,10 @@ public class UserRestController {
 
         if (!userService.idCheck(userId)) {
             throw new DuplicateUserIdException("이미 사용 중인 아이디입니다.");
+        }
+
+        if (!userService.emailCheck(email)) {
+            throw new DuplicateUserIdException("이미 사용 중인 이메일입니다.");
         }
 
         if (!userService.signUp(UserVO.builder()

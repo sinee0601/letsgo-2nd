@@ -13,7 +13,7 @@
 
     <div id="updatePwMessage"></div>
 
-    <form id="updatePwForm" method="post" action="/user/updatePw">
+    <form id="updatePwForm" method="post">
         <div class="id">
             <input id="userIdInput" name="userID" placeholder="아이디">
         </div>
@@ -28,7 +28,7 @@
         </div>
         <div>
             <button type="submit">비밀번호 변경</button>
-            <a href="/user/loginView">로그인</a>
+            <a th:href="@{/user/loginView}">로그인</a>
         </div>
     </form>
 </div>
