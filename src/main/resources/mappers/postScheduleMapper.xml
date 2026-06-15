@@ -54,35 +54,21 @@
         p.VIEW_COUNT,
         p.IS_ANONYMOUS,
         u.NAME,
-        vp.VISIT_ITEM_ID,
-        vp.VISIT_ORDER,
-        vp.SCHEDULE_TYPE,
-        vp.PLACE_TITLE,
-        vp.ADDR1,
-        vp.FIRST_IMAGE,
-        vp.PLACE_TYPE
+        v.VISIT_ITEM_ID,
+        v.VISIT_ORDER,
+        v.SCHEDULE_TYPE,
+        pl.TITLE   AS PLACE_TITLE,
+        pl.ADDR1,
+        pl.FIRST_IMAGE,
+        pl.PLACE_TYPE
     </sql>
 
     <sql id="postScheduleJoins">
         FROM schedule_post p
-        JOIN (
-            SELECT
-                v.SCHEDULE_ID,
-                MIN(v.VISIT_ITEM_ID) AS VISIT_ITEM_ID,
-                MIN(v.VISIT_ORDER) AS VISIT_ORDER,
-                MIN(v.SCHEDULE_TYPE) AS SCHEDULE_TYPE,
-                GROUP_CONCAT(pl.TITLE ORDER BY v.VISIT_ORDER SEPARATOR ' / ') AS PLACE_TITLE,
-                SUBSTRING_INDEX(GROUP_CONCAT(pl.ADDR1 ORDER BY v.VISIT_ORDER SEPARATOR '||'), '||', 1) AS ADDR1,
-                SUBSTRING_INDEX(GROUP_CONCAT(pl.FIRST_IMAGE ORDER BY v.VISIT_ORDER SEPARATOR '||'), '||', 1) AS FIRST_IMAGE,
-                SUBSTRING_INDEX(GROUP_CONCAT(pl.PLACE_TYPE ORDER BY v.VISIT_ORDER SEPARATOR '||'), '||', 1) AS PLACE_TYPE
-            FROM visit_item v
-            JOIN place pl ON v.PLACE_ID = pl.PLACE_ID
-            GROUP BY v.SCHEDULE_ID
-        ) vp ON p.POST_ID = vp.SCHEDULE_ID
-        JOIN jpa_users u ON p.user_id = u.userId
+        JOIN visit_item v  ON p.POST_ID   = v.SCHEDULE_ID
+        JOIN place      pl ON v.PLACE_ID  = pl.PLACE_ID
+        JOIN jpa_users  u  ON p.user_id   = u.userId
     </sql>
-
-
 
     <select id="getPostScheduleListLike" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
@@ -117,7 +103,7 @@
     <select id="getPostScheduleListSearchLike" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
           AND p.is_hidden = 0
         ORDER BY p.like_count DESC, p.post_id ASC
     </select>
@@ -125,7 +111,7 @@
     <select id="getPostScheduleListSearchView" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
           AND p.is_hidden = 0
         ORDER BY p.view_count DESC, p.post_id ASC
     </select>
@@ -133,7 +119,7 @@
     <select id="getPostScheduleListSearchTitle" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
           AND p.is_hidden = 0
         ORDER BY p.title DESC, p.post_id ASC
     </select>
@@ -141,7 +127,7 @@
     <select id="getPostScheduleListSearchLatest" parameterType="String" resultMap="postScheduleResultMap">
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
-        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+        WHERE (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
           AND p.is_hidden = 0
         ORDER BY p.posted_at DESC, p.post_id ASC
     </select>
@@ -181,7 +167,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.like_count DESC, p.post_id ASC
     </select>
 
@@ -189,7 +175,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.view_count DESC, p.post_id ASC
     </select>
 
@@ -197,7 +183,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.title ASC, p.post_id ASC
     </select>
 
@@ -205,7 +191,7 @@
         SELECT <include refid="postScheduleColumns"/>
         <include refid="postScheduleJoins"/>
         WHERE p.USER_ID = #{userId}
-          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR vp.PLACE_TITLE LIKE CONCAT('%', #{keyword}, '%'))
+          AND (p.TITLE LIKE CONCAT('%', #{keyword}, '%') OR pl.TITLE LIKE CONCAT('%', #{keyword}, '%'))
         ORDER BY p.posted_at DESC, p.post_id ASC
     </select>
 
@@ -263,6 +249,23 @@
 
     <select id="getUserId" parameterType="String" resultType="String">
         SELECT USER_ID FROM schedule_post WHERE POST_ID = #{postId}
+    </select>
+
+    <select id="getPostScheduleId" parameterType="String" resultType="String">
+        SELECT p.POST_ID
+        FROM schedule_post p
+        WHERE p.IS_HIDDEN = 0
+          AND (
+            p.TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR EXISTS (
+                SELECT 1
+                FROM visit_item v
+                         JOIN place pl ON v.PLACE_ID = pl.PLACE_ID
+                WHERE v.SCHEDULE_ID = p.POST_ID
+                  AND pl.TITLE LIKE CONCAT('%', #{keyword}, '%')
+            )
+            )
+        ORDER BY p.POSTED_AT DESC, p.POST_ID ASC
     </select>
 
 

@@ -8,7 +8,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class PostScheduleDetailTO {
     private String postId;
     private String scheduleTitle;

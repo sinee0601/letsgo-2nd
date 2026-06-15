@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -77,7 +78,6 @@ public class PostScheduleService {
         PageInfo<PostScheduleListTO> pageInfo = new PageInfo<>(rows);
         return new PageResponse<>(rows, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
     }
-
 
 
     @Transactional
@@ -146,6 +146,10 @@ public class PostScheduleService {
     public void deletePostSchedule(String postId, String loginUserId) {
         String writerId = getUserId(postId);
 
+        if (writerId == null) {
+            throw new PostNotFoundException("존재하지 않는 게시물입니다.");
+        }
+
         if (!writerId.equals(loginUserId)) {
             log.warn("게시물 삭제 권한 위반: postId={}, loginUserId={}, writerId={}",
                     postId, loginUserId, writerId);
@@ -174,7 +178,7 @@ public class PostScheduleService {
                     .visitOrder(route.getVisitOrder())
                     .distanceToNext(route.getDistanceToNext())
                     .placeId(route.getPlaceId())
-                    .scheduleType(route.getScheduleType())
+                    .scheduleType("SCHEDULE")
                     .build());
         }
         log.info("게시물 내 일정 추가 완료: postId={}, userId={}, myScheduleId={}",
