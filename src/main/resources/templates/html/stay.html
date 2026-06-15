@@ -154,7 +154,7 @@
             </div>
             <H1>🏠숙박</H1>
             <div class="container" id="stayPlaceContainer">
-                <figure class="figure" th:each="place : ${stayPlaceList}">
+                <figure class="figure" th:each="place : ${stayPlaceList.content}">
                     <th:block th:if="${place.firstImage != null && place.firstImage != ''}">
                         <img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder"/>
                     </th:block>
@@ -177,6 +177,8 @@
                     </button>
                 </figure>
             </div>
+
+            <div id="pagination" class="pagination"></div>
 
             <div class="button-container">
                 <button type="button" id="leisure" th:onclick="|location.href='@{/places/leisure}'|">
