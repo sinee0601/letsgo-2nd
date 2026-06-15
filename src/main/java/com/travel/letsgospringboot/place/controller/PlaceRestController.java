@@ -1,5 +1,7 @@
 package com.travel.letsgospringboot.place.controller;
 
+import com.travel.letsgospringboot.common.PageResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.travel.letsgospringboot.user.auth.AppUserDetails;
 
@@ -9,12 +11,14 @@ import com.travel.letsgospringboot.place.vo.VisitItemVO;
 import com.travel.letsgospringboot.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PlaceRestController {
@@ -29,6 +33,41 @@ public class PlaceRestController {
         String sortBy = ("like".equalsIgnoreCase(sortOrder) || "popular".equalsIgnoreCase(sortOrder)) ? "like"
                 : "title";
         return placeService.searchPlaces("LEISURE", category, keyword, sortBy);
+    }
+
+
+    @GetMapping("/list/leisure")
+    public PageResponse<PlaceVO> leisureList(Model model,
+                              @RequestParam(value = "category", required = false) String category,
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "sortOrder", defaultValue = "distance") String sortOrder,
+                              @RequestParam(value = "page", defaultValue = "1") int page) {
+
+        String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
+        PageResponse<PlaceVO> leisure = placeService.getPlaceListPaged("LEISURE", category, keyword, sortBy, page, 12);
+        return leisure;
+    }
+
+    @GetMapping("/list/restaurant")
+    public PageResponse<PlaceVO> restaurantList(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
+
+        String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
+        return placeService.getPlaceListPaged("RESTAURANT", category, keyword, sortBy, page, 12);
+    }
+
+    @GetMapping("/list/stay")
+    public PageResponse<PlaceVO> stayList(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "sortOrder", defaultValue = "name") String sortOrder,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
+
+        String sortBy = "popular".equalsIgnoreCase(sortOrder) ? "like" : "title";
+        return placeService.getPlaceListPaged("STAY", category, keyword, sortBy, page, 12);
     }
 
     @PostMapping("/placeLikeAjax")

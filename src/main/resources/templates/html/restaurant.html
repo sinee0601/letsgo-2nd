@@ -91,7 +91,7 @@
             </div>
             <H1>🍔음식점</H1>
             <div class="container" id="restaurantPlaceContainer">
-                <figure class="figure" th:each="place : ${restaurantPlaceList}">
+                <figure class="figure" th:each="place : ${restaurantPlaceList.content}">
                     <th:block th:if="${place.firstImage != null && place.firstImage != ''}">
                         <img th:src="${place.firstImage}" th:alt="${place.title}" class="box-placeholder"/>
                     </th:block>
@@ -114,6 +114,8 @@
                     </button>
                 </figure>
             </div>
+
+            <div id="pagination" class="pagination"></div>
 
             <div class="button-container">
                 <button type="button" id="leisure" th:onclick="|location.href='@{/places/leisure}'|">

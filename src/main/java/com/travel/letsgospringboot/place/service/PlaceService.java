@@ -1,5 +1,9 @@
 package com.travel.letsgospringboot.place.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.travel.letsgospringboot.common.PageResponse;
+import com.travel.letsgospringboot.myschedule.vo.MyScheduleVO;
 import com.travel.letsgospringboot.place.repository.PlaceMapper;
 import com.travel.letsgospringboot.place.vo.PlaceVO;
 import com.travel.letsgospringboot.place.vo.VisitItemVO;
@@ -129,23 +133,26 @@ public class PlaceService {
             params.put("keywordPattern", pattern);
         }
 
+        List<PlaceVO> rows;
+
         if (hasCategory && hasKeyword) {
-            return isSortByLike 
-                ? placeMapper.searchPlacesByCategoryAndKeywordOrderByLike(params)
-                : placeMapper.searchPlacesByCategoryAndKeywordOrderByTitle(params);
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByCategoryAndKeywordOrderByLike(params)
+                    : placeMapper.searchPlacesByCategoryAndKeywordOrderByTitle(params);
         } else if (hasCategory) {
-            return isSortByLike
-                ? placeMapper.searchPlacesByCategoryOrderByLike(params)
-                : placeMapper.searchPlacesByCategoryOrderByTitle(params);
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByCategoryOrderByLike(params)
+                    : placeMapper.searchPlacesByCategoryOrderByTitle(params);
         } else if (hasKeyword) {
-            return isSortByLike
-                ? placeMapper.searchPlacesByKeywordOrderByLike(params)
-                : placeMapper.searchPlacesByKeywordOrderByTitle(params);
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByKeywordOrderByLike(params)
+                    : placeMapper.searchPlacesByKeywordOrderByTitle(params);
         } else {
-            return isSortByLike
-                ? placeMapper.searchPlacesOrderByLike(params)
-                : placeMapper.searchPlacesOrderByTitle(params);
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesOrderByLike(params)
+                    : placeMapper.searchPlacesOrderByTitle(params);
         }
+        return rows;
     }
 
     public List<PlaceVO> searchNearbyPlaces(String placeType, String centerLat, String centerLon, Double radiusKm, boolean orderByLike, String category, String keyword) {
@@ -167,6 +174,47 @@ public class PlaceService {
         return placeMapper.searchNearbyPlaces(params);
     }
 
+
+    public PageResponse<PlaceVO> getPlaceListPaged(String placeType, String category, String keyword, String sortBy,
+                                           int page, int size) {
+        PageHelper.startPage(page, size);
+        Map<String, Object> params = new HashMap<>();
+        params.put("placeType", placeType);
+
+        boolean hasCategory = category != null && !category.trim().isEmpty();
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+        boolean isSortByLike = "like".equalsIgnoreCase(sortBy);
+
+        if (hasCategory) {
+            params.put("category", category);
+        }
+        if (hasKeyword) {
+            String pattern = keyword.contains("%") ? keyword : "%" + keyword + "%";
+            params.put("keywordPattern", pattern);
+        }
+
+        List<PlaceVO> rows;
+
+        if (hasCategory && hasKeyword) {
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByCategoryAndKeywordOrderByLike(params)
+                    : placeMapper.searchPlacesByCategoryAndKeywordOrderByTitle(params);
+        } else if (hasCategory) {
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByCategoryOrderByLike(params)
+                    : placeMapper.searchPlacesByCategoryOrderByTitle(params);
+        } else if (hasKeyword) {
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesByKeywordOrderByLike(params)
+                    : placeMapper.searchPlacesByKeywordOrderByTitle(params);
+        } else {
+            rows = isSortByLike
+                    ? placeMapper.searchPlacesOrderByLike(params)
+                    : placeMapper.searchPlacesOrderByTitle(params);
+        }
+        PageInfo<PlaceVO> pageInfo = new PageInfo<>(rows);
+        return new PageResponse<>(rows, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
+    }
 
     public PlaceVO getPlaceByTitle(Map<String, Object> params) {
         return placeMapper.getPlaceByTitle(params);
