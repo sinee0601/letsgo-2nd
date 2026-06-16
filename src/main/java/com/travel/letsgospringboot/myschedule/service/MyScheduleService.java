@@ -140,8 +140,10 @@ public class MyScheduleService {
     }
 
     public ScheduleDetailVO getScheduleDetail(String scheduleId, String userId) {
-        if(!isScheduleOwnedByUser(scheduleId, userId))
+        if(!hasReadSchedulePermission(scheduleId, userId))
             throw new AccessDeniedException("존재하지 않거나 권한이 없습니다");
+//        if(!isScheduleOwnedByUser(scheduleId, userId))
+//           throw new AccessDeniedException("존재하지 않거나 권한이 없습니다");
         return myScheduleRepository.getScheduleDetail(scheduleId);
     }
 
@@ -197,19 +199,31 @@ public class MyScheduleService {
         return owned;
     }
 
+    private boolean hasReadSchedulePermission(String scheduleId, String userId) {
+        boolean hasPermission = myScheduleRepository.hasReadSchedulePermission(scheduleId, userId) > 0;
+        if (!hasPermission) {
+            log.warn("일정 접근 권한 위반 차단 - userId={}, scheduleId={}", userId, scheduleId);
+        }
+        return  hasPermission;
+    }
+
     public List<ScheduleSummaryVO> listMyScheduleIdAndTitle(String userId) {
         return myScheduleRepository.listMyScheduleIdAndTitle(userId);
     }
 
     public List<RouteScheduleVO> getScheduleRoute(String scheduleId, String userId) {
-        if(!isScheduleOwnedByUser(scheduleId, userId))
+        if(!hasReadSchedulePermission(scheduleId, userId))
             throw new AccessDeniedException("권한이 없습니다");
+//        if(!isScheduleOwnedByUser(scheduleId, userId))
+//            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getScheduleRoute(scheduleId);
     }
 
     public List<MapScheduleVO> getMapSchedule(String scheduleId, String userId) {
-        if(!isScheduleOwnedByUser(scheduleId, userId))
+        if(!hasReadSchedulePermission(scheduleId, userId))
             throw new AccessDeniedException("권한이 없습니다");
+//        if(!isScheduleOwnedByUser(scheduleId, userId))
+//            throw new AccessDeniedException("권한이 없습니다");
         return myScheduleRepository.getMapSchedule(scheduleId);
     }
     @Transactional
