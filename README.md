@@ -46,6 +46,7 @@
 
 - **Kiwi** 형태소 분석으로 사용자 질의에서 키워드를 파싱하고, **Gemini(GenAI)** 로 여행 관련 응답을 생성
 - **SQLAlchemy** 로 키워드 캐시(Keyword caches)와 대화 로그(Chat Logs)를 관리하여, 캐시 히트 시 Gemini 호출 없이 빠르게 응답
+- https://github.com/sinee0601/letsgo-chatbot
 
 ### 🌍 외부 연동
 
