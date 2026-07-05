@@ -24,7 +24,7 @@
 | **개발 형태** | 팀 프로젝트 · 애자일(스프린트) 기반 · GitHub Flow 협업 |
 | **진행 방식** | **1차 스프린트** Servlet/JSP → **2차 스프린트** Spring Boot 리팩토링 + AI 챗봇 연동 |
 | **핵심 목표** | 계층형 아키텍처로의 구조 전환 · 조회 성능 최적화 · 리소스 단위 인가 · 외부 API/AI 연동 |
-1차 스프린트 : https://github.com/sinee0601/letsgo-1st
+|1차 스프린트 | https://github.com/sinee0601/letsgo-1st|
 
 
 ---
@@ -33,7 +33,7 @@
 
 ![LetsGo 2차 스프린트 아키텍처](LetsGO_2차_스프린트_아키텍처.drawio.png)
 
-전체 시스템은 **Spring Boot 애플리케이션 서버**와 **FastAPI 기반 AI 챗봇 서버**로 구성되며, 모두 **AWS EC2 위 Docker 컨테이너**로 배포되고 **MariaDB**를 공유합니다.
+전체 시스템은 SSR 중심의 **Spring Boot 애플리케이션 서버**와 **FastAPI 기반 AI 챗봇 서버**로 구성되며, 모두 **AWS EC2 위 Docker 컨테이너**로 배포되고 **MariaDB**를 공유합니다. 
 
 ### ⚙️ Spring Boot (핵심 애플리케이션)
 
